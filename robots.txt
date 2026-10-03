@@ -1,0 +1,28 @@
+# 2023swhs3rd-a11y.github.io 루트 저장소에 둘 파일
+# 일반 검색엔진은 모두 허용
+User-agent: *
+Allow: /
+
+# AI 학습용 수집 차단 (CC BY-NC 비영리 조건 보호)
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: ClaudeBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: meta-externalagent
+Disallow: /
+
+Sitemap: https://2023swhs3rd-a11y.github.io/2028plan/sitemap.xml
