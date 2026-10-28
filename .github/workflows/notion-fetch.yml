@@ -1,0 +1,43 @@
+name: notion-fetch (임시)
+on:
+  push:
+    branches: [notion-fetch]
+permissions:
+  contents: write
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: fetch
+        run: |
+          python3 - <<'PY'
+          import json, urllib.request
+          def post(path, body):
+              req = urllib.request.Request("https://bicjj.notion.site/api/v3/" + path, data=json.dumps(body).encode(),
+                    headers={"content-type": "application/json", "user-agent": "Mozilla/5.0"})
+              return json.load(urllib.request.urlopen(req, timeout=60))
+          out = {}
+          pid = "3129b73f-fbe4-807c-be00-e0c53617a77e"
+          seen, queue = set(), [pid]
+          while queue and len(seen) < 40:
+              p = queue.pop(0)
+              if p in seen: continue
+              seen.add(p)
+              try:
+                  r = post("loadPageChunk", {"pageId": p, "limit": 500, "cursor": {"stack": []}, "chunkNumber": 0, "verticalColumns": False})
+              except Exception as e:
+                  out[p] = {"error": str(e)}; continue
+              blocks = r.get("recordMap", {}).get("block", {})
+              out[p] = blocks
+              for bid, b in blocks.items():
+                  v = b.get("value", {}).get("value", b.get("value", {}))
+                  if v.get("type") == "page" and bid != p and v.get("parent_id") == p:
+                      queue.append(bid)
+          json.dump(out, open("notion.json", "w"), ensure_ascii=False)
+          print(len(out), "pages")
+          PY
+      - run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add notion.json && git commit -m "notion dump" && git push
