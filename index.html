@@ -3,21 +3,98 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2028 대입전형 시행계획 요약</title>
-<meta name="robots" content="noindex, follow">
-<link rel="canonical" href="https://2023swhs3rd-a11y.github.io/2028plan/">
-<meta http-equiv="refresh" content="0; url=/2028plan/">
-<script>location.replace('/2028plan/' + location.hash);</script>
+<title>봉일천고 진로진학 자료실</title>
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
+<link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="봉일천고 진로진학 자료실">
+<meta property="og:description" content="2028 대입전형 시행계획 요약 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
+<meta property="og:url" content="https://2023swhs3rd-a11y.github.io/">
+<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/2028plan/og.png">
+<script>
+  // 예전 주소(루트 + #대학 등)로 들어온 링크는 그대로 2028 대시보드로 보낸다
+  if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
+</script>
 <style>
-  :root { color-scheme: light dark; }
-  body { margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
-         font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-         background: Canvas; color: CanvasText; text-align: center; }
-  a { color: LinkText; }
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e4e7ec;
+    --plan: #2563eb; --news: #0f766e; --book: #c2410c;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c;
+      --plan: #7aa2ff; --news: #4fd1c5; --book: #fb923c;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  }
+  main { max-width: 1040px; margin: 0 auto; padding: 48px 16px 32px; }
+  header { margin-bottom: 28px; }
+  .school { margin: 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
+  h1 { margin: 4px 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.02em; }
+  header p { margin: 0; color: var(--muted); }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .card {
+    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line);
+    border-top: 4px solid var(--c); border-radius: 14px; overflow: hidden;
+    color: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s;
+  }
+  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
+  .card:focus-visible { outline: 3px solid var(--c); outline-offset: 2px; }
+  .thumb { background: var(--line); }
+  .thumb img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; object-position: top; }
+  .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
+  .tag { font-size: .8rem; font-weight: 700; color: var(--c); }
+  h2 { margin: 0; font-size: 1.2rem; letter-spacing: -0.01em; }
+  .desc { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
+  .go { margin-top: 8px; font-weight: 700; color: var(--c); }
+  footer { margin-top: 36px; color: var(--muted); font-size: .85rem; text-align: center; }
 </style>
 </head>
 <body>
-<p>2028 대입전형 시행계획 요약 대시보드로 이동합니다.<br>
-<a href="/2028plan/">바로 가기</a></p>
+<main>
+  <header>
+    <p class="school">봉일천고등학교 진로진학부</p>
+    <h1>진로진학 자료실</h1>
+    <p>필요한 곳을 골라 들어가세요.</p>
+  </header>
+
+  <div class="grid">
+    <a class="card" href="/2028plan/" style="--c: var(--plan)">
+      <div class="thumb"><img src="/2028plan/og.png" alt="" loading="lazy"></div>
+      <div class="body">
+        <span class="tag">대입 · 전 학년</span>
+        <h2>2028 대입전형 시행계획 요약</h2>
+        <p class="desc">95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p>
+        <span class="go">대시보드 열기 →</span>
+      </div>
+    </a>
+
+    <a class="card" href="/news/" style="--c: var(--news)">
+      <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
+      <div class="body">
+        <span class="tag">주간 뉴스 · 1학년</span>
+        <h2>뉴스 읽고 진로 확장하기</h2>
+        <p class="desc">매주 월요일, 계열별로 고른 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
+        <span class="go">이번 주 뉴스 보기 →</span>
+      </div>
+    </a>
+
+    <a class="card" href="/book/" style="--c: var(--book)">
+      <div class="thumb"><img src="/book/docs/board-desktop.png" alt="" loading="lazy"></div>
+      <div class="body">
+        <span class="tag">독서 · 학생·선생님</span>
+        <h2>독서나눔 릴레이</h2>
+        <p class="desc">지금 읽고 있는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
+        <span class="go">게시판 들어가기 →</span>
+      </div>
+    </a>
+  </div>
+
+  <footer>© 봉일천고등학교 진로진학부</footer>
+</main>
 </body>
 </html>
