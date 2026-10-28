@@ -66,7 +66,8 @@
    "desc": "대학별 모집요강, 전형 계획, 학과 정보와 전년도 입시 결과를 한곳에서 찾는 공식 포털입니다. 성적을 넣어 보는 대입 상담과 진로 탐색 메뉴도 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/a681947976.jpg"
   },
   {
    "cat": "portal",
@@ -76,7 +77,8 @@
    "desc": "서울대 입학본부가 운영하는 웹진으로, 학생부종합전형 평가 방식, 전공 소개, 합격생 이야기를 읽을 수 있습니다. 서울대에 지원하지 않아도 학종 준비의 기준을 잡는 데 도움이 됩니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/c0b05fcd43.jpg"
   },
   {
    "cat": "portal",
@@ -86,7 +88,8 @@
    "desc": "전문대학 입학 정보 포털의 자료실입니다. 권역별 입학정보 자료집, 전형 안내 같은 전문대 진학 자료를 내려받을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/353352cc01.jpg"
   },
   {
    "cat": "center",
@@ -96,7 +99,8 @@
    "desc": "경기도 학생을 위한 진학 정보 센터입니다. 대입 설명회, 진학 상담 신청, 경기도 학생 대상 자료를 확인합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/cfad690ee5.jpg"
   },
   {
    "cat": "center",
@@ -106,7 +110,8 @@
    "desc": "서울시교육청의 진학 정보 센터입니다. '쎈(SEN)진학' 자료집과 설명회 자료가 이곳에서 나옵니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/d2c49dc192.jpg"
   },
   {
    "cat": "center",
@@ -116,7 +121,8 @@
    "desc": "인천시교육청의 온라인 진로교육원입니다. '마중물' 진로·진학 로드맵 자료와 진로 프로그램을 제공합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/d46b6eb033.jpg"
   },
   {
    "cat": "center",
@@ -126,7 +132,8 @@
    "desc": "부산시교육청의 진로진학 센터입니다. 과목 선택 안내와 5등급제 성적 분석 자료가 이곳에서 나옵니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/1934479d38.jpg"
   },
   {
    "cat": "center",
@@ -136,7 +143,8 @@
    "desc": "세종시교육청 진로교육원의 자료실입니다. 대학별 면접 전형을 정리한 '면접전형 자료집'을 펴냅니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/8b2c3d9f54.jpg"
   },
   {
    "cat": "center",
@@ -146,7 +154,8 @@
    "desc": "울산시교육청 진로진학 센터의 자료실입니다. 진학 지도 자료와 설명회 자료를 모아 둡니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/deee01e0b1.jpg"
   },
   {
    "cat": "center",
@@ -156,7 +165,8 @@
    "desc": "충남교육청의 진학 정보 누리집입니다. 대입 자료와 상담 안내를 제공합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/d464d27319.jpg"
   },
   {
    "cat": "center",
@@ -166,7 +176,8 @@
    "desc": "경기도교육청의 진로교육 누리집입니다. 진로 탐색 활동과 진로교육 자료를 찾을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3"
+   "grade": "고1·고2·고3",
+   "thumb": "thumbs/244890d08b.jpg"
   },
   {
    "cat": "explore",
@@ -176,7 +187,8 @@
    "desc": "진로심리검사(적성·흥미·가치관), 직업정보, 학과정보를 무료로 제공하는 국가 진로 정보망입니다. 희망 학과를 정하기 전에 검사 결과와 학과 정보를 함께 보면 좋습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/b27d0ac07e.jpg"
   },
   {
    "cat": "explore",
@@ -186,7 +198,8 @@
    "desc": "여러 직업의 멘토와 화상으로 만나 질문하는 진로 멘토링입니다. 학교(교사)가 수업 단위로 신청합니다.",
    "kind": "웹사이트",
    "who": "t",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/2676713dac.jpg"
   },
   {
    "cat": "explore",
@@ -196,7 +209,8 @@
    "desc": "공공기관·기업·대학이 여는 진로체험 프로그램을 찾아 신청하는 플랫폼입니다. 학교 단체 체험과 개인 체험 모두 찾을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/935198cda1.jpg"
   },
   {
    "cat": "explore",
@@ -206,16 +220,8 @@
    "desc": "아이디어를 사업 계획으로 바꿔 보는 창업 체험 교육 플랫폼입니다. 경영·창업 분야에 관심 있는 학생의 탐구 활동에 쓸 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2"
-  },
-  {
-   "cat": "explore",
-   "title": "2025 지역 연계 진로체험 프로그램(중등)",
-   "url": "https://2025localconnect-ms.onlinebanner.kr/",
-   "src": "교육청",
-   "desc": "지역 기관과 연계한 중등 진로체험 프로그램을 소개하는 온라인 책자입니다.",
-   "kind": "온라인 책자",
-   "who": "t"
+   "grade": "고1·고2",
+   "thumb": "thumbs/2ac3bd3356.jpg"
   },
   {
    "cat": "policy",
@@ -226,7 +232,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/a663797201.jpg"
   },
   {
    "cat": "policy",
@@ -237,7 +244,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/6f155dfe74.jpg"
   },
   {
    "cat": "policy",
@@ -248,7 +256,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/a264861721.jpg"
   },
   {
    "cat": "policy",
@@ -259,7 +268,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/b2657f3171.jpg"
   },
   {
    "cat": "policy",
@@ -270,7 +280,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/b34396218f.jpg"
   },
   {
    "cat": "policy",
@@ -281,7 +292,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/d64741cc8b.jpg"
   },
   {
    "cat": "policy",
@@ -292,7 +304,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/d74efda476.jpg"
   },
   {
    "cat": "policy",
@@ -303,7 +316,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/eefb5d7cfc.jpg"
   },
   {
    "cat": "policy",
@@ -314,7 +328,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/419a21e4f5.jpg"
   },
   {
    "cat": "policy",
@@ -325,7 +340,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "t",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/eb2e8bd7d0.jpg"
   },
   {
    "cat": "policy",
@@ -334,7 +350,8 @@
    "src": "한국대학교육협의회",
    "desc": "전국 고교 교사들의 진로·진학 지도 우수 사례를 모은 책자입니다. 학교 프로그램을 설계할 때 참고합니다.",
    "kind": "PDF",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/e1ab135f05.jpg"
   },
   {
    "cat": "course",
@@ -345,7 +362,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/9e7d2305fd.jpg"
   },
   {
    "cat": "course",
@@ -355,7 +373,8 @@
    "desc": "5개 대학이 자연계열 14개 학문 분야별로 핵심과목(필수로 이수)과 권장과목(가급적 이수)을 제시한 공동연구 보고서입니다(2023. 2.). 자연계열 과목 선택의 출발점으로 많이 쓰입니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/1e3215a360.jpg"
   },
   {
    "cat": "course",
@@ -366,7 +385,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/03b3459777.jpg"
   },
   {
    "cat": "course",
@@ -376,7 +396,8 @@
    "desc": "2022 개정 과학 과목(일반·진로·융합 선택)의 내용과 이수 순서를 안내합니다. 과학 과목을 어떤 순서로 들을지 정할 때 봅니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1"
+   "grade": "고1",
+   "thumb": "thumbs/92e307de91.jpg"
   },
   {
    "cat": "course",
@@ -386,7 +407,8 @@
    "desc": "고교학점제에서 과목 종류(공통·일반·진로·융합 선택)와 학년별 이수 흐름을 신입생 눈높이로 설명합니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1"
+   "grade": "고1",
+   "thumb": "thumbs/ec4bc1a1e7.jpg"
   },
   {
    "cat": "course",
@@ -397,7 +419,8 @@
    "kind": "PDF",
    "who": "st",
    "grade": "고1",
-   "new": true
+   "new": true,
+   "thumb": "thumbs/4e8099ba55.jpg"
   },
   {
    "cat": "course",
@@ -407,7 +430,8 @@
    "desc": "2028학년도부터 대입 자료로 추가되는 수행평가 영역명을 어떻게 지으면 좋은지, 280명 교사의 543개 사례를 분석해 '주제(내용)×방법' 형식으로 제안합니다. 교과별 예시가 있습니다.",
    "kind": "PDF",
    "year": "2028",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/b5838a2077.jpg"
   },
   {
    "cat": "course",
@@ -417,7 +441,8 @@
    "desc": "대학이 수행평가 영역명을 학생부 평가에서 어떻게 읽는지 설명하는 짧은 안내서입니다. 위 설정 가이드북과 함께 봅니다.",
    "kind": "PDF",
    "year": "2028",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/6bea2f5745.jpg"
   },
   {
    "cat": "guide",
@@ -429,7 +454,8 @@
    "year": "2027",
    "who": "st",
    "grade": "고2·고3",
-   "new": true
+   "new": true,
+   "thumb": "thumbs/2c4bcc1d89.jpg"
   },
   {
    "cat": "guide",
@@ -440,7 +466,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/27330fdc8c.jpg"
   },
   {
    "cat": "guide",
@@ -451,7 +478,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/eca80d3713.jpg"
   },
   {
    "cat": "guide",
@@ -462,7 +490,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/80dbcbd217.jpg"
   },
   {
    "cat": "guide",
@@ -473,7 +502,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/fca8af6ce7.jpg"
   },
   {
    "cat": "guide",
@@ -484,7 +514,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/4c760772cc.jpg"
   },
   {
    "cat": "guide",
@@ -495,7 +526,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/8280b641c7.jpg"
   },
   {
    "cat": "guide",
@@ -506,7 +538,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/372c779b1c.jpg"
   },
   {
    "cat": "guide",
@@ -517,7 +550,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/76e5bd8a3d.jpg"
   },
   {
    "cat": "guide",
@@ -528,7 +562,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/74a2597ec9.jpg"
   },
   {
    "cat": "guide",
@@ -539,7 +574,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/3af5172b10.jpg"
   },
   {
    "cat": "guide",
@@ -550,18 +586,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고2·고3"
-  },
-  {
-   "cat": "guide",
-   "title": "2026 강원대 학생부위주전형 가이드북",
-   "url": "https://wwwk.kangwon.ac.kr/DATA/cmmAtchmnfl/tn_entsch_book/20250625/20250625130616905eOO.pdf",
-   "src": "강원대학교",
-   "desc": "강원대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
-   "kind": "PDF",
-   "year": "2026",
-   "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/a91f3a6587.jpg"
   },
   {
    "cat": "guide",
@@ -572,7 +598,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/c932bcd796.jpg"
   },
   {
    "cat": "guide",
@@ -583,7 +610,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/c3c02ee139.jpg"
   },
   {
    "cat": "guide",
@@ -594,7 +622,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/1cfc641ddf.jpg"
   },
   {
    "cat": "guide",
@@ -605,7 +634,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/15adbc71db.jpg"
   },
   {
    "cat": "guide",
@@ -617,17 +647,8 @@
    "year": "2027",
    "who": "st",
    "grade": "고2·고3",
-   "new": true
-  },
-  {
-   "cat": "guide",
-   "title": "대학 가이드북 모음 폴더(노션 연결)",
-   "url": "https://drive.google.com/drive/folders/1P3IgdeqPoNfsbH27BETygWcyGqYV7LAV",
-   "src": "봉일천고 진로진학부",
-   "desc": "2026학년도 25개 대학 가이드북을 모은 드라이브 폴더입니다(2026. 3. 3. 기준, 2027학년도는 계속 추가). 여기 없는 대학은 이 폴더에서 찾아보세요.",
-   "kind": "폴더",
-   "who": "st",
-   "grade": "고2·고3"
+   "new": true,
+   "thumb": "thumbs/5e2376672d.jpg"
   },
   {
    "cat": "major",
@@ -638,7 +659,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/469985786d.jpg"
   },
   {
    "cat": "major",
@@ -649,7 +671,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/24ab13aa52.jpg"
   },
   {
    "cat": "major",
@@ -660,7 +683,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/f88f565a0c.jpg"
   },
   {
    "cat": "major",
@@ -671,7 +695,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/05b0766192.jpg"
   },
   {
    "cat": "major",
@@ -682,7 +707,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/761f2e8c87.jpg"
   },
   {
    "cat": "major",
@@ -693,7 +719,8 @@
    "kind": "PDF",
    "who": "st",
    "grade": "고1·고2",
-   "new": true
+   "new": true,
+   "thumb": "thumbs/c0bdfe6c7b.jpg"
   },
   {
    "cat": "interview",
@@ -704,7 +731,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/d459777680.jpg"
   },
   {
    "cat": "interview",
@@ -715,7 +743,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/9136d13a26.jpg"
   },
   {
    "cat": "interview",
@@ -726,7 +755,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/4e6fa64d63.jpg"
   },
   {
    "cat": "interview",
@@ -737,7 +767,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/596eaf8fe9.jpg"
   },
   {
    "cat": "interview",
@@ -748,7 +779,8 @@
    "kind": "PDF",
    "year": "2027",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/36b6147879.jpg"
   },
   {
    "cat": "roadmap",
@@ -759,7 +791,8 @@
    "kind": "PDF",
    "year": "2028",
    "who": "t",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/81c704be64.jpg"
   },
   {
    "cat": "roadmap",
@@ -769,7 +802,8 @@
    "desc": "고1·2 담임과 교과 교사가 학생의 진로·진학·학업 설계를 돕는 방법을 이론과 사례로 설명한 교사용 자료입니다. 파일이 커서(약 110MB) 내려받는 데 시간이 걸립니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/ef202d6fdd.jpg"
   },
   {
    "cat": "roadmap",
@@ -779,7 +813,8 @@
    "desc": "학년별·시기별로 해야 할 진로진학 지도 내용을 정리한 교사용 길라잡이입니다.",
    "kind": "PDF",
    "year": "2026",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/4ef53ae065.jpg"
   },
   {
    "cat": "roadmap",
@@ -789,7 +824,8 @@
    "desc": "일반고 학생이 고1부터 고3까지 진로를 정하고 과목·활동·진학을 이어 가는 흐름을 로드맵으로 보여 줍니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/c71b5ff46e.jpg"
   },
   {
    "cat": "roadmap",
@@ -799,7 +835,8 @@
    "desc": "위 로드맵을 수업에서 쓰도록 만든 학생 활동지 묶음입니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1"
+   "grade": "고1",
+   "thumb": "thumbs/24ca47098f.jpg"
   },
   {
    "cat": "roadmap",
@@ -808,7 +845,8 @@
    "src": "인천광역시교육청",
    "desc": "로드맵과 워크북을 어떻게 수업에 쓰는지 안내하는 교사용 길잡이입니다.",
    "kind": "PDF",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/23f0a59f9d.jpg"
   },
   {
    "cat": "roadmap",
@@ -818,7 +856,8 @@
    "desc": "고교학점제에 맞춰 진로를 탐색하고 과목 이수 계획을 세워 보는 학생용 워크북입니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1"
+   "grade": "고1",
+   "thumb": "thumbs/ef04041804.jpg"
   },
   {
    "cat": "roadmap",
@@ -827,7 +866,8 @@
    "src": "경기도교육청",
    "desc": "학교급이 바뀌는 시기(중3→고1)의 진로연계교육 장학자료를 모은 누리집입니다.",
    "kind": "웹사이트",
-   "who": "t"
+   "who": "t",
+   "thumb": "thumbs/bb19fba9c4.jpg"
   },
   {
    "cat": "video",
@@ -837,16 +877,8 @@
    "desc": "대교협의 '대입정보 119'를 주제별 짧은 영상으로 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3"
-  },
-  {
-   "cat": "video",
-   "title": "2025년 대입상담교사단 동계 직무연수 (재생목록)",
-   "url": "https://www.youtube.com/playlist?list=PL0VYY_hzU_PIx-NQtYzSAmOnWYW7KSHbv",
-   "src": "대학어디가TV(대교협)",
-   "desc": "대교협 대입상담교사단 연수 강의입니다. 전형 분석과 상담 방법을 다룹니다.",
-   "kind": "영상",
-   "who": "t"
+   "grade": "고2·고3",
+   "thumb": "thumbs/e2ccb5e1ca.jpg"
   },
   {
    "cat": "video",
@@ -856,7 +888,8 @@
    "desc": "고3 학년 초 설명회 수시 강의 영상입니다. 같은 강의 PDF가 '대입 제도·전형 해설'에 있습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/b5c1944282.jpg"
   },
   {
    "cat": "video",
@@ -866,7 +899,8 @@
    "desc": "고3 학년 초 설명회 정시 강의 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/8625e40336.jpg"
   },
   {
    "cat": "video",
@@ -876,7 +910,8 @@
    "desc": "EBS 겨울방학 학습전략설명회 중 2028학년도 통합형 수능 대비 전략을 다룬 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/d718715a97.jpg"
   },
   {
    "cat": "video",
@@ -886,17 +921,8 @@
    "desc": "대구시교육청이 2026학년도 대입 결과를 분석한 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3"
-  },
-  {
-   "cat": "video",
-   "title": "서울대 2024학년도 학생부종합전형 합격생 인터뷰 (재생목록)",
-   "url": "https://www.youtube.com/playlist?list=PLVHPuY7CGZ6Jc0b07qA9EO1zNxPU7v8St",
-   "src": "서울대학교 입학본부",
-   "desc": "합격생들이 고교 생활, 과목 선택, 탐구 활동을 어떻게 했는지 직접 이야기합니다.",
-   "kind": "영상",
-   "who": "st",
-   "grade": "고1·고2"
+   "grade": "고2·고3",
+   "thumb": "thumbs/4f2b53f67d.jpg"
   },
   {
    "cat": "video",
@@ -906,7 +932,8 @@
    "desc": "2025학년도 합격생 인터뷰 모음입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/595fbf1c81.jpg"
   },
   {
    "cat": "video",
@@ -916,7 +943,8 @@
    "desc": "자유전공학부, 화공생명공학과, 경영학부 합격자의 인터뷰입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/68cf080ae1.jpg"
   },
   {
    "cat": "video",
@@ -926,7 +954,8 @@
    "desc": "수시·정시 합격생의 준비 과정과 소감을 모았습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/e417cdf6f8.jpg"
   },
   {
    "cat": "video",
@@ -936,7 +965,8 @@
    "desc": "고려대 교수가 학과별 전공 맛보기 강의를 합니다. 관심 전공의 실제 수업을 미리 들어 볼 수 있습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/9e1173f87b.jpg"
   },
   {
    "cat": "video",
@@ -946,7 +976,8 @@
    "desc": "2026년 1월에 진행한 6개 학과 전공체험 강의입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/763764f45f.jpg"
   },
   {
    "cat": "video",
@@ -956,7 +987,8 @@
    "desc": "건국대 입학처가 2026학년도 결과와 2027학년도 지원 전략을 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3"
+   "grade": "고3",
+   "thumb": "thumbs/edb8cb13e3.jpg"
   },
   {
    "cat": "video",
@@ -966,7 +998,8 @@
    "desc": "건국대 입학팀장이 2027학년도 전형 시행계획을 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/82277dffed.jpg"
   },
   {
    "cat": "video",
@@ -976,7 +1009,8 @@
    "desc": "중앙대 입학사정관이 전형과 학교생활 질문에 답하는 라디오 형식 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/b33c88f4ee.jpg"
   },
   {
    "cat": "video",
@@ -986,7 +1020,8 @@
    "desc": "인하대 학과별 전공 소개 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/a1821c8715.jpg"
   },
   {
    "cat": "video",
@@ -996,7 +1031,8 @@
    "desc": "컴퓨터정보공학부, 정보통신전자공학부, 인공지능학과를 퀴즈 형식으로 소개합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/1ab6e80df3.jpg"
   },
   {
    "cat": "video",
@@ -1006,7 +1042,8 @@
    "desc": "명지대 캠퍼스와 학과를 소개합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/22c064553a.jpg"
   },
   {
    "cat": "video",
@@ -1016,7 +1053,8 @@
    "desc": "강원대 학과별 소개 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2"
+   "grade": "고1·고2",
+   "thumb": "thumbs/c32e35b755.jpg"
   },
   {
    "cat": "school",
@@ -1027,18 +1065,8 @@
    "kind": "PDF",
    "year": "2026",
    "who": "st",
-   "grade": "고1"
-  },
-  {
-   "cat": "school",
-   "title": "2027학년도 대입전형시행계획 모음(드라이브)",
-   "url": "https://drive.google.com/drive/folders/12bI0VLCtsIHiYrr24n7AdXcR5IsrZuIN",
-   "src": "봉일천고 진로진학부",
-   "desc": "대학별 2027학년도 전형 시행계획 PDF 모음입니다. 2026년 고3이 5월 말 모집요강이 나오기 전까지 참고합니다.",
-   "kind": "폴더",
-   "year": "2027",
-   "who": "st",
-   "grade": "고3"
+   "grade": "고1",
+   "thumb": "thumbs/7ac0c4b78d.jpg"
   },
   {
    "cat": "school",
@@ -1048,7 +1076,8 @@
    "desc": "최근 3년 수능 탐구 과목별 응시자 수 변화와 대학알리미 공시 자료를 정리한 스프레드시트입니다. 탐구 과목 선택의 유불리를 따져 볼 때 참고합니다.",
    "kind": "시트",
    "who": "t",
-   "grade": "고2·고3"
+   "grade": "고2·고3",
+   "thumb": "thumbs/80dd9be590.jpg"
   },
   {
    "cat": "school",
@@ -1058,25 +1087,8 @@
    "desc": "경기도 고교 학년별 학생 수의 3년 변화를 정리했습니다. 학령인구 변화가 내신·입시 경쟁에 주는 영향을 볼 때 씁니다.",
    "kind": "시트",
    "who": "t",
-   "new": true
-  },
-  {
-   "cat": "school",
-   "title": "봉일천고 진로수업 관련 자료 폴더",
-   "url": "https://drive.google.com/drive/folders/1OPjGX2lHuKr5U7INjO4FJGhSBmewXiDM",
-   "src": "봉일천고 진로진학부",
-   "desc": "봉일천고 진로 수업에서 쓰는 활동지와 자료를 모아 둔 폴더입니다.",
-   "kind": "폴더",
-   "who": "t"
-  },
-  {
-   "cat": "school",
-   "title": "2027 이후 대입자료 폴더(드라이브)",
-   "url": "https://drive.google.com/drive/folders/12EKVW_MEVQDngzwIozP_nGMbVUCwwIzv",
-   "src": "봉일천고 진로진학부",
-   "desc": "이 페이지에 실은 PDF 자료 대부분의 원본 폴더입니다.",
-   "kind": "폴더",
-   "who": "st"
+   "new": true,
+   "thumb": "thumbs/e17a0a4934.jpg"
   }
  ]
 }
