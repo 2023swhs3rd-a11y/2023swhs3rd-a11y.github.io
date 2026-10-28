@@ -4,109 +4,208 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>봉일천고 진로진학 자료실</title>
-<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이, 대입·진로 자료실">
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 자료실, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="봉일천고 진로진학 자료실">
-<meta property="og:description" content="2028 대입전형 시행계획 요약 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
+<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 자료실 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:image" content="https://2023swhs3rd-a11y.github.io/2028plan/og.png">
 <script>
   // 예전 주소(루트 + #대학 등)로 들어온 링크는 그대로 2028 대시보드로 보낸다
   if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
 </script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <style>
   :root {
-    --bg: #f6f7f9; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e4e7ec;
-    --plan: #2563eb; --news: #0f766e; --book: #c2410c; --jinhak: #7c3aed;
+    --bg: #f4f5f7; --card: #ffffff; --text: #111827; --body: #374151; --muted: #6b7280; --line: #e5e7eb;
+    --brand: #1e3a8a;
+    --plan: #1d4ed8; --jinhak: #6d28d9; --gg: #0e7490; --news: #15803d; --book: #c2410c;
+    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 2px 8px rgba(17,24,39,.05);
+    --shadow-hover: 0 14px 32px rgba(17,24,39,.12);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c;
-      --plan: #7aa2ff; --news: #4fd1c5; --book: #fb923c; --jinhak: #b79bff;
+      --bg: #0f1216; --card: #171b21; --text: #f3f4f6; --body: #d1d5db; --muted: #9ca3af; --line: #2a3039;
+      --brand: #a5b4fc;
+      --plan: #7aa2ff; --jinhak: #b79bff; --gg: #4fc3dc; --news: #4ade80; --book: #fb923c;
+      --shadow: none; --shadow-hover: 0 14px 32px rgba(0,0,0,.45);
     }
   }
   * { box-sizing: border-box; }
   body {
-    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
-    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    margin: 0; background: var(--bg); color: var(--body); line-height: 1.65; font-size: 16px;
+    font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+    -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere;
   }
-  main { max-width: 1280px; margin: 0 auto; padding: 48px 16px 32px; }
-  header { margin-bottom: 28px; }
-  .school { margin: 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
-  h1 { margin: 4px 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.02em; }
-  header p { margin: 0; color: var(--muted); }
-  .grid { display: grid; gap: 20px; grid-template-columns: repeat(4, minmax(0, 1fr)); }
-  @media (max-width: 1100px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
-  @media (max-width: 600px) { .grid { grid-template-columns: minmax(0, 1fr); } }
+  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
+
+  /* 머리 */
+  .hero { padding: 56px 0 28px; }
+  .school { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: .9rem; font-weight: 700; color: var(--brand); }
+  .school::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+  h1 { margin: 10px 0 10px; color: var(--text); font-size: clamp(1.9rem, 4.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; }
+  .lead { margin: 0; max-width: 40em; color: var(--muted); font-size: 1.05rem; }
+
+  /* 묶음 */
+  section { margin-top: 30px; }
+  .sec-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+  .sec-h h2 { margin: 0; color: var(--text); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+  .sec-h p { margin: 0; color: var(--muted); font-size: .9rem; }
+  .grid { display: grid; gap: 20px; }
+  .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+  /* 카드 */
   .card {
-    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line);
-    border-top: 4px solid var(--c); border-radius: 14px; overflow: hidden;
-    color: inherit; text-decoration: none; transition: transform .15s, box-shadow .15s;
+    position: relative; display: flex; flex-direction: column; min-width: 0;
+    background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+    color: inherit; text-decoration: none; box-shadow: var(--shadow);
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
   }
-  .card:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.12); }
-  .card:focus-visible { outline: 3px solid var(--c); outline-offset: 2px; }
-  .thumb { background: var(--line); }
-  .thumb img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; object-position: top; }
-  .body { padding: 16px 18px 18px; display: flex; flex-direction: column; gap: 6px; flex: 1; }
-  .tag { font-size: .8rem; font-weight: 700; color: var(--c); }
-  h2 { margin: 0; font-size: 1.2rem; letter-spacing: -0.01em; }
-  .desc { margin: 0; color: var(--muted); font-size: .95rem; flex: 1; }
-  .go { margin-top: 8px; font-weight: 700; color: var(--c); }
-  footer { margin-top: 36px; color: var(--muted); font-size: .85rem; text-align: center; }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
+  .card:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
+  .thumb { position: relative; background: color-mix(in srgb, var(--c) 10%, var(--card)); border-bottom: 1px solid var(--line); overflow: hidden; }
+  .thumb img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; object-position: top; transition: transform .35s ease; }
+  .card:hover .thumb img { transform: scale(1.03); }
+  .thumb::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c); }
+  .body { display: flex; flex-direction: column; gap: 8px; flex: 1; padding: 18px 20px 20px; }
+  .top { display: flex; align-items: center; gap: 10px; }
+  .icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, var(--card)); }
+  .icon svg { width: 19px; height: 19px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  .tag { font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--card)); }
+  .tag.plain { color: var(--muted); background: transparent; border: 1px solid var(--line); }
+  .card h3 { margin: 4px 0 0; color: var(--text); font-size: 1.22rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.35; }
+  .desc { margin: 0; font-size: .95rem; flex: 1; }
+  .go { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-weight: 700; font-size: .95rem; color: var(--c); }
+  .go svg { width: 16px; height: 16px; transition: transform .18s ease; }
+  .card:hover .go svg { transform: translateX(3px); }
+
+  /* 가로형 카드(읽고 탐구하기 묶음) */
+  .card.wide { flex-direction: row; }
+  .card.wide .thumb { flex: 0 0 46%; border-bottom: 0; border-right: 1px solid var(--line); }
+  .card.wide .thumb img { height: 100%; aspect-ratio: auto; min-height: 220px; object-position: left top; }
+
+  @media (max-width: 1000px) {
+    .grid.three, .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .card.wide { flex-direction: column; }
+    .card.wide .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
+    .card.wide .thumb img { height: auto; aspect-ratio: 1200 / 630; min-height: 0; }
+    /* 세 장일 때 남는 한 장은 가로로 넓게 */
+    .grid.three > .card:last-child { grid-column: 1 / -1; flex-direction: row; }
+    .grid.three > .card:last-child .thumb { flex: 0 0 50%; border-bottom: 0; border-right: 1px solid var(--line); }
+    .grid.three > .card:last-child .thumb img { height: 100%; aspect-ratio: auto; }
+  }
+  @media (max-width: 640px) {
+    .hero { padding-top: 36px; }
+    .grid.three, .grid.two { grid-template-columns: minmax(0, 1fr); gap: 16px; }
+    .grid.three > .card:last-child { flex-direction: column; }
+    .grid.three > .card:last-child .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
+    .grid.three > .card:last-child .thumb img { height: auto; aspect-ratio: 1200 / 630; }
+    .sec-h { flex-direction: column; gap: 2px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+
+  footer { margin: 52px 0 32px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
+  footer p { margin: 0; }
 </style>
 </head>
 <body>
-<main>
-  <header>
+<div class="wrap">
+  <header class="hero">
     <p class="school">봉일천고등학교 진로진학부</p>
     <h1>진로진학 자료실</h1>
-    <p>필요한 곳을 골라 들어가세요.</p>
+    <p class="lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책으로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
   </header>
 
-  <div class="grid">
-    <a class="card" href="/2028plan/" style="--c: var(--plan)">
-      <div class="thumb"><img src="/2028plan/og.png" alt="" loading="lazy"></div>
-      <div class="body">
-        <span class="tag">대입 · 전 학년</span>
-        <h2>2028 대입전형 시행계획 요약</h2>
-        <p class="desc">95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p>
-        <span class="go">대시보드 열기 →</span>
+  <main>
+    <section aria-labelledby="s1">
+      <div class="sec-h">
+        <h2 id="s1">대입·진학 정보</h2>
+        <p>전형을 확인하고 진학 자료를 찾을 때</p>
       </div>
-    </a>
+      <div class="grid three">
+        <a class="card" href="/2028plan/" style="--c: var(--plan)">
+          <div class="thumb"><img src="/2028plan/og.png" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6-9 6-9-6z"/><path d="M7 12.5V17c0 1.1 2.2 2.5 5 2.5s5-1.4 5-2.5v-4.5"/></svg></span>
+              <div class="tags"><span class="tag">대입 전형</span><span class="tag plain">전 학년</span></div>
+            </div>
+            <h3>2028 대입전형 시행계획 요약</h3>
+            <p class="desc">95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p>
+            <span class="go">대시보드 열기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
 
-    <a class="card" href="/news/" style="--c: var(--news)">
-      <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
-      <div class="body">
-        <span class="tag">주간 뉴스 · 1학년</span>
-        <h2>뉴스 읽고 진로 확장하기</h2>
-        <p class="desc">매주 월요일, 계열별로 고른 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
-        <span class="go">이번 주 뉴스 보기 →</span>
+        <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
+          <div class="thumb"><img src="/jinhak/og.png" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10l2 2h6.5A1.5 1.5 0 0 1 20 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 12h8M8 15.5h5"/></svg></span>
+              <div class="tags"><span class="tag">자료 모음</span><span class="tag plain">전 학년</span></div>
+            </div>
+            <h3>대입·진로 자료실</h3>
+            <p class="desc">과목 선택, 진로 탐색, 전공 안내, 대학 가이드북, 설명회 영상을 학년별로 쓰기 좋게 모으고 자료마다 해설을 붙였습니다.</p>
+            <span class="go">자료 찾아보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="/gg-highschool-students/" style="--c: var(--gg)">
+          <div class="thumb"><img src="/assets/gg-students.jpg" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
+              <div class="tags"><span class="tag">통계</span><span class="tag plain">학생·선생님</span></div>
+            </div>
+            <h3>경기도 고등학교 학생수 추이</h3>
+            <p class="desc">학교알리미 공시자료로 경기도 31개 시·군 고등학교의 학년별 학생수 3개년 변화를 지도와 그래프로 봅니다.</p>
+            <span class="go">통계 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
       </div>
-    </a>
+    </section>
 
-    <a class="card" href="/book/" style="--c: var(--book)">
-      <div class="thumb"><img src="/book/docs/board-desktop.png" alt="" loading="lazy"></div>
-      <div class="body">
-        <span class="tag">독서 · 학생·선생님</span>
-        <h2>독서나눔 릴레이</h2>
-        <p class="desc">지금 읽고 있는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
-        <span class="go">게시판 들어가기 →</span>
+    <section aria-labelledby="s2">
+      <div class="sec-h">
+        <h2 id="s2">읽고 탐구하기</h2>
+        <p>뉴스와 책으로 관심 분야를 넓힐 때</p>
       </div>
-    </a>
+      <div class="grid two">
+        <a class="card wide" href="/news/" style="--c: var(--news)">
+          <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a1 1 0 0 1 1 1v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M17 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h3"/></svg></span>
+              <div class="tags"><span class="tag">매주 월요일</span><span class="tag plain">1학년</span></div>
+            </div>
+            <h3>뉴스 읽고 진로 확장하기</h3>
+            <p class="desc">계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
+            <span class="go">이번 주 뉴스 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
 
-    <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
-      <div class="thumb"><img src="/jinhak/og.png" alt="" loading="lazy"></div>
-      <div class="body">
-        <span class="tag">자료 모음 · 전 학년</span>
-        <h2>대입·진로 자료실</h2>
-        <p class="desc">대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 설명회 영상을 종류별로 모으고 무엇을 언제 읽으면 좋은지 해설을 붙였습니다.</p>
-        <span class="go">자료 찾아보기 →</span>
+        <a class="card wide" href="/book/" style="--c: var(--book)">
+          <div class="thumb"><img src="/book/docs/board-desktop.png" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg></span>
+              <div class="tags"><span class="tag">독서</span><span class="tag plain">학생·선생님</span></div>
+            </div>
+            <h3>독서나눔 릴레이</h3>
+            <p class="desc">지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
+            <span class="go">게시판 들어가기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
       </div>
-    </a>
-  </div>
+    </section>
+  </main>
 
-  <footer>© 봉일천고등학교 진로진학부</footer>
-</main>
+  <footer>
+    <p>© 봉일천고등학교 진로진학부</p>
+    <p>모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
+  </footer>
+</div>
 </body>
 </html>
