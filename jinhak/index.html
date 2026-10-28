@@ -81,17 +81,17 @@
 
   /* 탭·필터 */
   .bar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); margin-top: 22px; }
-  .tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; padding-top: 8px; }
+  .tabs { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; }
   .tab {
-    all: unset; cursor: pointer; flex: none; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
-    padding: 8px 13px 9px; font-size: .9rem; font-weight: 600; color: var(--muted);
-    border-radius: 10px 10px 0 0; border-bottom: 3px solid transparent;
+    all: unset; cursor: pointer; display: inline-flex; align-items: center; gap: 6px; white-space: nowrap;
+    padding: 5px 12px; font-size: .88rem; font-weight: 600; color: var(--text);
+    border: 1px solid var(--line); border-radius: 999px; background: var(--card);
   }
   .tab .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
   .tab small { font-weight: 600; font-size: .75rem; color: var(--muted); }
   .tab:hover { color: var(--text); background: color-mix(in srgb, var(--c) 8%, transparent); }
-  .tab[aria-selected="true"] { color: var(--c); border-bottom-color: var(--c); background: color-mix(in srgb, var(--c) 12%, var(--card)); }
-  .tab:focus-visible { outline: 2px solid var(--c); outline-offset: -2px; }
+  .tab[aria-selected="true"] { color: var(--c); border-color: var(--c); background: color-mix(in srgb, var(--c) 14%, var(--card)); box-shadow: inset 0 0 0 1px var(--c); }
+  .tab:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
   .filters { display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; padding: 10px 0; }
   .search { flex: 1 1 240px; min-width: 0; padding: 8px 12px; font-size: .95rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text); }
   .search:focus { outline: 2px solid var(--accent); border-color: transparent; }
@@ -102,7 +102,7 @@
     padding: 3px 10px; font-size: .82rem; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px;
   }
   .chip svg { width: 13px; height: 13px; }
-  @media (max-width: 640px) { .group { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; } .chip { flex: none; } .filters { padding: 8px 0; gap: 8px; } }
+  @media (max-width: 640px) { .bar { position: static; } .tab { font-size: .84rem; padding: 4px 10px; } .filters { padding: 8px 0; gap: 8px; } }
   .chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
 
   /* 목록 */
@@ -266,9 +266,7 @@
   function setCat(id, scroll) {
     state.cat = catOf[id] ? id : 'all';
     document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.cat === state.cat)));
-    const active = document.querySelector(`.tab[data-cat="${state.cat}"]`);
-    active?.scrollIntoView({ block: 'nearest', inline: 'center' });
-    history.replaceState(null, '', state.cat === 'all' ? location.pathname : '#' + state.cat);
+        history.replaceState(null, '', state.cat === 'all' ? location.pathname : '#' + state.cat);
     render();
     if (scroll) $('#count').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
