@@ -10,118 +10,228 @@
 <meta property="og:title" content="봉일천고 대입·진로 자료실">
 <meta property="og:description" content="대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 영상까지 종류별로 모으고 해설을 붙였습니다.">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/jinhak/">
+<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/jinhak/og.png">
 <style>
   :root {
-    --bg: #f6f7f9; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e4e7ec;
-    --accent: #7c3aed; --accent-soft: #f1ebff; --new: #dc2626; --teacher: #b45309;
+    --bg: #f5f6f8; --card: #ffffff; --text: #1f2937; --muted: #667085; --line: #e4e7ec; --soft: #eef1f5;
+    --accent: #3f3d9e;
+    --c-portal: #2563eb; --c-center: #0891b2; --c-explore: #16a34a; --c-policy: #7c3aed;
+    --c-course: #b45309; --c-guide: #4338ca; --c-major: #db2777; --c-interview: #ea580c;
+    --c-roadmap: #0f766e; --c-video: #dc2626; --c-school: #475569;
+    --shadow: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.06);
+    --shadow-lg: 0 10px 24px rgba(16,24,40,.10);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c;
-      --accent: #b79bff; --accent-soft: #2a2340; --new: #f87171; --teacher: #fbbf24;
+      --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c; --soft: #222831;
+      --accent: #a5b4fc;
+      --c-portal: #7aa2ff; --c-center: #22d3ee; --c-explore: #4ade80; --c-policy: #b79bff;
+      --c-course: #fbbf24; --c-guide: #a5b4fc; --c-major: #f472b6; --c-interview: #fb923c;
+      --c-roadmap: #2dd4bf; --c-video: #f87171; --c-school: #94a3b8;
+      --shadow: none; --shadow-lg: 0 10px 24px rgba(0,0,0,.35);
     }
   }
   * { box-sizing: border-box; }
-  html { scroll-padding-top: 120px; }
+  html { scroll-padding-top: 150px; }
   body {
     margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
     font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
   }
-  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 40px; }
+  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 16px; }
   a { color: var(--accent); }
-  .home { font-size: .9rem; color: var(--muted); text-decoration: none; }
-  .home:hover { text-decoration: underline; }
-  .school { margin: 12px 0 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
-  h1 { margin: 4px 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.02em; }
-  .lead { margin: 0 0 16px; color: var(--muted); }
-  .howto { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px 18px; margin-bottom: 20px; }
-  .howto summary { cursor: pointer; font-weight: 700; padding: 10px 0; }
-  .howto ul { margin: 0 0 12px; padding-left: 20px; }
-  .howto li { margin: 4px 0; }
-  .howto p { margin: 0 0 12px; color: var(--muted); font-size: .92rem; }
+  .tint { background: color-mix(in srgb, var(--c) 12%, var(--card)); }
 
-  .bar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; border-bottom: 1px solid var(--line); }
-  .search { width: 100%; padding: 10px 14px; font-size: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text); }
+  /* 머리 */
+  .hero { padding: 28px 0 8px; display: grid; gap: 24px; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); align-items: start; }
+  @media (max-width: 820px) { .hero { grid-template-columns: minmax(0, 1fr); } }
+  .home { font-size: .88rem; color: var(--muted); text-decoration: none; }
+  .home:hover { text-decoration: underline; }
+  .school { margin: 14px 0 0; color: var(--muted); font-size: .92rem; font-weight: 600; }
+  h1 { margin: 2px 0 10px; font-size: clamp(1.7rem, 4.2vw, 2.4rem); letter-spacing: -0.025em; line-height: 1.25; }
+  .lead { margin: 0 0 16px; color: var(--muted); font-size: 1.02rem; }
+  .stats { display: flex; gap: 10px; flex-wrap: wrap; }
+  .stat { background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 8px 14px; box-shadow: var(--shadow); min-width: 84px; }
+  .stat b { display: block; font-size: 1.35rem; line-height: 1.2; letter-spacing: -0.02em; }
+  .stat span { font-size: .78rem; color: var(--muted); }
+  .panel { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; box-shadow: var(--shadow); }
+  .panel h2 { margin: 0 0 10px; font-size: .95rem; }
+  .bars { display: grid; grid-template-columns: auto minmax(0, 1fr) 2.2em; gap: 5px 10px; align-items: center; font-size: .82rem; }
+  .bars button { all: unset; cursor: pointer; display: contents; }
+  .bars .nm { white-space: nowrap; color: var(--text); }
+  .bars .track { height: 10px; background: var(--soft); border-radius: 99px; overflow: hidden; }
+  .bars .fill { height: 100%; background: var(--c); border-radius: 99px; }
+  .bars .n { text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bars button:hover .nm, .bars button:focus-visible .nm { color: var(--c); text-decoration: underline; }
+
+  /* 학년별 안내 */
+  .guide { margin: 22px 0 6px; }
+  .guide h2 { font-size: 1.1rem; margin: 0 0 10px; }
+  .steps { display: grid; gap: 12px; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  @media (max-width: 820px) { .steps { grid-template-columns: minmax(0, 1fr); } }
+  .step { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; box-shadow: var(--shadow); position: relative; }
+  .step .yr { display: inline-flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1rem; }
+  .step .yr i { font-style: normal; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--accent); color: var(--card); font-size: .85rem; }
+  .step .goal { margin: 4px 0 8px; color: var(--muted); font-size: .88rem; }
+  .step ol { margin: 0; padding-left: 18px; font-size: .9rem; }
+  .step li { margin: 3px 0; }
+  .catlink { all: unset; cursor: pointer; font-weight: 700; color: var(--c); border-bottom: 1px dashed currentColor; }
+  .catlink:focus-visible { outline: 2px solid var(--c); outline-offset: 2px; }
+  .note { margin: 12px 0 0; font-size: .85rem; color: var(--muted); background: var(--soft); border-radius: 10px; padding: 10px 14px; }
+  .note b { color: var(--text); }
+
+  /* 탭·필터 */
+  .bar { position: sticky; top: 0; z-index: 10; background: color-mix(in srgb, var(--bg) 92%, transparent); backdrop-filter: blur(8px); border-bottom: 1px solid var(--line); margin-top: 22px; }
+  .tabs { display: flex; gap: 4px; overflow-x: auto; scrollbar-width: thin; padding-top: 8px; }
+  .tab {
+    all: unset; cursor: pointer; flex: none; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap;
+    padding: 8px 13px 9px; font-size: .9rem; font-weight: 600; color: var(--muted);
+    border-radius: 10px 10px 0 0; border-bottom: 3px solid transparent;
+  }
+  .tab .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--c); }
+  .tab small { font-weight: 600; font-size: .75rem; color: var(--muted); }
+  .tab:hover { color: var(--text); background: color-mix(in srgb, var(--c) 8%, transparent); }
+  .tab[aria-selected="true"] { color: var(--c); border-bottom-color: var(--c); background: color-mix(in srgb, var(--c) 12%, var(--card)); }
+  .tab:focus-visible { outline: 2px solid var(--c); outline-offset: -2px; }
+  .filters { display: flex; gap: 10px 14px; flex-wrap: wrap; align-items: center; padding: 10px 0; }
+  .search { flex: 1 1 240px; min-width: 0; padding: 8px 12px; font-size: .95rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text); }
   .search:focus { outline: 2px solid var(--accent); border-color: transparent; }
-  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
-  .row .lbl { font-size: .82rem; color: var(--muted); margin-right: 2px; }
+  .group { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; }
+  .group .lbl { font-size: .78rem; color: var(--muted); margin-right: 2px; flex: none; white-space: nowrap; }
   .chip {
     border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px;
-    padding: 4px 11px; font-size: .85rem; cursor: pointer; font-family: inherit;
+    padding: 3px 10px; font-size: .82rem; cursor: pointer; font-family: inherit; display: inline-flex; align-items: center; gap: 4px;
   }
-  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
-  @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #111418; } }
-  .count { margin: 10px 0 0; font-size: .85rem; color: var(--muted); }
+  .chip svg { width: 13px; height: 13px; }
+  @media (max-width: 640px) { .group { flex-wrap: nowrap; overflow-x: auto; max-width: 100%; scrollbar-width: none; } .chip { flex: none; } .filters { padding: 8px 0; gap: 8px; } }
+  .chip[aria-pressed="true"] { background: var(--text); border-color: var(--text); color: var(--bg); }
 
-  .toc { display: flex; gap: 6px; flex-wrap: wrap; margin: 18px 0 4px; }
-  .toc a { font-size: .85rem; text-decoration: none; background: var(--accent-soft); padding: 3px 10px; border-radius: 8px; }
-  .toc a span { color: var(--muted); }
-
-  section { margin-top: 30px; }
-  section h2 { margin: 0 0 4px; font-size: 1.25rem; letter-spacing: -0.01em; }
-  section h2 small { font-size: .85rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
-  .cdesc { margin: 0 0 12px; color: var(--muted); font-size: .93rem; }
-  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  /* 목록 */
+  .count { margin: 16px 0 0; font-size: .85rem; color: var(--muted); }
+  section.cat { margin-top: 26px; }
+  .cathead { display: flex; gap: 14px; align-items: flex-start; border-radius: 14px; padding: 14px 16px; margin-bottom: 14px; border-left: 5px solid var(--c); }
+  .cathead h2 { margin: 0; font-size: 1.2rem; letter-spacing: -0.01em; color: var(--c); }
+  .cathead h2 small { font-size: .82rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
+  .cathead p { margin: 2px 0 0; color: var(--text); font-size: .92rem; opacity: .85; }
+  .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 290px), 1fr)); }
   .item {
-    display: flex; flex-direction: column; gap: 6px; background: var(--card); border: 1px solid var(--line);
-    border-left: 4px solid var(--accent); border-radius: 12px; padding: 14px 16px; min-width: 0;
+    display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; overflow: hidden; box-shadow: var(--shadow); min-width: 0; transition: transform .15s, box-shadow .15s;
   }
-  .meta { display: flex; flex-wrap: wrap; gap: 5px; font-size: .75rem; }
-  .badge { padding: 1px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-weight: 700; }
-  .badge.grade { background: transparent; border: 1px solid var(--line); color: var(--muted); font-weight: 600; }
-  .badge.t { background: transparent; border: 1px solid var(--teacher); color: var(--teacher); }
-  .badge.new { background: var(--new); color: #fff; }
-  .item h3 { margin: 0; font-size: 1.02rem; line-height: 1.4; overflow-wrap: anywhere; }
-  .src { margin: 0; font-size: .82rem; color: var(--muted); }
-  .item p.d { margin: 0; font-size: .92rem; flex: 1; }
-  .open { align-self: flex-start; margin-top: 4px; font-weight: 700; font-size: .9rem; text-decoration: none; }
+  .item:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+  .thumb { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--line); }
+  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .thumb.video img { object-position: center; }
+  .thumb .ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--c); }
+  .thumb .ph svg { width: 44px; height: 44px; opacity: .8; }
+  .thumb .play { position: absolute; inset: 0; display: grid; place-items: center; }
+  .thumb .play span { width: 52px; height: 52px; border-radius: 50%; background: rgba(0,0,0,.6); display: grid; place-items: center; }
+  .thumb .play svg { width: 22px; height: 22px; fill: #fff; margin-left: 3px; }
+  .kindtag { position: absolute; left: 10px; top: 10px; display: inline-flex; gap: 4px; align-items: center; font-size: .72rem; font-weight: 700; padding: 2px 8px; border-radius: 6px; background: var(--card); color: var(--c); box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+  .kindtag svg { width: 12px; height: 12px; }
+  .newtag { position: absolute; right: 10px; top: 10px; font-size: .72rem; font-weight: 800; padding: 2px 8px; border-radius: 6px; background: #dc2626; color: #fff; }
+  .ib { padding: 13px 15px 15px; display: flex; flex-direction: column; gap: 5px; flex: 1; border-top: 3px solid var(--c); }
+  .item h3 { margin: 0; font-size: 1rem; line-height: 1.4; overflow-wrap: anywhere; }
+  .item h3 a { color: inherit; text-decoration: none; }
+  .item h3 a:hover { color: var(--c); text-decoration: underline; }
+  .src { margin: 0; font-size: .8rem; color: var(--muted); }
+  .item p.d { margin: 2px 0 0; font-size: .9rem; flex: 1; }
+  .meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; font-size: .74rem; }
+  .badge { padding: 1px 8px; border-radius: 6px; background: var(--soft); color: var(--muted); font-weight: 600; }
+  .badge.t { background: transparent; border: 1px solid var(--c-course); color: var(--c-course); }
+  .open { align-self: flex-start; margin-top: 8px; font-weight: 700; font-size: .88rem; text-decoration: none; color: var(--c); }
   .open:hover { text-decoration: underline; }
-  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
-  footer { margin-top: 40px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+  .empty { text-align: center; color: var(--muted); padding: 48px 0; }
+  footer { margin: 48px 0 28px; color: var(--muted); font-size: .84rem; border-top: 1px solid var(--line); padding-top: 16px; }
   footer p { margin: 4px 0; }
 </style>
 </head>
 <body>
-<main>
-  <a class="home" href="/">← 진로진학 자료실 처음으로</a>
-  <p class="school">봉일천고등학교 진로진학부</p>
-  <h1>대입·진로 자료실</h1>
-  <p class="lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
-
-  <details class="howto">
-    <summary>학년별로 이렇게 활용해요</summary>
-    <ul>
-      <li><b>1학년</b>: '진로 탐색·체험'에서 관심 분야를 찾고, '과목 선택·교육과정'으로 2학년 선택과목을 정해요. '전공 안내'로 학과가 무엇을 배우는지 살펴봐요.</li>
-      <li><b>2학년</b>: '대입 제도·전형 해설'로 전형의 큰 그림을 잡고, 관심 대학의 '대학 전형 가이드북'에서 평가 요소를 읽어 3학년 과목과 활동을 계획해요.</li>
-      <li><b>3학년</b>: '대입 정보 포털'에서 모집요강과 전년도 결과를 확인하고, '면접·전문대학' 자료로 면접을 준비해요.</li>
-    </ul>
-    <p>자료 이름의 '학년도'는 그 해에 대학에 입학하는 학년도를 뜻합니다(예: 2028학년도 = 2028년 3월 입학, 지금 1학년). 전형 내용은 해마다 바뀌므로 최종 확인은 반드시 각 대학의 모집요강으로 하세요. 대학·기관 자료는 원 발행처에 저작권이 있으니 내려받은 파일을 고치거나 다시 퍼뜨리지 마세요.</p>
-  </details>
-
-  <div class="bar">
-    <input class="search" id="q" type="search" placeholder="검색 (예: 면접, 권장과목, 고려대)" aria-label="자료 검색">
-    <div class="row" id="grades" role="group" aria-label="학년">
-      <span class="lbl">학년</span>
+<div class="wrap">
+  <header class="hero">
+    <div>
+      <a class="home" href="/">← 진로진학 자료실 처음으로</a>
+      <p class="school">봉일천고등학교 진로진학부</p>
+      <h1>대입·진로 자료실</h1>
+      <p class="lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
+      <div class="stats" id="stats"></div>
     </div>
-    <div class="row" id="kinds" role="group" aria-label="자료 형태">
-      <span class="lbl">형태</span>
+    <div class="panel">
+      <h2>종류별 자료 수</h2>
+      <div class="bars" id="bars"></div>
     </div>
-    <p class="count" id="count" aria-live="polite"></p>
+  </header>
+
+  <section class="guide" aria-labelledby="g-h">
+    <h2 id="g-h">학년별로 이렇게 활용해요</h2>
+    <div class="steps">
+      <div class="step">
+        <span class="yr"><i>1</i>진로 찾기</span>
+        <p class="goal">관심 분야를 좁히고 2학년 과목을 고르는 시기</p>
+        <ol>
+          <li><button class="catlink" data-cat="explore" style="--c: var(--c-explore)">진로 탐색·체험</button>에서 적성 검사와 직업·학과 정보 보기</li>
+          <li><button class="catlink" data-cat="major" style="--c: var(--c-major)">전공 안내</button>로 학과가 배우는 내용 확인</li>
+          <li><button class="catlink" data-cat="course" style="--c: var(--c-course)">과목 선택·교육과정</button>으로 선택과목 정하기</li>
+        </ol>
+      </div>
+      <div class="step">
+        <span class="yr"><i>2</i>전형 이해</span>
+        <p class="goal">전형의 큰 그림을 잡고 3학년 계획을 세우는 시기</p>
+        <ol>
+          <li><button class="catlink" data-cat="policy" style="--c: var(--c-policy)">대입 제도·전형 해설</button>로 수시·정시 구조 이해</li>
+          <li><button class="catlink" data-cat="guide" style="--c: var(--c-guide)">대학 전형 가이드북</button>에서 평가 요소 읽기</li>
+          <li><button class="catlink" data-cat="video" style="--c: var(--c-video)">영상</button>으로 설명회·합격생 이야기 듣기</li>
+        </ol>
+      </div>
+      <div class="step">
+        <span class="yr"><i>3</i>지원 준비</span>
+        <p class="goal">모집요강을 확인하고 지원과 면접을 준비하는 시기</p>
+        <ol>
+          <li><button class="catlink" data-cat="portal" style="--c: var(--c-portal)">대입 정보 포털</button>에서 모집요강·전년도 결과 확인</li>
+          <li><button class="catlink" data-cat="interview" style="--c: var(--c-interview)">면접·전문대학</button> 자료로 면접 준비</li>
+          <li><button class="catlink" data-cat="center" style="--c: var(--c-center)">진로진학센터</button>에서 상담·설명회 찾기</li>
+        </ol>
+      </div>
+    </div>
+    <p class="note"><b>학년도</b>는 대학에 입학하는 해를 뜻합니다(2028학년도 = 2028년 3월 입학, 지금 1학년). 전형은 해마다 바뀌므로 <b>최종 확인은 각 대학의 모집요강</b>으로 하세요. 대학·기관 자료는 발행처에 저작권이 있으니 내려받은 파일을 고치거나 다시 퍼뜨리지 마세요.</p>
+  </section>
+</div>
+
+<div class="bar">
+  <div class="wrap">
+    <div class="tabs" id="tabs" role="tablist" aria-label="자료 종류"></div>
+    <div class="filters">
+      <input class="search" id="q" type="search" placeholder="검색 (예: 면접, 권장과목, 고려대)" aria-label="자료 검색">
+      <div class="group" id="grades" role="group" aria-label="학년"><span class="lbl">학년</span></div>
+      <div class="group" id="kinds" role="group" aria-label="형태"><span class="lbl">형태</span></div>
+    </div>
   </div>
+</div>
 
-  <nav class="toc" id="toc" aria-label="분류 바로 가기"></nav>
+<main class="wrap">
+  <p class="count" id="count" aria-live="polite"></p>
   <div id="list"></div>
-
   <footer>
-    <p>링크는 각 기관 누리집과 진로진학부가 공유한 자료로 연결됩니다. 주소가 바뀌어 열리지 않으면 진로진학부에 알려 주세요.</p>
+    <p>미리보기 그림은 각 웹사이트의 첫 화면과 PDF의 첫 쪽입니다. 링크가 열리지 않으면 진로진학부에 알려 주세요.</p>
     <p id="updated"></p>
     <p>© 봉일천고등학교 진로진학부</p>
   </footer>
 </main>
+
 <script>
 (async () => {
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  const svg = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+  const ICON = {
+    '웹사이트': svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
+    'PDF': svg('<path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/>'),
+    '온라인 책자': svg('<path d="M3 5h6a3 3 0 0 1 3 3v12a2 2 0 0 0-2-2H3zM21 5h-6a3 3 0 0 0-3 3v12a2 2 0 0 1 2-2h7z"/>'),
+    '영상': svg('<rect x="3" y="5" width="18" height="14" rx="3"/><path d="M10 9l5 3-5 3z"/>'),
+    '시트': svg('<rect x="4" y="4" width="16" height="16" rx="2"/><path d="M4 10h16M4 15h16M10 4v16"/>'),
+    '폴더': svg('<path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>'),
+  };
+  const PLAY = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M7 4l13 8-13 8z"/></svg>';
+
   let data;
   try {
     data = await (await fetch('resources.json', {cache: 'no-cache'})).json();
@@ -129,32 +239,66 @@
     $('#list').innerHTML = '<p class="empty">자료 목록을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.</p>';
     return;
   }
+  const cats = data.categories, items = data.items;
+  const catOf = Object.fromEntries(cats.map((c) => [c.id, c]));
+  const cvar = (id) => `--c: var(--c-${id})`;
   $('#updated').textContent = '마지막 정리: ' + data.updated.replace(/(\d+)-(\d+)-(\d+)/, (_, y, m, d) => `${y}년 ${+m}월 ${+d}일`);
 
-  const state = { q: '', grade: '전체', kind: '전체' };
-  const grades = ['전체', '고1', '고2', '고3', '교사용'];
-  const kinds = ['전체', ...new Set(data.items.map((i) => i.kind).filter(Boolean))];
+  // 머리: 숫자와 막대
+  const byKind = (k) => items.filter((i) => i.kind === k).length;
+  $('#stats').innerHTML = [
+    [items.length, '전체 자료'], [cats.length, '종류'],
+    [byKind('웹사이트'), '웹사이트'], [byKind('PDF'), 'PDF 자료'], [byKind('영상'), '영상'],
+  ].map(([n, l]) => `<div class="stat"><b>${n}</b><span>${l}</span></div>`).join('');
+  const max = Math.max(...cats.map((c) => items.filter((i) => i.cat === c.id).length));
+  $('#bars').innerHTML = cats.map((c) => {
+    const n = items.filter((i) => i.cat === c.id).length;
+    return `<button data-cat="${c.id}" style="${cvar(c.id)}" aria-label="${esc(c.name)} ${n}개 보기">
+      <span class="nm">${esc(c.name)}</span><span class="track"><span class="fill" style="display:block;width:${(n / max * 100).toFixed(1)}%"></span></span><span class="n">${n}</span></button>`;
+  }).join('');
 
-  function chips(el, list, key) {
+  const state = { cat: 'all', q: '', grade: '전체', kind: '전체' };
+
+  // 탭
+  const tabList = [{ id: 'all', name: '전체' }, ...cats];
+  $('#tabs').innerHTML = tabList.map((c) => `<button class="tab" role="tab" data-cat="${c.id}" style="${c.id === 'all' ? '--c: var(--text)' : cvar(c.id)}">
+    ${c.id === 'all' ? '' : '<span class="dot"></span>'}${esc(c.name)} <small>${c.id === 'all' ? items.length : items.filter((i) => i.cat === c.id).length}</small></button>`).join('');
+  function setCat(id, scroll) {
+    state.cat = catOf[id] ? id : 'all';
+    document.querySelectorAll('.tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.cat === state.cat)));
+    const active = document.querySelector(`.tab[data-cat="${state.cat}"]`);
+    active?.scrollIntoView({ block: 'nearest', inline: 'center' });
+    history.replaceState(null, '', state.cat === 'all' ? location.pathname : '#' + state.cat);
+    render();
+    if (scroll) $('#count').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+  document.addEventListener('click', (e) => {
+    const b = e.target.closest('[data-cat]');
+    if (b && !b.closest('.item')) setCat(b.dataset.cat, !b.classList.contains('tab'));
+  });
+
+  // 필터
+  function chips(el, list, key, icons) {
     for (const v of list) {
       const b = document.createElement('button');
-      b.type = 'button'; b.className = 'chip'; b.textContent = v;
+      b.type = 'button'; b.className = 'chip'; b.dataset.v = v;
+      b.innerHTML = (icons && ICON[v] ? ICON[v] : '') + esc(v);
       b.setAttribute('aria-pressed', String(state[key] === v));
       b.onclick = () => {
         state[key] = v;
-        el.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.textContent === v)));
+        el.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.dataset.v === v)));
         render();
       };
       el.appendChild(b);
     }
   }
-  chips($('#grades'), grades, 'grade');
-  chips($('#kinds'), kinds, 'kind');
+  chips($('#grades'), ['전체', '고1', '고2', '고3', '교사용'], 'grade');
+  chips($('#kinds'), ['전체', ...new Set(items.map((i) => i.kind).filter(Boolean))], 'kind', true);
 
   const norm = (s) => String(s ?? '').toLowerCase().replace(/\s+/g, '');
   function match(it) {
     if (state.grade === '교사용' && it.who !== 't') return false;
-    if (state.grade !== '전체' && state.grade !== '교사용' && it.grade && !it.grade.includes(state.grade)) return false;
+    if (!['전체', '교사용'].includes(state.grade) && it.grade && !it.grade.includes(state.grade)) return false;
     if (state.kind !== '전체' && it.kind !== state.kind) return false;
     if (state.q) {
       const hay = norm([it.title, it.src, it.desc, it.kind, it.year].join(' '));
@@ -164,41 +308,49 @@
   }
 
   function card(it) {
-    const badges = [
-      it.new ? '<span class="badge new">NEW</span>' : '',
-      it.kind ? `<span class="badge">${esc(it.kind)}</span>` : '',
-      it.year ? `<span class="badge grade">${esc(it.year)}</span>` : '',
-      it.grade ? `<span class="badge grade">${esc(it.grade)}</span>` : '',
+    const kind = it.kind || '웹사이트';
+    const isVideo = kind === '영상';
+    const pic = it.thumb
+      ? `<img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async">${isVideo ? `<span class="play"><span>${PLAY}</span></span>` : ''}`
+      : `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span>`;
+    const verb = isVideo ? '영상 보기' : kind === 'PDF' ? '자료 열기' : '바로 가기';
+    const meta = [
+      it.year ? `<span class="badge">${esc(it.year)}</span>` : '',
+      it.grade ? `<span class="badge">${esc(it.grade)}</span>` : '',
       it.who === 't' ? '<span class="badge t">교사용</span>' : '',
     ].join('');
-    const verb = it.kind === '영상' ? '영상 보기' : it.kind === 'PDF' ? '자료 열기' : '바로 가기';
-    return `<article class="item">
-      <div class="meta">${badges}</div>
-      <h3>${esc(it.title)}</h3>
-      <p class="src">${esc(it.src)}</p>
-      <p class="d">${esc(it.desc)}</p>
-      <a class="open" href="${esc(it.url)}" target="_blank" rel="noopener">${verb} ↗</a>
+    return `<article class="item" style="${cvar(it.cat)}">
+      <a class="thumb ${it.thumb ? '' : 'tint'} ${isVideo ? 'video' : ''}" href="${esc(it.url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+        ${pic}<span class="kindtag">${ICON[kind] || ''}${esc(kind)}</span>${it.new ? '<span class="newtag">NEW</span>' : ''}
+      </a>
+      <div class="ib">
+        <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
+        <p class="src">${esc(it.src)}</p>
+        <p class="d">${esc(it.desc)}</p>
+        ${meta ? `<div class="meta">${meta}</div>` : ''}
+        <a class="open" href="${esc(it.url)}" target="_blank" rel="noopener">${verb} ↗</a>
+      </div>
     </article>`;
   }
 
   function render() {
-    const shown = data.items.filter(match);
-    let html = '', toc = '';
-    for (const c of data.categories) {
+    const shown = items.filter((i) => (state.cat === 'all' || i.cat === state.cat) && match(i));
+    let html = '';
+    for (const c of cats) {
       const its = shown.filter((i) => i.cat === c.id);
       if (!its.length) continue;
-      toc += `<a href="#${c.id}">${esc(c.name)} <span>${its.length}</span></a>`;
-      html += `<section id="${c.id}"><h2>${esc(c.name)}<small>${its.length}</small></h2>
-        <p class="cdesc">${esc(c.desc)}</p><div class="grid">${its.map(card).join('')}</div></section>`;
+      html += `<section class="cat" id="s-${c.id}" style="${cvar(c.id)}">
+        <div class="cathead tint"><div><h2>${esc(c.name)}<small>${its.length}개</small></h2><p>${esc(c.desc)}</p></div></div>
+        <div class="grid">${its.map(card).join('')}</div></section>`;
     }
-    $('#toc').innerHTML = toc;
     $('#list').innerHTML = html || '<p class="empty">조건에 맞는 자료가 없습니다. 검색어나 학년·형태를 바꿔 보세요.</p>';
-    $('#count').textContent = `자료 ${shown.length}개` + (shown.length < data.items.length ? ` / 전체 ${data.items.length}개` : '');
+    const scope = state.cat === 'all' ? '' : catOf[state.cat].name + ' · ';
+    $('#count').textContent = `${scope}자료 ${shown.length}개`;
   }
 
   let t;
   $('#q').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value.trim(); render(); }, 120); });
-  render();
+  setCat(location.hash.slice(1), false);
 })();
 </script>
 </body>
