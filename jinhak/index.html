@@ -15,9 +15,8 @@
   :root {
     --bg: #f5f6f8; --card: #ffffff; --text: #1f2937; --muted: #667085; --line: #e4e7ec; --soft: #eef1f5;
     --accent: #3f3d9e;
-    --c-portal: #2563eb; --c-center: #0891b2; --c-explore: #16a34a; --c-policy: #7c3aed;
-    --c-course: #b45309; --c-guide: #4338ca; --c-major: #db2777; --c-interview: #ea580c;
-    --c-roadmap: #0f766e; --c-video: #dc2626; --c-school: #475569;
+    --c-course: #b45309; --c-explore: #16a34a; --c-major: #db2777; --c-policy: #7c3aed; --c-guide: #4338ca;
+    --c-exam: #ea580c; --c-college: #0891b2; --c-portal: #2563eb; --c-teacher: #475569;
     --shadow: 0 1px 2px rgba(16,24,40,.05), 0 1px 3px rgba(16,24,40,.06);
     --shadow-lg: 0 10px 24px rgba(16,24,40,.10);
   }
@@ -25,9 +24,8 @@
     :root {
       --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c; --soft: #222831;
       --accent: #a5b4fc;
-      --c-portal: #7aa2ff; --c-center: #22d3ee; --c-explore: #4ade80; --c-policy: #b79bff;
-      --c-course: #fbbf24; --c-guide: #a5b4fc; --c-major: #f472b6; --c-interview: #fb923c;
-      --c-roadmap: #2dd4bf; --c-video: #f87171; --c-school: #94a3b8;
+      --c-course: #fbbf24; --c-explore: #4ade80; --c-major: #f472b6; --c-policy: #b79bff; --c-guide: #a5b4fc;
+      --c-exam: #fb923c; --c-college: #22d3ee; --c-portal: #7aa2ff; --c-teacher: #94a3b8;
       --shadow: none; --shadow-lg: 0 10px 24px rgba(0,0,0,.35);
     }
   }
@@ -137,6 +135,7 @@
   .item p.d { margin: 2px 0 0; font-size: .9rem; flex: 1; }
   .meta { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; font-size: .74rem; }
   .badge { padding: 1px 8px; border-radius: 6px; background: var(--soft); color: var(--muted); font-weight: 600; }
+  .badge.old { background: transparent; border: 1px dashed var(--line); }
   .badge.t { background: transparent; border: 1px solid var(--c-course); color: var(--c-course); }
   .open { align-self: flex-start; margin-top: 8px; font-weight: 700; font-size: .88rem; text-decoration: none; color: var(--c); }
   .open:hover { text-decoration: underline; }
@@ -168,31 +167,31 @@
         <span class="yr"><i>1</i>진로 찾기</span>
         <p class="goal">관심 분야를 좁히고 2학년 과목을 고르는 시기</p>
         <ol>
-          <li><button class="catlink" data-cat="explore" style="--c: var(--c-explore)">진로 탐색·체험</button>에서 적성 검사와 직업·학과 정보 보기</li>
-          <li><button class="catlink" data-cat="major" style="--c: var(--c-major)">전공 안내</button>로 학과가 배우는 내용 확인</li>
-          <li><button class="catlink" data-cat="course" style="--c: var(--c-course)">과목 선택·교육과정</button>으로 선택과목 정하기</li>
+          <li><button class="catlink" data-cat="course" style="--c: var(--c-course)">우리 학교 과목 선택</button>에서 편제표와 과목 안내 보기</li>
+          <li><button class="catlink" data-cat="explore" style="--c: var(--c-explore)">진로 찾기</button>로 적성 검사와 진로 체험하기</li>
+          <li><button class="catlink" data-cat="major" style="--c: var(--c-major)">전공·학과 알아보기</button>로 학과가 배우는 내용 확인</li>
         </ol>
       </div>
       <div class="step">
         <span class="yr"><i>2</i>전형 이해</span>
         <p class="goal">전형의 큰 그림을 잡고 3학년 계획을 세우는 시기</p>
         <ol>
-          <li><button class="catlink" data-cat="policy" style="--c: var(--c-policy)">대입 제도·전형 해설</button>로 수시·정시 구조 이해</li>
-          <li><button class="catlink" data-cat="guide" style="--c: var(--c-guide)">대학 전형 가이드북</button>에서 평가 요소 읽기</li>
-          <li><button class="catlink" data-cat="video" style="--c: var(--c-video)">영상</button>으로 설명회·합격생 이야기 듣기</li>
+          <li><button class="catlink" data-cat="policy" style="--c: var(--c-policy)">대입 제도 이해</button>로 수시·정시 구조 익히기</li>
+          <li><button class="catlink" data-cat="guide" style="--c: var(--c-guide)">대학별 가이드북</button>에서 평가 요소와 선배 이야기 읽기</li>
+          <li>관심 대학 가이드북의 권장과목을 3학년 과목 선택에 반영하기</li>
         </ol>
       </div>
       <div class="step">
         <span class="yr"><i>3</i>지원 준비</span>
         <p class="goal">모집요강을 확인하고 지원과 면접을 준비하는 시기</p>
         <ol>
-          <li><button class="catlink" data-cat="portal" style="--c: var(--c-portal)">대입 정보 포털</button>에서 모집요강·전년도 결과 확인</li>
-          <li><button class="catlink" data-cat="interview" style="--c: var(--c-interview)">면접·전문대학</button> 자료로 면접 준비</li>
-          <li><button class="catlink" data-cat="center" style="--c: var(--c-center)">진로진학센터</button>에서 상담·설명회 찾기</li>
+          <li><button class="catlink" data-cat="portal" style="--c: var(--c-portal)">대입 정보 사이트</button>에서 모집요강·전년도 결과 확인</li>
+          <li><button class="catlink" data-cat="exam" style="--c: var(--c-exam)">면접·논술</button> 자료로 대학별 고사 준비</li>
+          <li><button class="catlink" data-cat="college" style="--c: var(--c-college)">전문대학</button> 진학도 함께 살펴보기</li>
         </ol>
       </div>
     </div>
-    <p class="note"><b>학년도</b>는 대학에 입학하는 해를 뜻합니다(2028학년도 = 2028년 3월 입학, 지금 1학년). 전형은 해마다 바뀌므로 <b>최종 확인은 각 대학의 모집요강</b>으로 하세요. 대학·기관 자료는 발행처에 저작권이 있으니 내려받은 파일을 고치거나 다시 퍼뜨리지 마세요.</p>
+    <p class="note"><b>학년도</b>는 대학에 입학하는 해를 뜻합니다(2028학년도 = 2028년 3월 입학, 지금 1학년). <b>선배 학년도</b> 표시가 붙은 2026·2027학년도 자료는 큰 틀을 익히는 참고용입니다. 전형은 해마다 바뀌므로 <b>최종 확인은 각 대학의 모집요강</b>으로 하세요. 대학·기관 자료는 발행처에 저작권이 있으니 내려받은 파일을 고치거나 다시 퍼뜨리지 마세요.</p>
   </section>
 </div>
 
@@ -313,7 +312,8 @@
       : `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span>`;
     const verb = isVideo ? '영상 보기' : kind === 'PDF' ? '자료 열기' : '바로 가기';
     const meta = [
-      it.year ? `<span class="badge">${esc(it.year)}</span>` : '',
+      it.year ? `<span class="badge">${esc(it.year)}학년도</span>` : '',
+      it.year && +it.year < 2028 && it.cat !== 'teacher' ? '<span class="badge old">선배 학년도</span>' : '',
       it.grade ? `<span class="badge">${esc(it.grade)}</span>` : '',
       it.who === 't' ? '<span class="badge t">교사용</span>' : '',
     ].join('');
