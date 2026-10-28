@@ -17,25 +17,20 @@ jobs:
               req = urllib.request.Request("https://bicjj.notion.site/api/v3/" + path, data=json.dumps(body).encode(),
                     headers={"content-type": "application/json", "user-agent": "Mozilla/5.0"})
               return json.load(urllib.request.urlopen(req, timeout=60))
-          out = {}
+          def val(b):
+              v = b.get("value", {}); return v.get("value", v)
           pid = "3129b73f-fbe4-807c-be00-e0c53617a77e"
-          seen, queue = set(), [pid]
-          while queue and len(seen) < 40:
-              p = queue.pop(0)
-              if p in seen: continue
-              seen.add(p)
-              try:
-                  r = post("loadPageChunk", {"pageId": p, "limit": 500, "cursor": {"stack": []}, "chunkNumber": 0, "verticalColumns": False})
-              except Exception as e:
-                  out[p] = {"error": str(e)}; continue
-              blocks = r.get("recordMap", {}).get("block", {})
-              out[p] = blocks
-              for bid, b in blocks.items():
-                  v = b.get("value", {}).get("value", b.get("value", {}))
-                  if v.get("type") == "page" and bid != p and v.get("parent_id") == p:
-                      queue.append(bid)
-          json.dump(out, open("notion.json", "w"), ensure_ascii=False)
-          print(len(out), "pages")
+          r = post("loadPageChunk", {"pageId": pid, "limit": 500, "cursor": {"stack": []}, "chunkNumber": 0, "verticalColumns": False})
+          blocks = dict(r.get("recordMap", {}).get("block", {}))
+          for _ in range(6):
+              missing = {c for b in blocks.values() for c in val(b).get("content", []) or [] if c not in blocks}
+              if not missing: break
+              ids = list(missing)
+              for i in range(0, len(ids), 80):
+                  rr = post("syncRecordValuesMain", {"requests": [{"pointer": {"table": "block", "id": x}, "version": -1} for x in ids[i:i+80]]})
+                  blocks.update(rr.get("recordMap", {}).get("block", {}))
+          json.dump(blocks, open("notion.json", "w"), ensure_ascii=False)
+          print(len(blocks), "blocks")
           PY
       - run: |
           git config user.name "github-actions[bot]"
