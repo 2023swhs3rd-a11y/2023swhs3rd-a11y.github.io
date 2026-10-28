@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>봉일천고 진로진학 자료실</title>
-<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이, 대입·진로 자료실">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="봉일천고 진로진학 자료실">
@@ -18,12 +18,12 @@
 <style>
   :root {
     --bg: #f6f7f9; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e4e7ec;
-    --plan: #2563eb; --news: #0f766e; --book: #c2410c;
+    --plan: #2563eb; --news: #0f766e; --book: #c2410c; --jinhak: #7c3aed;
   }
   @media (prefers-color-scheme: dark) {
     :root {
       --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c;
-      --plan: #7aa2ff; --news: #4fd1c5; --book: #fb923c;
+      --plan: #7aa2ff; --news: #4fd1c5; --book: #fb923c; --jinhak: #b79bff;
     }
   }
   * { box-sizing: border-box; }
@@ -36,7 +36,7 @@
   .school { margin: 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
   h1 { margin: 4px 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.02em; }
   header p { margin: 0; color: var(--muted); }
-  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .grid { display: grid; gap: 20px; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); }
   .card {
     display: flex; flex-direction: column; background: var(--card); border: 1px solid var(--line);
     border-top: 4px solid var(--c); border-radius: 14px; overflow: hidden;
@@ -90,6 +90,16 @@
         <h2>독서나눔 릴레이</h2>
         <p class="desc">지금 읽고 있는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
         <span class="go">게시판 들어가기 →</span>
+      </div>
+    </a>
+
+    <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
+      <div class="thumb"><img src="/jinhak/og.png" alt="" loading="lazy"></div>
+      <div class="body">
+        <span class="tag">자료 모음 · 전 학년</span>
+        <h2>대입·진로 자료실</h2>
+        <p class="desc">대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 설명회 영상을 종류별로 모으고 무엇을 언제 읽으면 좋은지 해설을 붙였습니다.</p>
+        <span class="go">자료 찾아보기 →</span>
       </div>
     </a>
   </div>
