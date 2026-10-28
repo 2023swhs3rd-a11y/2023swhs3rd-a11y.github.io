@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>대입·진로 자료실</title>
+<meta name="description" content="봉일천고 진로진학부가 고른 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇을 담았는지와 언제 읽으면 좋은지 해설을 붙였습니다.">
+<link rel="canonical" href="https://2023swhs3rd-a11y.github.io/jinhak/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="봉일천고 대입·진로 자료실">
+<meta property="og:description" content="대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 영상까지 종류별로 모으고 해설을 붙였습니다.">
+<meta property="og:url" content="https://2023swhs3rd-a11y.github.io/jinhak/">
+<style>
+  :root {
+    --bg: #f6f7f9; --card: #ffffff; --text: #1f2937; --muted: #6b7280; --line: #e4e7ec;
+    --accent: #7c3aed; --accent-soft: #f1ebff; --new: #dc2626; --teacher: #b45309;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #111418; --card: #1a1f26; --text: #e5e7eb; --muted: #9aa3b2; --line: #2b323c;
+      --accent: #b79bff; --accent-soft: #2a2340; --new: #f87171; --teacher: #fbbf24;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-padding-top: 120px; }
+  body {
+    margin: 0; background: var(--bg); color: var(--text); line-height: 1.6;
+    font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  }
+  main { max-width: 1040px; margin: 0 auto; padding: 32px 16px 40px; }
+  a { color: var(--accent); }
+  .home { font-size: .9rem; color: var(--muted); text-decoration: none; }
+  .home:hover { text-decoration: underline; }
+  .school { margin: 12px 0 0; color: var(--muted); font-size: .95rem; font-weight: 600; }
+  h1 { margin: 4px 0 8px; font-size: clamp(1.6rem, 4vw, 2.2rem); letter-spacing: -0.02em; }
+  .lead { margin: 0 0 16px; color: var(--muted); }
+  .howto { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 4px 18px; margin-bottom: 20px; }
+  .howto summary { cursor: pointer; font-weight: 700; padding: 10px 0; }
+  .howto ul { margin: 0 0 12px; padding-left: 20px; }
+  .howto li { margin: 4px 0; }
+  .howto p { margin: 0 0 12px; color: var(--muted); font-size: .92rem; }
+
+  .bar { position: sticky; top: 0; z-index: 5; background: var(--bg); padding: 10px 0; border-bottom: 1px solid var(--line); }
+  .search { width: 100%; padding: 10px 14px; font-size: 1rem; border: 1px solid var(--line); border-radius: 10px; background: var(--card); color: var(--text); }
+  .search:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  .row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 8px; align-items: center; }
+  .row .lbl { font-size: .82rem; color: var(--muted); margin-right: 2px; }
+  .chip {
+    border: 1px solid var(--line); background: var(--card); color: var(--text); border-radius: 999px;
+    padding: 4px 11px; font-size: .85rem; cursor: pointer; font-family: inherit;
+  }
+  .chip[aria-pressed="true"] { background: var(--accent); border-color: var(--accent); color: #fff; }
+  @media (prefers-color-scheme: dark) { .chip[aria-pressed="true"] { color: #111418; } }
+  .count { margin: 10px 0 0; font-size: .85rem; color: var(--muted); }
+
+  .toc { display: flex; gap: 6px; flex-wrap: wrap; margin: 18px 0 4px; }
+  .toc a { font-size: .85rem; text-decoration: none; background: var(--accent-soft); padding: 3px 10px; border-radius: 8px; }
+  .toc a span { color: var(--muted); }
+
+  section { margin-top: 30px; }
+  section h2 { margin: 0 0 4px; font-size: 1.25rem; letter-spacing: -0.01em; }
+  section h2 small { font-size: .85rem; color: var(--muted); font-weight: 600; margin-left: 6px; }
+  .cdesc { margin: 0 0 12px; color: var(--muted); font-size: .93rem; }
+  .grid { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); }
+  .item {
+    display: flex; flex-direction: column; gap: 6px; background: var(--card); border: 1px solid var(--line);
+    border-left: 4px solid var(--accent); border-radius: 12px; padding: 14px 16px; min-width: 0;
+  }
+  .meta { display: flex; flex-wrap: wrap; gap: 5px; font-size: .75rem; }
+  .badge { padding: 1px 8px; border-radius: 6px; background: var(--accent-soft); color: var(--accent); font-weight: 700; }
+  .badge.grade { background: transparent; border: 1px solid var(--line); color: var(--muted); font-weight: 600; }
+  .badge.t { background: transparent; border: 1px solid var(--teacher); color: var(--teacher); }
+  .badge.new { background: var(--new); color: #fff; }
+  .item h3 { margin: 0; font-size: 1.02rem; line-height: 1.4; overflow-wrap: anywhere; }
+  .src { margin: 0; font-size: .82rem; color: var(--muted); }
+  .item p.d { margin: 0; font-size: .92rem; flex: 1; }
+  .open { align-self: flex-start; margin-top: 4px; font-weight: 700; font-size: .9rem; text-decoration: none; }
+  .open:hover { text-decoration: underline; }
+  .empty { text-align: center; color: var(--muted); padding: 40px 0; }
+  footer { margin-top: 40px; color: var(--muted); font-size: .85rem; border-top: 1px solid var(--line); padding-top: 16px; }
+  footer p { margin: 4px 0; }
+</style>
+</head>
+<body>
+<main>
+  <a class="home" href="/">← 진로진학 자료실 처음으로</a>
+  <p class="school">봉일천고등학교 진로진학부</p>
+  <h1>대입·진로 자료실</h1>
+  <p class="lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
+
+  <details class="howto">
+    <summary>학년별로 이렇게 활용해요</summary>
+    <ul>
+      <li><b>1학년</b>: '진로 탐색·체험'에서 관심 분야를 찾고, '과목 선택·교육과정'으로 2학년 선택과목을 정해요. '전공 안내'로 학과가 무엇을 배우는지 살펴봐요.</li>
+      <li><b>2학년</b>: '대입 제도·전형 해설'로 전형의 큰 그림을 잡고, 관심 대학의 '대학 전형 가이드북'에서 평가 요소를 읽어 3학년 과목과 활동을 계획해요.</li>
+      <li><b>3학년</b>: '대입 정보 포털'에서 모집요강과 전년도 결과를 확인하고, '면접·전문대학' 자료로 면접을 준비해요.</li>
+    </ul>
+    <p>자료 이름의 '학년도'는 그 해에 대학에 입학하는 학년도를 뜻합니다(예: 2028학년도 = 2028년 3월 입학, 지금 1학년). 전형 내용은 해마다 바뀌므로 최종 확인은 반드시 각 대학의 모집요강으로 하세요. 대학·기관 자료는 원 발행처에 저작권이 있으니 내려받은 파일을 고치거나 다시 퍼뜨리지 마세요.</p>
+  </details>
+
+  <div class="bar">
+    <input class="search" id="q" type="search" placeholder="검색 (예: 면접, 권장과목, 고려대)" aria-label="자료 검색">
+    <div class="row" id="grades" role="group" aria-label="학년">
+      <span class="lbl">학년</span>
+    </div>
+    <div class="row" id="kinds" role="group" aria-label="자료 형태">
+      <span class="lbl">형태</span>
+    </div>
+    <p class="count" id="count" aria-live="polite"></p>
+  </div>
+
+  <nav class="toc" id="toc" aria-label="분류 바로 가기"></nav>
+  <div id="list"></div>
+
+  <footer>
+    <p>링크는 각 기관 누리집과 진로진학부가 공유한 자료로 연결됩니다. 주소가 바뀌어 열리지 않으면 진로진학부에 알려 주세요.</p>
+    <p id="updated"></p>
+    <p>© 봉일천고등학교 진로진학부</p>
+  </footer>
+</main>
+<script>
+(async () => {
+  const $ = (s) => document.querySelector(s);
+  const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  let data;
+  try {
+    data = await (await fetch('resources.json', {cache: 'no-cache'})).json();
+  } catch (e) {
+    $('#list').innerHTML = '<p class="empty">자료 목록을 불러오지 못했습니다. 잠시 뒤 다시 열어 주세요.</p>';
+    return;
+  }
+  $('#updated').textContent = '마지막 정리: ' + data.updated.replace(/(\d+)-(\d+)-(\d+)/, (_, y, m, d) => `${y}년 ${+m}월 ${+d}일`);
+
+  const state = { q: '', grade: '전체', kind: '전체' };
+  const grades = ['전체', '고1', '고2', '고3', '교사용'];
+  const kinds = ['전체', ...new Set(data.items.map((i) => i.kind).filter(Boolean))];
+
+  function chips(el, list, key) {
+    for (const v of list) {
+      const b = document.createElement('button');
+      b.type = 'button'; b.className = 'chip'; b.textContent = v;
+      b.setAttribute('aria-pressed', String(state[key] === v));
+      b.onclick = () => {
+        state[key] = v;
+        el.querySelectorAll('.chip').forEach((c) => c.setAttribute('aria-pressed', String(c.textContent === v)));
+        render();
+      };
+      el.appendChild(b);
+    }
+  }
+  chips($('#grades'), grades, 'grade');
+  chips($('#kinds'), kinds, 'kind');
+
+  const norm = (s) => String(s ?? '').toLowerCase().replace(/\s+/g, '');
+  function match(it) {
+    if (state.grade === '교사용' && it.who !== 't') return false;
+    if (state.grade !== '전체' && state.grade !== '교사용' && it.grade && !it.grade.includes(state.grade)) return false;
+    if (state.kind !== '전체' && it.kind !== state.kind) return false;
+    if (state.q) {
+      const hay = norm([it.title, it.src, it.desc, it.kind, it.year].join(' '));
+      return state.q.split(/\s+/).filter(Boolean).every((w) => hay.includes(norm(w)));
+    }
+    return true;
+  }
+
+  function card(it) {
+    const badges = [
+      it.new ? '<span class="badge new">NEW</span>' : '',
+      it.kind ? `<span class="badge">${esc(it.kind)}</span>` : '',
+      it.year ? `<span class="badge grade">${esc(it.year)}</span>` : '',
+      it.grade ? `<span class="badge grade">${esc(it.grade)}</span>` : '',
+      it.who === 't' ? '<span class="badge t">교사용</span>' : '',
+    ].join('');
+    const verb = it.kind === '영상' ? '영상 보기' : it.kind === 'PDF' ? '자료 열기' : '바로 가기';
+    return `<article class="item">
+      <div class="meta">${badges}</div>
+      <h3>${esc(it.title)}</h3>
+      <p class="src">${esc(it.src)}</p>
+      <p class="d">${esc(it.desc)}</p>
+      <a class="open" href="${esc(it.url)}" target="_blank" rel="noopener">${verb} ↗</a>
+    </article>`;
+  }
+
+  function render() {
+    const shown = data.items.filter(match);
+    let html = '', toc = '';
+    for (const c of data.categories) {
+      const its = shown.filter((i) => i.cat === c.id);
+      if (!its.length) continue;
+      toc += `<a href="#${c.id}">${esc(c.name)} <span>${its.length}</span></a>`;
+      html += `<section id="${c.id}"><h2>${esc(c.name)}<small>${its.length}</small></h2>
+        <p class="cdesc">${esc(c.desc)}</p><div class="grid">${its.map(card).join('')}</div></section>`;
+    }
+    $('#toc').innerHTML = toc;
+    $('#list').innerHTML = html || '<p class="empty">조건에 맞는 자료가 없습니다. 검색어나 학년·형태를 바꿔 보세요.</p>';
+    $('#count').textContent = `자료 ${shown.length}개` + (shown.length < data.items.length ? ` / 전체 ${data.items.length}개` : '');
+  }
+
+  let t;
+  $('#q').addEventListener('input', (e) => { clearTimeout(t); t = setTimeout(() => { state.q = e.target.value.trim(); render(); }, 120); });
+  render();
+})();
+</script>
+</body>
+</html>
