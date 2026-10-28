@@ -412,18 +412,6 @@
   },
   {
    "cat": "course",
-   "title": "2026 부산광역시교육청 고등학교 과목선택 안내자료",
-   "url": "https://drive.google.com/file/d/1fZcr181da3eHjtBOBhHvaukBv-iSxxZX/view",
-   "src": "부산광역시교육청",
-   "desc": "진로에 따라 과목을 고르는 방법과 계열별 과목 선택 예시를 담은 안내서입니다.",
-   "kind": "PDF",
-   "who": "st",
-   "grade": "고1",
-   "new": true,
-   "thumb": "thumbs/4e8099ba55.jpg"
-  },
-  {
-   "cat": "course",
    "title": "[동국대] 수행평가 영역명 설정 가이드북",
    "url": "https://drive.google.com/file/d/1HGRu37-_AyEqyjthPz0GO7Y4HUE1MVVl/view",
    "src": "동국대학교",
@@ -432,17 +420,6 @@
    "year": "2028",
    "who": "t",
    "thumb": "thumbs/b5838a2077.jpg"
-  },
-  {
-   "cat": "course",
-   "title": "[동국대] 수행평가 영역명 활용 가이드북",
-   "url": "https://drive.google.com/file/d/1ZkqorXL-5PiYxo28pdzNEQ3LSypkv4Tw/view",
-   "src": "동국대학교",
-   "desc": "대학이 수행평가 영역명을 학생부 평가에서 어떻게 읽는지 설명하는 짧은 안내서입니다. 위 설정 가이드북과 함께 봅니다.",
-   "kind": "PDF",
-   "year": "2028",
-   "who": "t",
-   "thumb": "thumbs/6bea2f5745.jpg"
   },
   {
    "cat": "guide",
@@ -456,18 +433,6 @@
    "grade": "고2·고3",
    "new": true,
    "thumb": "thumbs/2c4bcc1d89.jpg"
-  },
-  {
-   "cat": "guide",
-   "title": "2027 동국대 학생부 가이드북(낱장)",
-   "url": "https://drive.google.com/file/d/1Uk4eNHCFp6hj-WMf-Wg3nr2gEow_phyZ/view",
-   "src": "동국대학교",
-   "desc": "동국대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
-   "kind": "PDF",
-   "year": "2027",
-   "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/27330fdc8c.jpg"
   },
   {
    "cat": "guide",
