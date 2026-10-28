@@ -85,27 +85,19 @@
   .go svg { width: 16px; height: 16px; transition: transform .18s ease; }
   .card:hover .go svg { transform: translateX(3px); }
 
-  /* 가로형 카드(읽고 탐구하기 묶음) */
-  .card.wide { flex-direction: row; }
-  .card.wide .thumb { flex: 0 0 46%; border-bottom: 0; border-right: 1px solid var(--line); }
-  .card.wide .thumb img { height: 100%; aspect-ratio: auto; min-height: 220px; object-position: left top; }
-
   @media (max-width: 1000px) {
     .grid.three, .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    .card.wide { flex-direction: column; }
-    .card.wide .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
-    .card.wide .thumb img { height: auto; aspect-ratio: 1200 / 630; min-height: 0; }
     /* 세 장일 때 남는 한 장은 가로로 넓게 */
-    .grid.three > .card:last-child { grid-column: 1 / -1; flex-direction: row; }
-    .grid.three > .card:last-child .thumb { flex: 0 0 50%; border-bottom: 0; border-right: 1px solid var(--line); }
-    .grid.three > .card:last-child .thumb img { height: 100%; aspect-ratio: auto; }
+    .grid.three > .card:last-child:nth-child(odd) { grid-column: 1 / -1; flex-direction: row; }
+    .grid.three > .card:last-child:nth-child(odd) .thumb { flex: 0 0 50%; border-bottom: 0; border-right: 1px solid var(--line); }
+    .grid.three > .card:last-child:nth-child(odd) .thumb img { height: 100%; aspect-ratio: auto; }
   }
   @media (max-width: 640px) {
     .hero { padding-top: 36px; }
     .grid.three, .grid.two { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-    .grid.three > .card:last-child { flex-direction: column; }
-    .grid.three > .card:last-child .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
-    .grid.three > .card:last-child .thumb img { height: auto; aspect-ratio: 1200 / 630; }
+    .grid.three > .card:last-child:nth-child(odd) { flex-direction: column; }
+    .grid.three > .card:last-child:nth-child(odd) .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
+    .grid.three > .card:last-child:nth-child(odd) .thumb img { height: auto; aspect-ratio: 1200 / 630; }
     .sec-h { flex-direction: column; gap: 2px; }
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
@@ -175,21 +167,8 @@
         <h2 id="s2">읽고 탐구하기</h2>
         <p>뉴스와 책으로 관심 분야를 넓힐 때</p>
       </div>
-      <div class="grid two">
-        <a class="card wide" href="/news/" style="--c: var(--news)">
-          <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a1 1 0 0 1 1 1v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M17 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h3"/></svg></span>
-              <div class="tags"><span class="tag">매주 월요일</span><span class="tag plain">1학년</span></div>
-            </div>
-            <h3>뉴스 읽고 진로 확장하기</h3>
-            <p class="desc">계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
-            <span class="go">이번 주 뉴스 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-
-        <a class="card wide" href="/book/" style="--c: var(--book)">
+      <div class="grid three">
+        <a class="card" href="/book/" style="--c: var(--book)">
           <div class="thumb"><img src="/book/docs/board-desktop.png" alt="" loading="lazy"></div>
           <div class="body">
             <div class="top">
@@ -199,6 +178,19 @@
             <h3>독서나눔 릴레이</h3>
             <p class="desc">지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
             <span class="go">게시판 들어가기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
+
+        <a class="card" href="/news/" style="--c: var(--news)">
+          <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a1 1 0 0 1 1 1v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M17 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h3"/></svg></span>
+              <div class="tags"><span class="tag">매주 월요일</span><span class="tag plain">1학년</span></div>
+            </div>
+            <h3>뉴스 읽고 진로 확장하기</h3>
+            <p class="desc">계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
+            <span class="go">이번 주 뉴스 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
         </a>
       </div>
