@@ -25,4 +25,5 @@ Disallow: /
 User-agent: meta-externalagent
 Disallow: /
 
+Sitemap: https://2023swhs3rd-a11y.github.io/sitemap.xml
 Sitemap: https://2023swhs3rd-a11y.github.io/2028plan/sitemap.xml
