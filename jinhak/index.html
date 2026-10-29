@@ -3,17 +3,17 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>대입·진로 자료실</title>
+<title>대입·진로 추천 자료</title>
 <meta name="description" content="봉일천고 진로진학부가 고른 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇을 담았는지와 언제 읽으면 좋은지 해설을 붙였습니다.">
 <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png?v=1" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/jinhak/">
 <meta property="og:type" content="website">
-<meta property="og:title" content="봉일천고 대입·진로 자료실">
+<meta property="og:title" content="봉일천고 대입·진로 추천 자료">
 <meta property="og:description" content="대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 영상까지 종류별로 모으고 해설을 붙였습니다.">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/jinhak/">
-<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/jinhak/og.png?v=3">
+<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/jinhak/og.png?v=4">
 <link rel="stylesheet" href="/assets/site.css?v=1">
 <style>
   :root {
@@ -145,10 +145,10 @@
 </style>
 </head>
 <body>
-<nav class="bon-bar" aria-label="진로진학부 사이트"><div class="bon-bar-in"><a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 자료실</span></div></nav>
+<nav class="bon-bar" aria-label="진로진학부 사이트"><div class="bon-bar-in"><a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 추천 자료</span></div></nav>
 <div class="wrap">
   <header class="bon-header">
-    <h1 class="bon-title">대입·진로 자료실</h1>
+    <h1 class="bon-title">대입·진로 추천 자료</h1>
     <p class="bon-lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
     <ul class="stats" id="stats"></ul>
   </header>
@@ -228,7 +228,7 @@
   const OUT = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7M8 7h9v9"/></svg>';
   const mobile = matchMedia('(max-width: 640px)');
 
-  // 학년도 안내: 이 자료실이 중심에 두는 학년도(FOCUS)를 지금 몇 학년이 치르는지 날짜로 계산한다
+  // 학년도 안내: 이 페이지가 중심에 두는 학년도(FOCUS)를 지금 몇 학년이 치르는지 날짜로 계산한다
   const FOCUS = 2028;
   const now = new Date();
   const schoolYear = now.getMonth() >= 2 ? now.getFullYear() : now.getFullYear() - 1; // 3월에 새 학년

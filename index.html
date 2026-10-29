@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>봉일천고 진로진학 자료실</title>
-<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 자료실, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 추천 자료, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
 <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png?v=1" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="봉일천고 진로진학 자료실">
-<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 자료실 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
+<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 추천 자료 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:image" content="https://2023swhs3rd-a11y.github.io/2028plan/og.png">
 <script>
@@ -58,6 +58,9 @@
   .icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, var(--card)); }
   .icon svg { width: 19px; height: 19px; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  /* 최신 업데이트 날짜: 각 사이트가 공개한 파일에서 읽어 카드 오른쪽 위에 둔다. 최근 7일 안이면 사이트 색 점 */
+  .upd { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .upd.fresh::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
   .tag { font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--card)); }
   .tag.plain { color: var(--muted); background: transparent; border: 1px solid var(--line); }
   .card h3 { margin: 4px 0 0; color: var(--text); font-size: 1.22rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.35; }
@@ -114,13 +117,13 @@
         </a>
 
         <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
-          <div class="thumb"><img src="/jinhak/og.png?v=3" alt="" loading="lazy"></div>
+          <div class="thumb"><img src="/jinhak/og.png?v=4" alt="" loading="lazy"></div>
           <div class="body">
             <div class="top">
               <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10l2 2h6.5A1.5 1.5 0 0 1 20 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 12h8M8 15.5h5"/></svg></span>
               <div class="tags"><span class="tag">자료 모음</span><span class="tag plain">전 학년</span></div>
             </div>
-            <h3>대입·진로 자료실</h3>
+            <h3>대입·진로 추천 자료</h3>
             <p class="desc">과목 선택, 진로 탐색, 전공 안내, 대학 가이드북, 설명회 영상을 학년별로 쓰기 좋게 모으고 자료마다 해설을 붙였습니다.</p>
             <span class="go">자료 찾아보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
@@ -181,5 +184,34 @@
     <p>모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
   </footer>
 </div>
+<script>
+  // 사이트별 최신 업데이트 날짜. 모두 같은 주소의 공개 파일이라 외부 서비스가 필요 없다.
+  // 어느 하나를 읽지 못해도 그 카드만 날짜 없이 둔다.
+  const UPD = {
+    '/2028plan/': ['/2028plan/sitemap.xml', /<lastmod>(\d{4})-(\d{2})-(\d{2})/, '데이터 버전 기준일'],
+    '/jinhak/': ['/jinhak/resources.json', /"updated":\s*"(\d{4})-(\d{2})-(\d{2})/, '자료 목록을 마지막으로 정리한 날'],
+    '/gg-highschool-students/': ['/gg-highschool-students/data/db.json', /"collected":\s*"(\d{4})-(\d{2})-(\d{2})/, '학교알리미 자료를 마지막으로 모은 날'],
+    '/news/': ['/news/data/index.json', /"date":\s*"(\d{4})-(\d{2})-(\d{2})/g, '가장 최근 호 발행일'],
+    '/book/': ['/book/js/common.js', /VERSION\s*=\s*"[^"(]*\((\d{4})\.(\d{1,2})\.(\d{1,2})\)/, '게시판을 마지막으로 고친 날'],
+  };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  document.querySelectorAll('a.card').forEach(async (card) => {
+    const src = UPD[card.getAttribute('href')];
+    if (!src) return;
+    try {
+      const text = await (await fetch(src[0], { cache: 'no-cache' })).text();
+      // 여러 개가 나오면(news의 호 목록) 가장 늦은 날짜
+      const dates = [...text.matchAll(new RegExp(src[1].source, 'g'))].map((m) => new Date(+m[1], +m[2] - 1, +m[3]));
+      if (!dates.length) return;
+      const d = new Date(Math.max(...dates));
+      const days = Math.round((today - d) / 864e5);
+      const el = document.createElement('span');
+      el.className = 'upd' + (days <= 7 ? ' fresh' : '');
+      el.title = src[2];
+      el.textContent = (days === 0 ? '오늘' : days === 1 ? '어제' : (d.getFullYear() === today.getFullYear() ? '' : d.getFullYear() + '년 ') + (d.getMonth() + 1) + '월 ' + d.getDate() + '일') + ' 업데이트';
+      card.querySelector('.top').appendChild(el);
+    } catch (e) { /* 날짜 없이 둔다 */ }
+  });
+</script>
 </body>
 </html>
