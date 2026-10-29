@@ -49,42 +49,43 @@
  ],
  "items": [
   {
+   "id": "7ac0c4b78d",
    "cat": "course",
    "title": "2026학년도 봉일천고 입학생 교육과정 편제표",
    "url": "https://drive.google.com/file/d/1tojg2n3u2PUn06hhzvZGnQx32jf4TxSU/view",
    "src": "봉일천고",
    "desc": "2026학년도 입학생이 3년 동안 배울 수 있는 과목과 학기별 편성입니다. 권장과목 자료와 나란히 놓고 내 과목 선택 계획을 세웁니다.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고1",
-   "thumb": "thumbs/7ac0c4b78d.jpg"
+   "grade": ["고1"],
+   "year": 2026
   },
   {
+   "id": "9e7d2305fd",
    "cat": "course",
    "title": "(대교협) 2028 모집단위별 반영과목 및 대학별 권장과목 자료집",
    "url": "https://drive.google.com/file/d/1CpwK_YNtCfMduLTRBpx7iN3HXYNCsydH/view",
    "src": "한국대학교육협의회",
    "desc": "학과(모집단위)별로 대학들이 반영·권장하는 고교 과목을 모은 자료집입니다(2025. 9. 30. 어디가 기준). PART 1은 학과별, PART 2는 대학별로 볼 수 있습니다. '필수 이수 기준'이 아닌 참고 자료라는 점을 자료집이 직접 밝히고 있습니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/9e7d2305fd.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "03b3459777",
    "cat": "course",
    "title": "2028학년도 경희대 자연계열 고교 교과이수 권장과목 수정 안내",
    "url": "https://drive.google.com/file/d/1BIqEqKjwn7d4rw7Tk2yRd114_JLynVmx/view",
    "src": "경희대학교",
    "desc": "경희대가 2028학년도 자연계열 학문 분야별 권장과목을 고친 내용을 안내한 공문입니다(2025. 8. 28.). 위 5개 대학 연구와 비교해 무엇이 바뀌었는지 확인합니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/03b3459777.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "92e307de91",
    "cat": "course",
    "title": "2022 개정 교육과정 과학 교육과정 이수 가이드",
    "url": "https://drive.google.com/file/d/1ZSecJGE6484oNzYgRfA-NuzivXC_dXdF/view",
@@ -92,10 +93,10 @@
    "desc": "2022 개정 과학 과목(일반·진로·융합 선택)의 내용과 이수 순서를 안내합니다. 과학 과목을 어떤 순서로 들을지 정할 때 봅니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1",
-   "thumb": "thumbs/92e307de91.jpg"
+   "grade": ["고1"]
   },
   {
+   "id": "ec4bc1a1e7",
    "cat": "course",
    "title": "2026학년도 신입생 교육과정 안내자료(어떤 과목을 언제 배울까)",
    "url": "https://drive.google.com/file/d/1VAQ_bqV1LZVoITjXTQNG2EIjdQ4d_PBb/view",
@@ -103,10 +104,10 @@
    "desc": "고교학점제에서 과목 종류(공통·일반·진로·융합 선택)와 학년별 이수 흐름을 신입생 눈높이로 설명합니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1",
-   "thumb": "thumbs/ec4bc1a1e7.jpg"
+   "grade": ["고1"]
   },
   {
+   "id": "b27d0ac07e",
    "cat": "explore",
    "title": "커리어넷",
    "url": "https://www.career.go.kr/cloud/w/main/home",
@@ -114,10 +115,10 @@
    "desc": "진로심리검사(적성·흥미·가치관), 직업정보, 학과정보를 무료로 제공하는 국가 진로 정보망입니다. 희망 학과를 정하기 전에 검사 결과와 학과 정보를 함께 보면 좋습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/b27d0ac07e.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "935198cda1",
    "cat": "explore",
    "title": "진로체험망 꿈길",
    "url": "https://www.ggoomgil.go.kr/front/index.do",
@@ -125,10 +126,10 @@
    "desc": "공공기관·기업·대학이 여는 진로체험 프로그램을 찾아 신청하는 플랫폼입니다. 학교 단체 체험과 개인 체험 모두 찾을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/935198cda1.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "2ac3bd3356",
    "cat": "explore",
    "title": "온라인 창업체험교육 플랫폼 YEEP",
    "url": "https://yeep.go.kr/main/main.do",
@@ -136,10 +137,10 @@
    "desc": "아이디어를 사업 계획으로 바꿔 보는 창업 체험 교육 플랫폼입니다. 경영·창업 분야에 관심 있는 학생의 탐구 활동에 쓸 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/2ac3bd3356.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "c71b5ff46e",
    "cat": "explore",
    "title": "[인천 마중물] 꿈을 디자인하는 진로·진학·직업 로드맵(일반고)",
    "url": "https://drive.google.com/file/d/1lt862Z0247S7yz_xF3kWVWXqi25V1XhT/view",
@@ -147,10 +148,10 @@
    "desc": "일반고 학생이 고1부터 고3까지 진로를 정하고 과목·활동·진학을 이어 가는 흐름을 로드맵으로 보여 줍니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/c71b5ff46e.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "ef04041804",
    "cat": "explore",
    "title": "2024 고교학점제 지원 인하 진로설계 워크북",
    "url": "https://drive.google.com/file/d/1fZI1LrnGYZx0rT9Aen0sKRA6gxbILj4v/view",
@@ -158,10 +159,10 @@
    "desc": "고교학점제에 맞춰 진로를 탐색하고 과목 이수 계획을 세워 보는 학생용 워크북입니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1",
-   "thumb": "thumbs/ef04041804.jpg"
+   "grade": ["고1"]
   },
   {
+   "id": "2676713dac",
    "cat": "explore",
    "title": "원격영상 진로멘토링",
    "url": "https://mentoring.career.go.kr/school/index.do",
@@ -169,10 +170,10 @@
    "desc": "여러 직업의 멘토와 화상으로 만나 질문하는 진로 멘토링입니다. 학교(교사)가 수업 단위로 신청합니다.",
    "kind": "웹사이트",
    "who": "t",
-   "grade": "고1·고2",
-   "thumb": "thumbs/2676713dac.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "c0bdfe6c7b",
    "cat": "major",
    "title": "부산대 모집단위별 추천도서",
    "url": "https://drive.google.com/file/d/1fwnnN8OFfXoXk4LJFhbs3u8MYWW7-r8h/view",
@@ -180,71 +181,71 @@
    "desc": "부산대가 학과(모집단위)별로 추천한 도서 목록입니다. 진로 독서 계획이나 독서나눔 릴레이 책 고르기에 쓸 수 있습니다.",
    "kind": "PDF",
    "who": "st",
-   "grade": "고1·고2",
-   "new": true,
-   "thumb": "thumbs/c0bdfe6c7b.jpg"
+   "grade": ["고1", "고2"],
+   "added": "2026-10-28"
   },
   {
+   "id": "469985786d",
    "cat": "major",
    "title": "2027 동국대 전공가이드북",
    "url": "https://drive.google.com/file/d/1et1dSvotOA-j0cYshpkgDJWvd5Q6nPha/view",
    "src": "동국대학교",
    "desc": "동국대 학과별 교육 내용, 관련 고교 과목, 졸업 후 진로를 소개합니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/469985786d.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2027
   },
   {
+   "id": "24ab13aa52",
    "cat": "major",
    "title": "2027 한양대 ERICA 진로진학 가이드북",
    "url": "https://drive.google.com/file/d/1IdJEwxyE-NR3CwHTy5A4KOGEgDlzC_k6/view",
    "src": "한양대학교 ERICA",
    "desc": "한양대 ERICA 학과 소개와 학과별로 준비하면 좋은 고교 활동·과목을 안내합니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/24ab13aa52.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2027
   },
   {
+   "id": "f88f565a0c",
    "cat": "major",
    "title": "전공자율선택제 입학생을 위한 2026 경기대 전공가이드북",
    "url": "https://drive.google.com/file/d/1IVRlChFE-BT0eqgSmzEnyMQz7q-jfNkY/view",
    "src": "경기대학교",
    "desc": "전공을 정하지 않고 입학하는 '전공자율선택제(무전공)' 학생을 위해 경기대 전공들을 소개합니다. 무전공 입학 후 전공을 고르는 과정을 미리 볼 수 있습니다.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/f88f565a0c.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2026
   },
   {
+   "id": "05b0766192",
    "cat": "major",
    "title": "2026 인하대 전공 안내 가이드북",
    "url": "https://admission.inha.ac.kr/ajaxfile/CMN_SVC/FileView.do?GBN=X09_1&SITE_NO=2&BROCHURE_SEQ=59",
    "src": "인하대학교",
    "desc": "인하대 학과별 소개와 교육과정을 정리한 안내서입니다.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/05b0766192.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2026
   },
   {
+   "id": "761f2e8c87",
    "cat": "major",
    "title": "2026 가톨릭대 진로진학 가이드북",
    "url": "https://drive.google.com/file/d/1z6cyjwektXc0S2YozLlbto3P78guQifN/view",
    "src": "가톨릭대학교",
    "desc": "가톨릭대 전공 소개와 학과별 권장 활동을 담은 진로진학 안내서입니다.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/761f2e8c87.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2026
   },
   {
+   "id": "a1821c8715",
    "cat": "major",
    "title": "인하대 진로진학 전공안내 영상 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLbL1xBFLm_za5g84-EAoG52-ugAi1kysJ",
@@ -252,10 +253,10 @@
    "desc": "인하대 학과별 전공 소개 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/a1821c8715.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "1ab6e80df3",
    "cat": "major",
    "title": "가톨릭대 진로진학가이드 영상(IT계열)",
    "url": "https://youtu.be/FOwhGxAZcWM",
@@ -263,10 +264,10 @@
    "desc": "컴퓨터정보공학부, 정보통신전자공학부, 인공지능학과를 퀴즈 형식으로 소개합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/1ab6e80df3.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "22c064553a",
    "cat": "major",
    "title": "명지대학교 학교소개 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLeOdlYSS3OPA1eQnmzFBCJZHf89HhRMWM",
@@ -274,10 +275,10 @@
    "desc": "명지대 캠퍼스와 학과를 소개합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/22c064553a.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "c32e35b755",
    "cat": "major",
    "title": "강원대 KNU 학과소개 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PL01F39EtsswQBpyQUh-2_AHjDhOu-NxWW",
@@ -285,10 +286,10 @@
    "desc": "강원대 학과별 소개 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/c32e35b755.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "763764f45f",
    "cat": "major",
    "title": "2025년 KU 전공체험 강의실 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLZLaVzHO7gXpVe1XH53vBZYOYrIRKGT6b",
@@ -296,10 +297,10 @@
    "desc": "2026년 1월에 진행한 6개 학과 전공체험 강의입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/763764f45f.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "9e1173f87b",
    "cat": "major",
    "title": "2024년 KU 전공체험 강의실 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLZLaVzHO7gXq06YEnTCzKqwaHOODV6rrt",
@@ -307,118 +308,118 @@
    "desc": "고려대 교수가 학과별 전공 맛보기 강의를 합니다. 관심 전공의 실제 수업을 미리 들어 볼 수 있습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/9e1173f87b.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "a663797201",
    "cat": "policy",
    "title": "2028학년도 대학입학전형기본사항",
    "url": "https://drive.google.com/file/d/1TqwLjVjOdIuN4Bj1qfeAyQVWvpmE44uk/view",
    "src": "한국대학교육협의회",
    "desc": "모든 대학이 2028학년도 전형을 만들 때 지켜야 하는 기본 규칙(전형 일정, 지원 횟수, 학생부 반영 원칙 등)입니다. 다른 자료를 읽다 헷갈리는 용어가 있으면 이 문서로 확인합니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/a663797201.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "6f155dfe74",
    "cat": "policy",
    "title": "[서교연] 2028 대입전형시행계획 요약 '쎈(SEN)진학 프리뷰'",
    "url": "https://drive.google.com/file/d/14J8L3_vt9MZF97S4HxgZSm4uh1crnUS9/view",
    "src": "서울특별시교육청교육연구정보원",
    "desc": "서울·수도권 등 82개 대학의 2028학년도 전형 시행계획을 지역·계열·전형별로 요약한 자료입니다(2026. 5. 14. 기준). 관심 대학의 전형 구조를 빠르게 훑어볼 때 좋습니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/6f155dfe74.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "a264861721",
    "cat": "policy",
    "title": "2028 대입 정보 제공 설명회",
    "url": "https://drive.google.com/file/d/1_ttBwY9HqaervbJd1BxLA-UBSbufADnt/view",
    "src": "한국대학교육협의회",
    "desc": "2028학년도 대입 개편(5등급 내신, 통합형 수능 등)과 대학별 전형 계획을 설명한 대교협 설명회 자료입니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/a264861721.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "b2657f3171",
    "cat": "policy",
    "title": "2027학년도 대입정보 119",
    "url": "https://drive.google.com/file/d/1-6rX_FdEBbRXg6RgYWTrIOWGelIIhx69/view",
    "src": "한국대학교육협의회",
    "desc": "예비 고3을 위한 대교협 대입 가이드로, 2027학년도 전형 일정, 주요 변화, 전형별 특징과 상담 정보를 정리했습니다. 대교협은 고1·2의 진로·진학 자료로도 활용할 수 있다고 안내합니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/b2657f3171.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "b34396218f",
    "cat": "policy",
    "title": "2027 대입전형의 이해와 대비(대교협 공통 PT)",
    "url": "https://drive.google.com/file/d/1S1g7ZLOkcP2tOFcKrP8DXBAH0nao7d-0/view",
    "src": "한국대학교육협의회",
    "desc": "대교협 대입상담교사단이 설명회에서 쓰는 공통 발표 자료입니다. 2027학년도 전형의 큰 흐름을 짧게 정리했습니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/b34396218f.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "d64741cc8b",
    "cat": "policy",
    "title": "2027 대입 고3 학년 초 대입전형의 이해와 대비",
    "url": "https://drive.google.com/file/d/1VqihWL-QrkMF0RWQVEVjaOfi2f4_Izb3/view",
    "src": "서울진로진학정보센터",
    "desc": "서울진로진학정보센터의 고3 학년 초 설명회 자료입니다. 수시·정시 일정과 전형별 준비 방법을 한 번에 정리합니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/d64741cc8b.jpg"
+   "grade": ["고3"],
+   "year": 2027
   },
   {
+   "id": "d74efda476",
    "cat": "policy",
    "title": "(강의1) 2027 대입 수시모집 이해와 대비",
    "url": "https://drive.google.com/file/d/1dN5rMS5T5pi12U4qSBnWeQ9-6pzDd83y/view",
    "src": "서울진로진학정보센터",
    "desc": "고3 학년 초 설명회의 수시 강의 자료입니다. 교과·종합·논술 전형의 특징과 지원 전략을 다룹니다. 같은 강의 영상이 '영상'에 있습니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/d74efda476.jpg"
+   "grade": ["고3"],
+   "year": 2027
   },
   {
+   "id": "eefb5d7cfc",
    "cat": "policy",
    "title": "(강의2) 2027 대입 정시모집 이해와 대비",
    "url": "https://drive.google.com/file/d/1kfEWEX6kHF64RNWZL2afiRayqHGTae6L/view",
    "src": "서울진로진학정보센터",
    "desc": "고3 학년 초 설명회의 정시 강의 자료입니다. 수능 반영 방법과 군별 지원 전략을 다룹니다. 같은 강의 영상이 '영상'에 있습니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/eefb5d7cfc.jpg"
+   "grade": ["고3"],
+   "year": 2027
   },
   {
+   "id": "419a21e4f5",
    "cat": "policy",
    "title": "[인천 마중물] 2027 대입 수시 전형 일람표",
    "url": "https://drive.google.com/file/d/1DjkXId3DbuwVKFhXq5IXfjLrm01vLhXV/view",
    "src": "인천광역시교육청",
    "desc": "대학별 2027학년도 수시 전형을 표 한 장 형식으로 모은 일람표입니다. 여러 대학을 나란히 비교할 때 씁니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/419a21e4f5.jpg"
+   "grade": ["고3"],
+   "year": 2027
   },
   {
+   "id": "d718715a97",
    "cat": "policy",
    "title": "[EBS] 2028학년도 수능 대비 전략《입시》",
    "url": "https://youtu.be/GBkQGejpRTY",
@@ -426,10 +427,10 @@
    "desc": "EBS 겨울방학 학습전략설명회 중 2028학년도 통합형 수능 대비 전략을 다룬 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/d718715a97.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "e2ccb5e1ca",
    "cat": "policy",
    "title": "대입정보 119 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PL0VYY_hzU_PKJEcSaUtvl6yje51ij0Esq",
@@ -437,10 +438,10 @@
    "desc": "대교협의 '대입정보 119'를 주제별 짧은 영상으로 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/e2ccb5e1ca.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "b5c1944282",
    "cat": "policy",
    "title": "[쎈진학 나침판] (강의1) 2027 대입 수시모집 이해와 대비",
    "url": "https://youtu.be/2sIM8G9DCFw",
@@ -448,10 +449,10 @@
    "desc": "고3 학년 초 설명회 수시 강의 영상입니다. 같은 강의 PDF가 '대입 제도·전형 해설'에 있습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/b5c1944282.jpg"
+   "grade": ["고3"]
   },
   {
+   "id": "8625e40336",
    "cat": "policy",
    "title": "[쎈진학 나침판] (강의2) 2027 대입 정시모집 이해와 대비",
    "url": "https://www.youtube.com/watch?v=SHBPZP46l3Q",
@@ -459,10 +460,10 @@
    "desc": "고3 학년 초 설명회 정시 강의 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/8625e40336.jpg"
+   "grade": ["고3"]
   },
   {
+   "id": "4f2b53f67d",
    "cat": "policy",
    "title": "2026 대입결과 분석",
    "url": "https://www.youtube.com/watch?v=r1hLm1QP8DM",
@@ -470,191 +471,191 @@
    "desc": "대구시교육청이 2026학년도 대입 결과를 분석한 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/4f2b53f67d.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "2c4bcc1d89",
    "cat": "guide",
    "title": "2027 동국대 학생부종합전형 가이드북",
    "url": "https://ipsi.dongguk.edu/upload/file/20260223162709VVB8GM.PDF",
    "src": "동국대학교",
    "desc": "동국대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "new": true,
-   "thumb": "thumbs/2c4bcc1d89.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027,
+   "added": "2026-10-28"
   },
   {
+   "id": "eca80d3713",
    "cat": "guide",
    "title": "2027 경희대 학생부종합 가이드북",
    "url": "https://drive.google.com/file/d/1Xln5IVLgr7FpCeKdh7DBY4UTSKo5m1E3/view",
    "src": "경희대학교",
    "desc": "경희대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/eca80d3713.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "80dbcbd217",
    "cat": "guide",
    "title": "2027 국민대 학생부위주전형 가이드북",
    "url": "https://drive.google.com/file/d/1YhYdf5R8lW7iBDYM_UZfTRnQKSYnISYP/view",
    "src": "국민대학교",
    "desc": "국민대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/80dbcbd217.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "fca8af6ce7",
    "cat": "guide",
    "title": "2027 숭실대 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1NCdkpxOTR36V3MVypZRzq09vJPlyIPmD/view",
    "src": "숭실대학교",
    "desc": "숭실대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/fca8af6ce7.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "4c760772cc",
    "cat": "guide",
    "title": "2027 한국외대 학생부전형 가이드북",
    "url": "https://drive.google.com/file/d/1JOImoo3CKpk6T3WgO7bNcSCx5sWJ-jBJ/view",
    "src": "한국외국어대학교",
    "desc": "한국외국어대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/4c760772cc.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "8280b641c7",
    "cat": "guide",
    "title": "2027 한국기술교육대 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1IhtT0sLg8ph5eRnfUZshMaugvamsAbnm/view",
    "src": "한국기술교육대학교",
    "desc": "한국기술교육대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/8280b641c7.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "372c779b1c",
    "cat": "guide",
    "title": "2027 한양대 ERICA 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1Yp75QoMDDRgnaYKzeMq4tqSXhTTeIlvp/view",
    "src": "한양대학교 ERICA",
    "desc": "한양대학교 ERICA가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/372c779b1c.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "76e5bd8a3d",
    "cat": "guide",
    "title": "2027 홍익대 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1W_J3eSHNZxiFPC2hdTZDj96FCbIuy1pJ/view",
    "src": "홍익대학교",
    "desc": "홍익대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/76e5bd8a3d.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "74a2597ec9",
    "cat": "guide",
    "title": "2027 서울시립대 학생부종합전형 가이드북(2026 발간)",
    "url": "https://drive.google.com/file/d/1RyO7MqpUOd69R3SHIMHqTbQWNu--WAiA/view",
    "src": "서울시립대학교",
    "desc": "서울시립대학교가 2027학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/74a2597ec9.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "15adbc71db",
    "cat": "guide",
    "title": "2027 홍익대 미술계열 전형 가이드북",
    "url": "https://drive.google.com/file/d/1oy4pdn9gHyQorpjRD_iSGvkD5OZDslyt/view",
    "src": "홍익대학교",
    "desc": "홍익대 미술계열(실기·학생부 위주) 전형의 평가 방법과 준비 사항을 안내합니다. 미술·디자인 진학을 생각하는 학생에게 맞습니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/15adbc71db.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "3af5172b10",
    "cat": "guide",
    "title": "2026 건국대 학생부위주전형 가이드북",
    "url": "https://drive.google.com/file/d/1IsJPSeB8XWMr9YYBEfinlFcbsTQHUmzq/view",
    "src": "건국대학교",
    "desc": "건국대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/3af5172b10.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2026
   },
   {
+   "id": "a91f3a6587",
    "cat": "guide",
    "title": "2026 경희대 학생부전형 가이드북",
    "url": "https://drive.google.com/file/d/1_mSwX5xJ7fcQgd-TkY0qtphFk-7AXtZ5/view",
    "src": "경희대학교",
    "desc": "경희대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/a91f3a6587.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2026
   },
   {
+   "id": "c932bcd796",
    "cat": "guide",
    "title": "2026 경북대 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1IpnKnJp72-i4usqvkT9Z-h_vCvwSWYRD/view",
    "src": "경북대학교",
    "desc": "경북대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/c932bcd796.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2026
   },
   {
+   "id": "c3c02ee139",
    "cat": "guide",
    "title": "2026 인하대 학생부종합전형 가이드북",
    "url": "https://admission.inha.ac.kr/ajaxfile/CMN_SVC/FileView.do?GBN=X09_1&SITE_NO=2&BROCHURE_SEQ=58",
    "src": "인하대학교",
    "desc": "인하대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/c3c02ee139.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2026
   },
   {
+   "id": "1cfc641ddf",
    "cat": "guide",
    "title": "2026 한국교원대 학생부종합전형 가이드북",
    "url": "https://drive.google.com/file/d/1-HuJ_GP_vWs-jhJXa5k36oWUH-qq5VOs/view",
    "src": "한국교원대학교",
    "desc": "한국교원대학교가 2026학년도 학생부위주전형의 평가 요소, 서류 평가 방법, 면접 방식과 예시를 직접 설명한 안내서입니다. 다음 학년도 전형은 바뀔 수 있으니 같은 대학의 새 가이드북이 나왔는지 확인하세요.",
    "kind": "PDF",
-   "year": "2026",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/1cfc641ddf.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2026
   },
   {
+   "id": "b33c88f4ee",
    "cat": "guide",
    "title": "중앙대 입학처 보이는라디오 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLOU7xmZR-J1__1idk6Zb0pYa9HW_0NIFD",
@@ -662,10 +663,10 @@
    "desc": "중앙대 입학사정관이 전형과 학교생활 질문에 답하는 라디오 형식 영상입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/b33c88f4ee.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "82277dffed",
    "cat": "guide",
    "title": "[입시KU:티비] 2027학년도 입학전형 시행계획 읽어주는 건대",
    "url": "https://youtu.be/ohyjg8AswOM",
@@ -673,10 +674,10 @@
    "desc": "건국대 입학팀장이 2027학년도 전형 시행계획을 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/82277dffed.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "e417cdf6f8",
    "cat": "guide",
    "title": "가톨릭대 2026학년도 신입생 합격 소감 모음",
    "url": "https://youtu.be/7MJedpDlGGk",
@@ -684,10 +685,10 @@
    "desc": "수시·정시 합격생의 준비 과정과 소감을 모았습니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/e417cdf6f8.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "edb8cb13e3",
    "cat": "guide",
    "title": "[입시KU:티비] 2026 학생부위주전형 입시결과와 2027 지원전략",
    "url": "https://youtu.be/hCgGkJWjGtM",
@@ -695,10 +696,10 @@
    "desc": "건국대 입학처가 2026학년도 결과와 2027학년도 지원 전략을 설명합니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/edb8cb13e3.jpg"
+   "grade": ["고3"]
   },
   {
+   "id": "595fbf1c81",
    "cat": "guide",
    "title": "서울대 2025학년도 학생부종합전형 합격생 인터뷰 (재생목록)",
    "url": "https://www.youtube.com/playlist?list=PLVHPuY7CGZ6JKFWCEotMtXu6VvbXNwtEc",
@@ -706,10 +707,10 @@
    "desc": "2025학년도 합격생 인터뷰 모음입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/595fbf1c81.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "68cf080ae1",
    "cat": "guide",
    "title": "서강대 2025학년도 학생부종합전형 합격자 인터뷰",
    "url": "https://youtu.be/XIygN52wT0A",
@@ -717,35 +718,35 @@
    "desc": "자유전공학부, 화공생명공학과, 경영학부 합격자의 인터뷰입니다.",
    "kind": "영상",
    "who": "st",
-   "grade": "고1·고2",
-   "thumb": "thumbs/68cf080ae1.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "5e2376672d",
    "cat": "exam",
    "title": "2027 동국대 논술 가이드북",
    "url": "https://ipsi.dongguk.edu/upload/file/20260223163919G9MS7D.PDF",
    "src": "동국대학교",
    "desc": "동국대 논술전형의 출제 방향, 기출 문항과 해설을 담은 안내서입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "new": true,
-   "thumb": "thumbs/5e2376672d.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027,
+   "added": "2026-10-28"
   },
   {
+   "id": "d459777680",
    "cat": "exam",
    "title": "(세종) 2027 대입 수시모집 면접전형 자료집",
    "url": "https://drive.google.com/file/d/11TzyyJxsjFur5QAQNNANGldxIcjgc7jK/view",
    "src": "세종특별자치시교육청 진로교육원",
    "desc": "77개 대학·사관학교·과학기술원의 면접 전형을 선발 방법, 면접 방식, 평가 요소, 예시 문항으로 정리했습니다. 앞부분에 '대입 면접 A to Z' 준비 안내가 있습니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고3",
-   "thumb": "thumbs/d459777680.jpg"
+   "grade": ["고3"],
+   "year": 2027
   },
   {
+   "id": "353352cc01",
    "cat": "college",
    "title": "전문대학교육협의회 진학정보 자료실(procollege)",
    "url": "https://www.procollege.kr/web/board/26108.do",
@@ -753,58 +754,58 @@
    "desc": "전문대학 입학 정보 포털의 자료실입니다. 권역별 입학정보 자료집, 전형 안내 같은 전문대 진학 자료를 내려받을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/353352cc01.jpg"
+   "grade": ["고2", "고3"]
   },
   {
+   "id": "9136d13a26",
    "cat": "college",
    "title": "수도권 2027학년도 수시모집 전문대학 입학정보자료집",
    "url": "https://drive.google.com/file/d/1E9B-wHOUw6yyu2GisnVkEB2rU3xvHpDb/view",
    "src": "한국전문대학교육협의회",
    "desc": "수도권 전문대학의 2027학년도 수시 모집 학과, 전형 방법, 모집 인원을 정리한 자료집입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/9136d13a26.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "4e6fa64d63",
    "cat": "college",
    "title": "중부권 2027학년도 수시모집 전문대학 입학정보자료집",
    "url": "https://drive.google.com/file/d/1ujSf42hZ-ZUru9Di-LWhaqzxbJgWp4cT/view",
    "src": "한국전문대학교육협의회",
    "desc": "중부권 전문대학의 2027학년도 수시 모집 학과, 전형 방법, 모집 인원을 정리한 자료집입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/4e6fa64d63.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "596eaf8fe9",
    "cat": "college",
    "title": "영남권 2027학년도 수시모집 전문대학 입학정보자료집",
    "url": "https://drive.google.com/file/d/1VAsBkg-nTkm7PMMYe0bYAxIIxEZeoTJR/view",
    "src": "한국전문대학교육협의회",
    "desc": "영남권 전문대학의 2027학년도 수시 모집 학과, 전형 방법, 모집 인원을 정리한 자료집입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/596eaf8fe9.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "36b6147879",
    "cat": "college",
    "title": "호남권 2027학년도 수시모집 전문대학 입학정보자료집",
    "url": "https://drive.google.com/file/d/1MoMVvGbfJrhic55URqc69ucKiHuKd-9z/view",
    "src": "한국전문대학교육협의회",
    "desc": "호남권 전문대학의 2027학년도 수시 모집 학과, 전형 방법, 모집 인원을 정리한 자료집입니다.",
    "kind": "PDF",
-   "year": "2027",
    "who": "st",
-   "grade": "고2·고3",
-   "thumb": "thumbs/36b6147879.jpg"
+   "grade": ["고2", "고3"],
+   "year": 2027
   },
   {
+   "id": "a681947976",
    "cat": "portal",
    "title": "대입정보포털 어디가",
    "url": "https://www.adiga.kr",
@@ -812,10 +813,10 @@
    "desc": "대학별 모집요강, 전형 계획, 학과 정보와 전년도 입시 결과를 한곳에서 찾는 공식 포털입니다. 성적을 넣어 보는 대입 상담과 진로 탐색 메뉴도 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/a681947976.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "cfad690ee5",
    "cat": "portal",
    "title": "경기진학정보센터",
    "url": "https://more.goe.go.kr/jinhak/index.do",
@@ -823,10 +824,10 @@
    "desc": "경기도 학생을 위한 진학 정보 센터입니다. 대입 설명회, 진학 상담 신청, 경기도 학생 대상 자료를 확인합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/cfad690ee5.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "244890d08b",
    "cat": "portal",
    "title": "꿈it다",
    "url": "https://jinro.goedu.kr",
@@ -834,10 +835,10 @@
    "desc": "경기도교육청의 진로교육 누리집입니다. 진로 탐색 활동과 진로교육 자료를 찾을 수 있습니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/244890d08b.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "c0b05fcd43",
    "cat": "portal",
    "title": "서울대학교 입학본부 웹진 아로리",
    "url": "https://snuarori.snu.ac.kr",
@@ -845,10 +846,10 @@
    "desc": "서울대 입학본부가 운영하는 웹진으로, 학생부종합전형 평가 방식, 전공 소개, 합격생 이야기를 읽을 수 있습니다. 서울대에 지원하지 않아도 학종 준비의 기준을 잡는 데 도움이 됩니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/c0b05fcd43.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "d2c49dc192",
    "cat": "portal",
    "title": "서울진로진학정보센터",
    "url": "https://www.jinhak.or.kr/index.do",
@@ -856,10 +857,10 @@
    "desc": "서울시교육청의 진학 정보 센터입니다. '쎈(SEN)진학' 자료집과 설명회 자료가 이곳에서 나옵니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/d2c49dc192.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "d46b6eb033",
    "cat": "portal",
    "title": "인천사이버진로교육원",
    "url": "https://cyberjinro.ice.go.kr",
@@ -867,10 +868,10 @@
    "desc": "인천시교육청의 온라인 진로교육원입니다. '마중물' 진로·진학 로드맵 자료와 진로 프로그램을 제공합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/d46b6eb033.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "1934479d38",
    "cat": "portal",
    "title": "부산진로진학지원센터",
    "url": "https://dream.pen.go.kr/sb33.php",
@@ -878,10 +879,10 @@
    "desc": "부산시교육청의 진로진학 센터입니다. 과목 선택 안내와 5등급제 성적 분석 자료가 이곳에서 나옵니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/1934479d38.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "8b2c3d9f54",
    "cat": "portal",
    "title": "세종특별자치시교육청 진로교육원",
    "url": "https://jinro.sje.go.kr/user/board/page_brd.do?menu_cd=141&menu_kind=brd",
@@ -889,10 +890,10 @@
    "desc": "세종시교육청 진로교육원의 자료실입니다. 대학별 면접 전형을 정리한 '면접전형 자료집'을 펴냅니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/8b2c3d9f54.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "deee01e0b1",
    "cat": "portal",
    "title": "울산진로진학지원센터",
    "url": "https://use.go.kr/jinhak/user/bbs/BD_selectBbsList.do?q_bbsSn=1095",
@@ -900,10 +901,10 @@
    "desc": "울산시교육청 진로진학 센터의 자료실입니다. 진학 지도 자료와 설명회 자료를 모아 둡니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/deee01e0b1.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "d464d27319",
    "cat": "portal",
    "title": "충남진학있슈",
    "url": "https://jinhak.cne.go.kr/",
@@ -911,45 +912,45 @@
    "desc": "충남교육청의 진학 정보 누리집입니다. 대입 자료와 상담 안내를 제공합니다.",
    "kind": "웹사이트",
    "who": "st",
-   "grade": "고1·고2·고3",
-   "thumb": "thumbs/d464d27319.jpg"
+   "grade": ["고1", "고2", "고3"]
   },
   {
+   "id": "eb2e8bd7d0",
    "cat": "teacher",
    "title": "부산시교육청 관내 5등급제 고1 1·2학기 등급평균 분석(누적비)",
    "url": "https://drive.google.com/file/d/1h2M45XDKni-2dOpShe6lx2guebA5Of3E/view",
    "src": "부산광역시교육청",
    "desc": "5등급 상대평가가 처음 적용된 고1의 학기별 등급 평균 분포를 누적 비율로 분석한 자료입니다. 새 내신 체제에서 내 성적의 위치를 가늠할 때 참고합니다(부산 지역 기준).",
    "kind": "PDF",
-   "year": "2028",
    "who": "t",
-   "grade": "고1·고2",
-   "thumb": "thumbs/eb2e8bd7d0.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "b5838a2077",
    "cat": "teacher",
    "title": "[동국대] 수행평가 영역명 설정 가이드북",
    "url": "https://drive.google.com/file/d/1HGRu37-_AyEqyjthPz0GO7Y4HUE1MVVl/view",
    "src": "동국대학교",
    "desc": "2028학년도부터 대입 자료로 추가되는 수행평가 영역명을 어떻게 지으면 좋은지, 280명 교사의 543개 사례를 분석해 '주제(내용)×방법' 형식으로 제안합니다. 교과별 예시가 있습니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "t",
-   "thumb": "thumbs/b5838a2077.jpg"
+   "year": 2028
   },
   {
+   "id": "81c704be64",
    "cat": "teacher",
    "title": "쎈(SEN)진학 2026 고1·2학년 진학지도 자료집",
    "url": "https://drive.google.com/file/d/1muY51R1DShK1fcExujAemPSmdmOJGDyA/view",
    "src": "서울특별시교육청교육연구정보원",
    "desc": "고교학점제와 2028·2029 대입을 고1·2 담당 교사 관점에서 정리한 자료집입니다. 2026 대입 결과 분석, 전형별 전략, 의학·교육·첨단·예체능 등 계열별 진학 전략, 교과별 지도 가이드와 상담 사례가 들어 있습니다.",
    "kind": "PDF",
-   "year": "2028",
    "who": "t",
-   "grade": "고1·고2",
-   "thumb": "thumbs/81c704be64.jpg"
+   "grade": ["고1", "고2"],
+   "year": 2028
   },
   {
+   "id": "1e3215a360",
    "cat": "teacher",
    "title": "고등학생 교과이수 과목의 대입전형 반영 방안 연구(5개 대학)",
    "url": "https://drive.google.com/file/d/18g6GllCJSw5IwRH4BSql7TAJ3S09DtnP/view",
@@ -957,10 +958,10 @@
    "desc": "5개 대학이 자연계열 14개 학문 분야별로 핵심과목(필수로 이수)과 권장과목(가급적 이수)을 제시한 공동연구 보고서입니다(2023. 2.). 자연계열 과목 선택의 출발점으로 많이 쓰입니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1·고2",
-   "thumb": "thumbs/1e3215a360.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "ef202d6fdd",
    "cat": "teacher",
    "title": "[서울시교육청] 고1·2 교사를 위한 진로·진학·학업 설계의 이론과 실제",
    "url": "https://drive.google.com/file/d/132d_vzLMzT_VbVtZlXbvupElLqsihEOY/view",
@@ -968,10 +969,10 @@
    "desc": "고1·2 담임과 교과 교사가 학생의 진로·진학·학업 설계를 돕는 방법을 이론과 사례로 설명한 교사용 자료입니다. 파일이 커서(약 110MB) 내려받는 데 시간이 걸립니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1·고2",
-   "thumb": "thumbs/ef202d6fdd.jpg"
+   "grade": ["고1", "고2"]
   },
   {
+   "id": "24ca47098f",
    "cat": "teacher",
    "title": "[인천 마중물] 진로·진학·직업 로드맵 활용수업(일반고 워크북)",
    "url": "https://drive.google.com/file/d/1i3vbZ693B9HrgeElkfFrigdV1hAbdqvC/view",
@@ -979,30 +980,30 @@
    "desc": "위 로드맵을 수업에서 쓰도록 만든 학생 활동지 묶음입니다.",
    "kind": "PDF",
    "who": "t",
-   "grade": "고1",
-   "thumb": "thumbs/24ca47098f.jpg"
+   "grade": ["고1"]
   },
   {
+   "id": "23f0a59f9d",
    "cat": "teacher",
    "title": "[인천 마중물] 진로·진학·직업 로드맵 길잡이",
    "url": "https://drive.google.com/file/d/1LmRGYFkU-feG03FE3qMth8xeZvd7O_2N/view",
    "src": "인천광역시교육청",
    "desc": "로드맵과 워크북을 어떻게 수업에 쓰는지 안내하는 교사용 길잡이입니다.",
    "kind": "PDF",
-   "who": "t",
-   "thumb": "thumbs/23f0a59f9d.jpg"
+   "who": "t"
   },
   {
+   "id": "bb19fba9c4",
    "cat": "teacher",
    "title": "경기도교육청 진로연계교육 장학자료집",
    "url": "https://goejinro25.iwinv.net/",
    "src": "경기도교육청",
    "desc": "학교급이 바뀌는 시기(중3→고1)의 진로연계교육 장학자료를 모은 누리집입니다.",
    "kind": "웹사이트",
-   "who": "t",
-   "thumb": "thumbs/bb19fba9c4.jpg"
+   "who": "t"
   },
   {
+   "id": "e17a0a4934",
    "cat": "teacher",
    "title": "경기도 고등학교 학년별 학생 수 3개년 증감 추이",
    "url": "https://docs.google.com/spreadsheets/d/1jSNoE_ZDHx7MpSsSCwtGXOjPXgCFwJ-KdCkCCQQOoiU/edit",
@@ -1010,31 +1011,31 @@
    "desc": "경기도 고교 학년별 학생 수의 3년 변화를 정리했습니다. 학령인구 변화가 내신·입시 경쟁에 주는 영향을 볼 때 씁니다.",
    "kind": "시트",
    "who": "t",
-   "new": true,
-   "thumb": "thumbs/e17a0a4934.jpg"
+   "added": "2026-10-28"
   },
   {
+   "id": "4ef53ae065",
    "cat": "teacher",
    "title": "[인천 마중물] 2026 고등학교 진로진학지도 길라잡이",
    "url": "https://drive.google.com/file/d/1K-zBOmtMgQjryKDJB2Ew4hdX7pkoQm9b/view",
    "src": "인천광역시교육청",
    "desc": "학년별·시기별로 해야 할 진로진학 지도 내용을 정리한 교사용 길라잡이입니다.",
    "kind": "PDF",
-   "year": "2026",
    "who": "t",
-   "thumb": "thumbs/4ef53ae065.jpg"
+   "year": 2026
   },
   {
+   "id": "e1ab135f05",
    "cat": "teacher",
    "title": "2025 대교협 진로진학지도 공모전 우수사례집",
    "url": "https://drive.google.com/file/d/1YGzdaBVAgOP81V2M22lk8xT1rsj7iwyE/view",
    "src": "한국대학교육협의회",
    "desc": "전국 고교 교사들의 진로·진학 지도 우수 사례를 모은 책자입니다. 학교 프로그램을 설계할 때 참고합니다.",
    "kind": "PDF",
-   "who": "t",
-   "thumb": "thumbs/e1ab135f05.jpg"
+   "who": "t"
   },
   {
+   "id": "80dd9be590",
    "cat": "teacher",
    "title": "2024–2026 수능 탐구 선택 학생 수 분석과 대학알리미 공시자료",
    "url": "https://docs.google.com/spreadsheets/d/1V2k7aJGAAHwOuXT7aeFO4rGx3-4pZbg8MDHm8JbYAps/edit",
@@ -1042,8 +1043,7 @@
    "desc": "최근 3년 수능 탐구 과목별 응시자 수 변화와 대학알리미 공시 자료를 정리한 스프레드시트입니다. 탐구 과목 선택의 유불리를 따져 볼 때 참고합니다.",
    "kind": "시트",
    "who": "t",
-   "grade": "고2·고3",
-   "thumb": "thumbs/80dd9be590.jpg"
+   "grade": ["고2", "고3"]
   }
  ]
 }

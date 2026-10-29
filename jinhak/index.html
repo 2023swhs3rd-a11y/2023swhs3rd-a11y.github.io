@@ -117,7 +117,7 @@
   }
   .item:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
   .thumb { position: relative; display: block; aspect-ratio: 16 / 10; overflow: hidden; border-bottom: 1px solid var(--line); }
-  .thumb img { width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; }
+  .thumb img { position: relative; width: 100%; height: 100%; object-fit: cover; object-position: top; display: block; } /* 아래 기본 그림(.ph)을 덮는다 */
   .thumb.video img { object-position: center; }
   .thumb .ph { position: absolute; inset: 0; display: grid; place-items: center; color: var(--c); }
   .thumb .ph svg { width: 44px; height: 44px; opacity: .8; }
@@ -230,6 +230,9 @@
 
   // 학년도 안내: 이 페이지가 중심에 두는 학년도(FOCUS)를 지금 몇 학년이 치르는지 날짜로 계산한다
   const FOCUS = 2028;
+  // 목록에 넣은 날(added)부터 30일 동안 NEW
+  const NEW_DAYS = 30;
+  const isNew = (it) => it.added && (Date.now() - new Date(it.added + 'T00:00:00+09:00')) / 864e5 < NEW_DAYS;
   const now = new Date();
   const schoolYear = now.getMonth() >= 2 ? now.getFullYear() : now.getFullYear() - 1; // 3월에 새 학년
   const g = schoolYear - FOCUS + 4;
@@ -308,19 +311,19 @@
   function card(it) {
     const kind = it.kind || '웹사이트';
     const isVideo = kind === '영상';
-    const pic = it.thumb
-      ? `<img src="${esc(it.thumb)}" alt="" loading="lazy" decoding="async">${isVideo ? `<span class="play"><span>${PLAY}</span></span>` : ''}`
-      : `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span>`;
+    // 미리보기 그림은 thumbs/<id>.jpg. 아직 없으면 그림이 지워지고 밑에 깔린 형태 아이콘이 보인다
+    const pic = `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span><img src="thumbs/${esc(it.id)}.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()">`
+      + (isVideo ? `<span class="play"><span>${PLAY}</span></span>` : '');
     const verb = isVideo ? '영상 보기' : kind === 'PDF' ? '자료 열기' : '바로 가기';
     const meta = [
       it.year ? `<span class="badge">${esc(it.year)}학년도</span>` : '',
       it.year && +it.year < FOCUS && it.cat !== 'teacher' ? '<span class="badge old">선배 학년도</span>' : '',
-      it.grade ? `<span class="badge">${esc(it.grade)}</span>` : '',
+      it.grade ? `<span class="badge">${esc(it.grade.join('·'))}</span>` : '',
       it.who === 't' ? '<span class="badge t">선생님용</span>' : '',
     ].join('');
     return `<article class="item" style="${cvar(it.cat)}">
-      <a class="thumb ${it.thumb ? '' : 'tint'} ${isVideo ? 'video' : ''}" href="${esc(it.url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
-        ${pic}<span class="kindtag">${ICON[kind] || ''}${esc(kind)}</span>${it.new ? '<span class="newtag">NEW</span>' : ''}
+      <a class="thumb tint ${isVideo ? 'video' : ''}" href="${esc(it.url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+        ${pic}<span class="kindtag">${ICON[kind] || ''}${esc(kind)}</span>${isNew(it) ? '<span class="newtag">NEW</span>' : ''}
       </a>
       <div class="ib">
         <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>

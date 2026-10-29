@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- 진로진학부 첫 화면 저장소의 사이트맵. 2028plan은 자기 sitemap.xml(데이터 기준일 포함)이 있어 robots.txt에 따로 적고,
+     독서나눔 릴레이(book)는 검색 제외(noindex) 게시판이라 넣지 않는다. -->
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://2023swhs3rd-a11y.github.io/</loc></url>
+  <url><loc>https://2023swhs3rd-a11y.github.io/jinhak/</loc></url>
+  <url><loc>https://2023swhs3rd-a11y.github.io/gg-highschool-students/</loc></url>
+  <url><loc>https://2023swhs3rd-a11y.github.io/news/</loc></url>
+</urlset>
