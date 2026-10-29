@@ -14,6 +14,7 @@
 import concurrent.futures
 import json
 import socket
+import ssl
 import sys
 import urllib.error
 import urllib.parse
@@ -28,17 +29,38 @@ TIMEOUT = 25
 OK, CHECK, BROKEN = "열림", "확인 필요", "깨짐"
 
 
-def fetch(url):
+def _context(verify=True):
+    """브라우저처럼 오래된 보안 연결 방식도 받아 준다(공공기관 사이트에 흔함). 링크가 열리는지만 보므로 보내는 정보는 없다."""
+    ctx = ssl.create_default_context() if verify else ssl._create_unverified_context()
+    ctx.options |= getattr(ssl, "OP_LEGACY_SERVER_CONNECT", 0x4)
+    try:
+        ctx.set_ciphers("DEFAULT:@SECLEVEL=1")
+    except ssl.SSLError:
+        pass
+    return ctx
+
+
+# 서버가 중간 인증서를 보내지 않을 때 나는 오류. 브라우저는 스스로 채워 열므로 검증 없이 한 번 더 열어 본다
+MISSING_ISSUER = (20, 21)  # unable to get local issuer certificate, unable to verify the first certificate
+
+
+def fetch(url, verify=True):
     """(상태 코드, 마지막 주소). 연결 자체가 안 되면 상태 코드 대신 오류 이름."""
     req = urllib.request.Request(url, headers={"User-Agent": UA, "Accept-Language": "ko,en;q=0.8"})
     try:
-        with urllib.request.urlopen(req, timeout=TIMEOUT) as r:
+        with urllib.request.urlopen(req, timeout=TIMEOUT, context=_context(verify)) as r:
             r.read(2048)
             return r.status, r.geturl()
     except urllib.error.HTTPError as e:
         return e.code, e.geturl() or url
     except urllib.error.URLError as e:
         reason = e.reason
+        if isinstance(reason, ssl.SSLCertVerificationError):
+            if verify and reason.verify_code in MISSING_ISSUER:
+                return fetch(url, verify=False)
+            return f"ssl:{reason.verify_message or reason}", url
+        if isinstance(reason, ssl.SSLError):
+            return f"ssl:{reason.reason or reason}", url
         if isinstance(reason, socket.gaierror):
             return "dns", url
         if isinstance(reason, (socket.timeout, TimeoutError)):
@@ -86,6 +108,8 @@ def classify(url, get=fetch):
         return CHECK, f"접속을 막음({code})"
     if code == "timeout":
         return CHECK, "응답 없음(시간 초과)"
+    if str(code).startswith("ssl:"):
+        return CHECK, f"보안 인증서·연결 오류({code[4:]}). 브라우저에서 경고가 뜨는지 확인"
     if isinstance(code, int) and code >= 500:
         return CHECK, f"서버 오류({code})"
     return CHECK, f"응답 {code}"
