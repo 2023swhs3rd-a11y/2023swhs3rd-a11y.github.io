@@ -37,7 +37,7 @@
   /* 진로진학부 대표색과 사이트별 고유색(첫 화면 카드 색과 같다) */
   --bon-brand: #1e3a8a;
   --bon-c-plan: #1d4ed8;   /* 2028 대입전형 시행계획 요약 */
-  --bon-c-jinhak: #6d28d9; /* 대입·진로 자료실 */
+  --bon-c-jinhak: #6d28d9; /* 대입·진로 추천 자료 */
   --bon-c-gg: #0e7490;     /* 경기도 고등학교 학생수 추이 */
   --bon-c-news: #15803d;   /* 뉴스 읽고 진로 확장하기 */
   --bon-c-book: #c2410c;   /* 독서나눔 릴레이 */
@@ -79,7 +79,7 @@
 /* ───────── 맨 위 경로 줄(하위 사이트 공통) ─────────
   첫 화면을 뺀 모든 사이트의 <body> 바로 안 맨 위에 둔다. 학교명을 누르면 첫 화면으로 간다.
   <nav class="bon-bar" aria-label="진로진학부 사이트"><div class="bon-bar-in">
-    <a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 자료실</span>
+    <a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 추천 자료</span>
   </div></nav>
   안쪽 폭은 그 사이트 본문 폭에 맞춰 페이지에서 --bon-max 로 바꾼다(예: .bon-bar { --bon-max: 1440px; }).
 */
@@ -93,10 +93,10 @@
 .bon-bar span::before { content: "›"; margin-right: 8px; color: var(--bon-muted); }
 @media print { .bon-bar { display: none; } }
 
-/* ───────── 머리말(첫 화면·자료실처럼 머리말을 새로 짤 때) ─────────
+/* ───────── 머리말(첫 화면·추천 자료처럼 머리말을 새로 짤 때) ─────────
   <header class="bon-header">
     <p class="bon-school">봉일천고등학교 진로진학부</p>   ← 위 경로 줄을 쓰는 페이지에서는 뺀다
-    <h1 class="bon-title">대입·진로 자료실</h1>
+    <h1 class="bon-title">대입·진로 추천 자료</h1>
     <p class="bon-lead">한두 문장 소개</p>
   </header>
 */
