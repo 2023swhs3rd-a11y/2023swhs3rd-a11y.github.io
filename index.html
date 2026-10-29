@@ -18,37 +18,18 @@
   // 예전 주소(루트 + #대학 등)로 들어온 링크는 그대로 2028 대시보드로 보낸다
   if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
 </script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="/assets/site.css?v=1">
 <style>
+  /* 글꼴·바탕·글자색·사이트별 색은 /assets/site.css 의 --bon-* 값을 그대로 쓴다 */
   :root {
-    --bg: #f4f5f7; --card: #ffffff; --text: #111827; --body: #374151; --muted: #6b7280; --line: #e5e7eb;
-    --brand: #1e3a8a;
-    --plan: #1d4ed8; --jinhak: #6d28d9; --gg: #0e7490; --news: #15803d; --book: #c2410c;
-    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 2px 8px rgba(17,24,39,.05);
-    --shadow-hover: 0 14px 32px rgba(17,24,39,.12);
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #0f1216; --card: #171b21; --text: #f3f4f6; --body: #d1d5db; --muted: #9ca3af; --line: #2a3039;
-      --brand: #a5b4fc;
-      --plan: #7aa2ff; --jinhak: #b79bff; --gg: #4fc3dc; --news: #4ade80; --book: #fb923c;
-      --shadow: none; --shadow-hover: 0 14px 32px rgba(0,0,0,.45);
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0; background: var(--bg); color: var(--body); line-height: 1.65; font-size: 16px;
-    font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
-    -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere;
+    --bg: var(--bon-bg); --card: var(--bon-card); --text: var(--bon-text); --body: var(--bon-body); --muted: var(--bon-muted); --line: var(--bon-line);
+    --plan: var(--bon-c-plan); --jinhak: var(--bon-c-jinhak); --gg: var(--bon-c-gg); --news: var(--bon-c-news); --book: var(--bon-c-book);
+    --shadow: var(--bon-shadow); --shadow-hover: var(--bon-shadow-hover);
   }
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
 
-  /* 머리 */
-  .hero { padding: 56px 0 28px; }
-  .school { display: inline-flex; align-items: center; gap: 8px; margin: 0; font-size: .9rem; font-weight: 700; color: var(--brand); }
-  .school::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-  h1 { margin: 10px 0 10px; color: var(--text); font-size: clamp(1.9rem, 4.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; }
-  .lead { margin: 0; max-width: 40em; color: var(--muted); font-size: 1.05rem; }
+  /* 머리: 공통 .bon-header에서 위아래 여백만 넓게 */
+  .bon-header { padding: 56px 0 28px; }
 
   /* 묶음 */
   section { margin-top: 30px; }
@@ -93,7 +74,7 @@
     .grid.three > .card:last-child:nth-child(odd) .thumb img { height: 100%; aspect-ratio: auto; }
   }
   @media (max-width: 640px) {
-    .hero { padding-top: 36px; }
+    .bon-header { padding-top: 36px; }
     .grid.three, .grid.two { grid-template-columns: minmax(0, 1fr); gap: 16px; }
     .grid.three > .card:last-child:nth-child(odd) { flex-direction: column; }
     .grid.three > .card:last-child:nth-child(odd) .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
@@ -102,16 +83,14 @@
   }
   @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
-  footer { margin: 52px 0 32px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
-  footer p { margin: 0; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <header class="hero">
-    <p class="school">봉일천고등학교 진로진학부</p>
-    <h1>진로진학 자료실</h1>
-    <p class="lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책으로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
+  <header class="bon-header">
+    <p class="bon-school">봉일천고등학교 진로진학부</p>
+    <h1 class="bon-title">진로진학 자료실</h1>
+    <p class="bon-lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책으로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
   </header>
 
   <main>
@@ -135,7 +114,7 @@
         </a>
 
         <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
-          <div class="thumb"><img src="/jinhak/og.png?v=2" alt="" loading="lazy"></div>
+          <div class="thumb"><img src="/jinhak/og.png?v=3" alt="" loading="lazy"></div>
           <div class="body">
             <div class="top">
               <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10l2 2h6.5A1.5 1.5 0 0 1 20 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 12h8M8 15.5h5"/></svg></span>
@@ -197,7 +176,7 @@
     </section>
   </main>
 
-  <footer>
+  <footer class="bon-footer">
     <p>© 봉일천고등학교 진로진학부</p>
     <p>모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
   </footer>

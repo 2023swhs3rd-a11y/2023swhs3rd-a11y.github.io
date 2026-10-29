@@ -3,139 +3,154 @@
 
   첫 화면과 다섯 사이트(2028plan, jinhak, gg-highschool-students, news, book)가 모두 같은 주소
   2023swhs3rd-a11y.github.io 아래에 있으므로, 각 페이지 <head>에 아래 한 줄을 사이트 자체 CSS보다
-  "먼저" 넣으면 글꼴·색·머리말·바닥글을 한 곳에서 맞출 수 있다. (아직 어느 페이지에도 붙이지 않았다)
+  "먼저" 넣으면 글꼴·색·머리말·바닥글을 한 곳에서 맞출 수 있다.
 
     <link rel="stylesheet" href="/assets/site.css?v=1">
 
   원칙
   - 사이트마다 이미 .card .wrap --bg --accent 같은 이름을 서로 다른 뜻으로 쓰므로,
-    이 파일의 변수는 모두 --site-*, 클래스는 모두 .site-* 로만 만든다. 기존 화면을 덮어쓰지 않는다.
+    이 파일의 변수는 모두 --bon-*, 클래스는 모두 .bon-*(봉일천) 로만 만든다. 기존 화면을 덮어쓰지 않는다.
+    (.site-footer 처럼 흔한 이름은 book·news가 이미 쓰고 있어 피했다)
   - body 기본값은 :where()로 감싸 우선순위를 0으로 두었다. 사이트 CSS가 같은 속성을 정하면 그쪽이 이긴다.
-  - 사이트 고유색은 페이지에서 --site-accent 만 바꾼다(예: <body style="--site-accent: var(--site-c-jinhak)">).
+  - 사이트 고유색은 페이지에서 --bon-accent 만 바꾼다(예: <body style="--bon-accent: var(--bon-c-jinhak)">).
   - 이 파일을 고치면 붙인 사이트가 모두 한꺼번에 바뀐다. 고친 뒤에는 각 사이트의 ?v= 숫자를 올린다.
 
-  글꼴: Pretendard (SIL Open Font License 1.1) — jsDelivr에서 쓰는 글자 조각만 받는다.
+  글꼴: Pretendard Variable 1.3.9 (SIL Open Font License 1.1) — /assets/fonts/pretendard/ 에 두고 같은 주소에서 내보낸다.
+  외부 CDN을 쓰지 않으므로 외부 글꼴을 막는 사이트(2028plan의 CSP font-src 'self')에서도 그대로 쓸 수 있고,
+  브라우저는 화면에 나온 글자가 든 조각만 받는다.
 */
-@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css");
+@import url("/assets/fonts/pretendard/pretendard.css");
 
 /* ───────── 디자인 값 ───────── */
 :root {
-  --site-font: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  --bon-font: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
 
   /* 바탕과 글자 */
-  --site-bg: #f4f5f7;       /* 페이지 바탕 */
-  --site-card: #ffffff;     /* 카드·패널 */
-  --site-soft: #eef1f5;     /* 안내 상자·배지 바탕 */
-  --site-text: #111827;     /* 제목 */
-  --site-body: #374151;     /* 본문 */
-  --site-muted: #6b7280;    /* 보조 설명 */
-  --site-line: #e5e7eb;     /* 테두리·구분선 */
+  --bon-bg: #f4f5f7;       /* 페이지 바탕 */
+  --bon-card: #ffffff;     /* 카드·패널 */
+  --bon-soft: #eef1f5;     /* 안내 상자·배지 바탕 */
+  --bon-text: #111827;     /* 제목 */
+  --bon-body: #374151;     /* 본문 */
+  --bon-muted: #6b7280;    /* 보조 설명 */
+  --bon-line: #e5e7eb;     /* 테두리·구분선 */
 
   /* 진로진학부 대표색과 사이트별 고유색(첫 화면 카드 색과 같다) */
-  --site-brand: #1e3a8a;
-  --site-c-plan: #1d4ed8;   /* 2028 대입전형 시행계획 요약 */
-  --site-c-jinhak: #6d28d9; /* 대입·진로 자료실 */
-  --site-c-gg: #0e7490;     /* 경기도 고등학교 학생수 추이 */
-  --site-c-news: #15803d;   /* 뉴스 읽고 진로 확장하기 */
-  --site-c-book: #c2410c;   /* 독서나눔 릴레이 */
-  --site-accent: var(--site-brand);
+  --bon-brand: #1e3a8a;
+  --bon-c-plan: #1d4ed8;   /* 2028 대입전형 시행계획 요약 */
+  --bon-c-jinhak: #6d28d9; /* 대입·진로 자료실 */
+  --bon-c-gg: #0e7490;     /* 경기도 고등학교 학생수 추이 */
+  --bon-c-news: #15803d;   /* 뉴스 읽고 진로 확장하기 */
+  --bon-c-book: #c2410c;   /* 독서나눔 릴레이 */
+  --bon-accent: var(--bon-brand);
 
   /* 모양 */
-  --site-max: 1160px;       /* 본문 최대 폭(표·대시보드처럼 넓어야 하는 사이트는 페이지에서 바꾼다) */
-  --site-gutter: 16px;      /* 좌우 여백 */
-  --site-radius: 16px;      /* 카드 */
-  --site-radius-sm: 10px;   /* 입력칸·작은 상자 */
-  --site-shadow: 0 1px 2px rgba(17,24,39,.04), 0 2px 8px rgba(17,24,39,.05);
-  --site-shadow-hover: 0 14px 32px rgba(17,24,39,.12);
-  --site-ease: .18s ease;
+  --bon-max: 1160px;       /* 본문 최대 폭(표·대시보드처럼 넓어야 하는 사이트는 페이지에서 바꾼다) */
+  --bon-gutter: 16px;      /* 좌우 여백 */
+  --bon-radius: 16px;      /* 카드 */
+  --bon-radius-sm: 10px;   /* 입력칸·작은 상자 */
+  --bon-shadow: 0 1px 2px rgba(17,24,39,.04), 0 2px 8px rgba(17,24,39,.05);
+  --bon-shadow-hover: 0 14px 32px rgba(17,24,39,.12);
+  --bon-ease: .18s ease;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --site-bg: #0f1216; --site-card: #171b21; --site-soft: #222831;
-    --site-text: #f3f4f6; --site-body: #d1d5db; --site-muted: #9ca3af; --site-line: #2a3039;
-    --site-brand: #a5b4fc;
-    --site-c-plan: #7aa2ff; --site-c-jinhak: #b79bff; --site-c-gg: #4fc3dc; --site-c-news: #4ade80; --site-c-book: #fb923c;
-    --site-shadow: none; --site-shadow-hover: 0 14px 32px rgba(0,0,0,.45);
+    --bon-bg: #0f1216; --bon-card: #171b21; --bon-soft: #222831;
+    --bon-text: #f3f4f6; --bon-body: #d1d5db; --bon-muted: #9ca3af; --bon-line: #2a3039;
+    --bon-brand: #a5b4fc;
+    --bon-c-plan: #7aa2ff; --bon-c-jinhak: #b79bff; --bon-c-gg: #4fc3dc; --bon-c-news: #4ade80; --bon-c-book: #fb923c;
+    --bon-shadow: none; --bon-shadow-hover: 0 14px 32px rgba(0,0,0,.45);
   }
 }
 
 /* ───────── 기본값(우선순위 0) ───────── */
 :where(*, *::before, *::after) { box-sizing: border-box; }
 :where(body) {
-  margin: 0; background: var(--site-bg); color: var(--site-body);
-  font-family: var(--site-font); font-size: 16px; line-height: 1.65;
+  margin: 0; background: var(--bon-bg); color: var(--bon-body);
+  font-family: var(--bon-font); font-size: 16px; line-height: 1.65;
   -webkit-font-smoothing: antialiased;
   word-break: keep-all;      /* 한국어 낱말 중간에서 줄이 바뀌지 않게 */
   overflow-wrap: anywhere;   /* 긴 주소·영문은 칸을 넘지 않게 */
 }
-:where(h1, h2, h3) { color: var(--site-text); letter-spacing: -0.02em; }
-:where(button, input, select, textarea) { font: inherit; }
+/* 제목 색·크기와 버튼 글자 크기는 사이트마다 다르므로 건드리지 않는다(물려받는 색을 덮어쓰지 않게) */
+:where(button, input, select, textarea) { font-family: inherit; }
 
-.site-wrap { max-width: var(--site-max); margin: 0 auto; padding: 0 var(--site-gutter); }
+.bon-wrap { max-width: var(--bon-max); margin: 0 auto; padding: 0 var(--bon-gutter); }
 
-/* ───────── 머리말 ─────────
-  <header class="site-header">
-    <a class="site-home" href="/">처음으로</a>          ← 첫 화면에서는 뺀다
-    <p class="site-school">봉일천고등학교 진로진학부</p>
-    <h1 class="site-title">대입·진로 자료실</h1>
-    <p class="site-lead">한두 문장 소개</p>
+/* ───────── 맨 위 경로 줄(하위 사이트 공통) ─────────
+  첫 화면을 뺀 모든 사이트의 <body> 바로 안 맨 위에 둔다. 학교명을 누르면 첫 화면으로 간다.
+  <nav class="bon-bar" aria-label="진로진학부 사이트"><div class="bon-bar-in">
+    <a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 자료실</span>
+  </div></nav>
+  안쪽 폭은 그 사이트 본문 폭에 맞춰 페이지에서 --bon-max 로 바꾼다(예: .bon-bar { --bon-max: 1440px; }).
+*/
+.bon-bar { background: var(--bon-card); border-bottom: 1px solid var(--bon-line); font-family: var(--bon-font); font-size: .82rem; line-height: 1.4; }
+.bon-bar-in { max-width: var(--bon-max); margin: 0 auto; padding: 8px var(--bon-gutter); display: flex; align-items: center; gap: 8px; min-width: 0; }
+.bon-bar a { display: inline-flex; align-items: center; gap: 7px; flex: none; color: var(--bon-brand); font-weight: 700; text-decoration: none; }
+.bon-bar a::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+.bon-bar a:hover { text-decoration: underline; }
+.bon-bar a:focus-visible { outline: 2px solid var(--bon-brand); outline-offset: 2px; border-radius: 4px; }
+.bon-bar span { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--bon-muted); }
+.bon-bar span::before { content: "›"; margin-right: 8px; color: var(--bon-muted); }
+@media print { .bon-bar { display: none; } }
+
+/* ───────── 머리말(첫 화면·자료실처럼 머리말을 새로 짤 때) ─────────
+  <header class="bon-header">
+    <p class="bon-school">봉일천고등학교 진로진학부</p>   ← 위 경로 줄을 쓰는 페이지에서는 뺀다
+    <h1 class="bon-title">대입·진로 자료실</h1>
+    <p class="bon-lead">한두 문장 소개</p>
   </header>
 */
-.site-header { padding: 28px 0 8px; }
-.site-home { display: flex; width: fit-content; align-items: center; gap: 4px; font-size: .88rem; color: var(--site-muted); text-decoration: none; }
-.site-home::before { content: "←"; }
-.site-home:hover { color: var(--site-text); text-decoration: underline; }
-.site-home + .site-school { margin-top: 18px; }
-.site-school { display: flex; width: fit-content; align-items: center; gap: 8px; margin: 0; font-size: .9rem; font-weight: 700; color: var(--site-brand); }
-.site-school::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-.site-title { margin: 8px 0 10px; color: var(--site-text); font-size: clamp(1.9rem, 4.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; }
-.site-lead { margin: 0; max-width: 42em; color: var(--site-muted); font-size: 1.05rem; }
+.bon-header { padding: 28px 0 8px; }
+.bon-school { display: flex; width: fit-content; align-items: center; gap: 8px; margin: 0; font-size: .9rem; font-weight: 700; color: var(--bon-brand); }
+.bon-school::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
+.bon-title { margin: 8px 0 10px; color: var(--bon-text); font-size: clamp(1.9rem, 4.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; }
+.bon-lead { margin: 0; max-width: 42em; color: var(--bon-muted); font-size: 1.05rem; }
 
-/* 묶음 제목: <div class="site-sec"><h2>제목</h2><p>보조 설명</p></div> */
-.site-sec { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
-.site-sec h2 { margin: 0; color: var(--site-text); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
-.site-sec p { margin: 0; color: var(--site-muted); font-size: .9rem; }
-@media (max-width: 640px) { .site-sec { flex-direction: column; gap: 2px; } }
+/* 묶음 제목: <div class="bon-sec"><h2>제목</h2><p>보조 설명</p></div> */
+.bon-sec { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
+.bon-sec h2 { margin: 0; color: var(--bon-text); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
+.bon-sec p { margin: 0; color: var(--bon-muted); font-size: .9rem; }
+@media (max-width: 640px) { .bon-sec { flex-direction: column; gap: 2px; } }
 
 /* ───────── 카드·태그·링크 ───────── */
-.site-card {
+.bon-card {
   position: relative; display: flex; flex-direction: column; min-width: 0;
-  background: var(--site-card); border: 1px solid var(--site-line); border-radius: var(--site-radius);
-  overflow: hidden; box-shadow: var(--site-shadow);
-  transition: transform var(--site-ease), box-shadow var(--site-ease), border-color var(--site-ease);
+  background: var(--bon-card); border: 1px solid var(--bon-line); border-radius: var(--bon-radius);
+  overflow: hidden; box-shadow: var(--bon-shadow);
+  transition: transform var(--bon-ease), box-shadow var(--bon-ease), border-color var(--bon-ease);
 }
-a.site-card { color: inherit; text-decoration: none; }
-a.site-card:hover, .site-card.is-link:hover { transform: translateY(-3px); box-shadow: var(--site-shadow-hover); border-color: color-mix(in srgb, var(--site-accent) 45%, var(--site-line)); }
-.site-card:focus-visible { outline: 3px solid var(--site-accent); outline-offset: 3px; }
+a.bon-card { color: inherit; text-decoration: none; }
+a.bon-card:hover, .bon-card.is-link:hover { transform: translateY(-3px); box-shadow: var(--bon-shadow-hover); border-color: color-mix(in srgb, var(--bon-accent) 45%, var(--bon-line)); }
+.bon-card:focus-visible { outline: 3px solid var(--bon-accent); outline-offset: 3px; }
 
-/* 태그(알약 모양): <span class="site-tag">대입 전형</span> <span class="site-tag is-plain">전 학년</span> */
-.site-tag { display: inline-flex; align-self: flex-start; width: fit-content; align-items: center; gap: 4px; font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--site-accent); background: color-mix(in srgb, var(--site-accent) 10%, var(--site-card)); }
-.site-tag.is-plain { color: var(--site-muted); background: transparent; border: 1px solid var(--site-line); }
+/* 태그(알약 모양): <span class="bon-tag">대입 전형</span> <span class="bon-tag is-plain">전 학년</span> */
+.bon-tag { display: inline-flex; align-self: flex-start; width: fit-content; align-items: center; gap: 4px; font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--bon-accent); background: color-mix(in srgb, var(--bon-accent) 10%, var(--bon-card)); }
+.bon-tag.is-plain { color: var(--bon-muted); background: transparent; border: 1px solid var(--bon-line); }
 
 /* 바로가기 링크: 안쪽 이동은 →, 바깥 사이트는 .is-out 으로 ↗ */
-.site-go { display: inline-flex; align-self: flex-start; width: fit-content; align-items: center; gap: 6px; font-weight: 700; font-size: .95rem; color: var(--site-accent); text-decoration: none; }
-.site-go::after { content: "→"; transition: transform var(--site-ease); }
-.site-go.is-out::after { content: "↗"; }
-.site-go:hover { text-decoration: underline; }
-.site-go:hover::after { transform: translateX(3px); }
-.site-go.is-out:hover::after { transform: translate(2px, -2px); }
+.bon-go { display: inline-flex; align-self: flex-start; width: fit-content; align-items: center; gap: 6px; font-weight: 700; font-size: .95rem; color: var(--bon-accent); text-decoration: none; }
+.bon-go::after { content: "→"; transition: transform var(--bon-ease); }
+.bon-go.is-out::after { content: "↗"; }
+.bon-go:hover { text-decoration: underline; }
+.bon-go:hover::after { transform: translateX(3px); }
+.bon-go.is-out:hover::after { transform: translate(2px, -2px); }
 
-/* 안내 상자: <p class="site-note"><b>강조</b> 설명</p> */
-.site-note { margin: 14px 0 0; font-size: .86rem; color: var(--site-muted); background: var(--site-soft); border-radius: 12px; padding: 12px 16px; }
-.site-note b { color: var(--site-text); }
+/* 안내 상자: <p class="bon-note"><b>강조</b> 설명</p> */
+.bon-note { margin: 14px 0 0; font-size: .86rem; color: var(--bon-muted); background: var(--bon-soft); border-radius: 12px; padding: 12px 16px; }
+.bon-note b { color: var(--bon-text); }
 
 /* ───────── 바닥글 ─────────
-  <footer class="site-footer">
-    <p class="site-footer-info">이 사이트만의 안내(선택)</p>
+  <footer class="bon-footer">
+    <p class="bon-footer-info">이 사이트만의 안내(선택)</p>
     <p>© 봉일천고등학교 진로진학부</p>
     <p>마지막 정리: 2026년 10월 28일</p>
   </footer>
 */
-.site-footer { margin: 52px 0 32px; padding-top: 18px; border-top: 1px solid var(--site-line); color: var(--site-muted); font-size: .85rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
-.site-footer p { margin: 0; }
-.site-footer .site-footer-info { flex: 1 1 100%; }
-.site-footer a { color: inherit; }
+.bon-footer { margin: 52px 0 32px; padding-top: 18px; border-top: 1px solid var(--bon-line); color: var(--bon-muted); font-size: .85rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
+.bon-footer p { margin: 0; }
+.bon-footer .bon-footer-info { flex: 1 1 100%; }
+.bon-footer a { color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
-  .site-card, .site-go::after { transition: none; }
+  .bon-card, .bon-go::after { transition: none; }
 }

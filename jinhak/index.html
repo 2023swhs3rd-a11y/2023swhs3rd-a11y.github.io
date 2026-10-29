@@ -13,49 +13,31 @@
 <meta property="og:title" content="봉일천고 대입·진로 자료실">
 <meta property="og:description" content="대입 포털, 전형 해설, 대학 가이드북, 과목 선택 자료, 영상까지 종류별로 모으고 해설을 붙였습니다.">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/jinhak/">
-<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/jinhak/og.png?v=2">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<meta property="og:image" content="https://2023swhs3rd-a11y.github.io/jinhak/og.png?v=3">
+<link rel="stylesheet" href="/assets/site.css?v=1">
 <style>
   :root {
-    --bg: #f4f5f7; --card: #ffffff; --text: #111827; --body: #374151; --muted: #6b7280; --line: #e5e7eb; --soft: #eef1f5;
-    --brand: #1e3a8a; --accent: #6d28d9;
+    /* 바탕·글자색·그림자는 /assets/site.css 의 --bon-* 값을 그대로 쓴다 */
+    --bg: var(--bon-bg); --card: var(--bon-card); --text: var(--bon-text); --body: var(--bon-body); --muted: var(--bon-muted); --line: var(--bon-line); --soft: var(--bon-soft);
+    --accent: var(--bon-c-jinhak); --bon-accent: var(--accent);
     /* 분류 색: 9가지가 서로 구별되도록 고른 값(밝은 화면 700단계, 어두운 화면 400단계) */
     --c-course: #a16207; --c-explore: #15803d; --c-major: #be185d; --c-policy: #6d28d9; --c-guide: #1d4ed8;
     --c-exam: #c2410c; --c-college: #0f766e; --c-portal: #a21caf; --c-teacher: #475569;
-    --radius: 16px;
-    --shadow: 0 1px 2px rgba(17,24,39,.04), 0 2px 8px rgba(17,24,39,.05);
-    --shadow-hover: 0 14px 32px rgba(17,24,39,.12);
+    --radius: var(--bon-radius); --shadow: var(--bon-shadow); --shadow-hover: var(--bon-shadow-hover);
   }
   @media (prefers-color-scheme: dark) {
     :root {
-      --bg: #0f1216; --card: #171b21; --text: #f3f4f6; --body: #d1d5db; --muted: #9ca3af; --line: #2a3039; --soft: #222831;
-      --brand: #a5b4fc; --accent: #b79bff;
       --c-course: #facc15; --c-explore: #4ade80; --c-major: #f472b6; --c-policy: #a78bfa; --c-guide: #60a5fa;
       --c-exam: #fb923c; --c-college: #2dd4bf; --c-portal: #e879f9; --c-teacher: #94a3b8;
-      --shadow: none; --shadow-hover: 0 14px 32px rgba(0,0,0,.45);
     }
   }
-  * { box-sizing: border-box; }
   html { scroll-padding-top: 150px; }
-  body {
-    margin: 0; background: var(--bg); color: var(--body); line-height: 1.65; font-size: 16px;
-    font-family: "Pretendard Variable", Pretendard, system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
-    -webkit-font-smoothing: antialiased; word-break: keep-all; overflow-wrap: anywhere;
-  }
   h1, h2, h3 { color: var(--text); }
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
   a { color: var(--accent); }
   .tint { background: color-mix(in srgb, var(--c) 12%, var(--card)); }
 
   /* 머리 */
-  .hero { padding: 28px 0 8px; }
-  .home { display: flex; width: fit-content; align-items: center; gap: 4px; font-size: .88rem; color: var(--muted); text-decoration: none; }
-  .home svg { width: 15px; height: 15px; }
-  .home:hover { color: var(--text); text-decoration: underline; }
-  .school { display: flex; width: fit-content; align-items: center; gap: 8px; margin: 18px 0 0; font-size: .9rem; font-weight: 700; color: var(--brand); }
-  .school::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: currentColor; }
-  h1 { margin: 8px 0 10px; font-size: clamp(1.9rem, 4.6vw, 2.75rem); font-weight: 800; letter-spacing: -0.035em; line-height: 1.2; }
-  .lead { margin: 0; max-width: 42em; color: var(--muted); font-size: 1.05rem; }
   .stats { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: 14px 0 0; padding: 0; list-style: none; font-size: .92rem; color: var(--muted); }
   .stats b { color: var(--text); font-weight: 800; font-size: 1.05rem; font-variant-numeric: tabular-nums; margin-right: 3px; }
   .stats li:first-child b { color: var(--accent); }
@@ -160,18 +142,14 @@
   .open:hover { text-decoration: underline; }
   .item:hover .open svg { transform: translate(2px, -2px); }
   .empty { text-align: center; color: var(--muted); padding: 48px 0; }
-  footer { margin: 52px 0 32px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--muted); font-size: .85rem; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 16px; }
-  footer p { margin: 0; }
-  footer .info { flex: 1 1 100%; }
 </style>
 </head>
 <body>
+<nav class="bon-bar" aria-label="진로진학부 사이트"><div class="bon-bar-in"><a href="/">봉일천고등학교 진로진학부</a><span aria-current="page">대입·진로 자료실</span></div></nav>
 <div class="wrap">
-  <header class="hero">
-    <a class="home" href="/"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>처음으로</a>
-    <p class="school">봉일천고등학교 진로진학부</p>
-    <h1>대입·진로 자료실</h1>
-    <p class="lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
+  <header class="bon-header">
+    <h1 class="bon-title">대입·진로 자료실</h1>
+    <p class="bon-lead">믿을 만한 대입·진로 웹사이트와 자료를 종류별로 모으고, 무엇이 들어 있고 언제 읽으면 좋은지 해설을 붙였습니다.</p>
     <ul class="stats" id="stats"></ul>
   </header>
 
@@ -226,8 +204,8 @@
 <main class="wrap">
   <p class="count" id="count" aria-live="polite"></p>
   <div id="list"></div>
-  <footer>
-    <p class="info">미리보기 그림은 각 웹사이트의 첫 화면과 PDF의 첫 쪽입니다. 링크가 열리지 않으면 진로진학부에 알려 주세요.</p>
+  <footer class="bon-footer">
+    <p class="bon-footer-info">미리보기 그림은 각 웹사이트의 첫 화면과 PDF의 첫 쪽입니다. 링크가 열리지 않으면 진로진학부에 알려 주세요.</p>
     <p>© 봉일천고등학교 진로진학부</p>
     <p id="updated"></p>
   </footer>
