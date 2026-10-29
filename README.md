@@ -1,14 +1,14 @@
 # 봉일천고 진로진학부 사이트 (2023swhs3rd-a11y.github.io)
 
 GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입·진로 추천 자료 저장소입니다.
-다섯 사이트 가운데 네 개(2028plan, gg-highschool-students, news, book)는 각자 저장소가 있고, 같은 주소 아래 `/저장소이름/`으로 열립니다.
+여섯 사이트 가운데 다섯 개(2028plan, gg-highschool-students, news, book, matrix)는 각자 저장소가 있고, 같은 주소 아래 `/저장소이름/`으로 열립니다.
 
 ## 구성
 
 | 경로 | 내용 |
 | --- | --- |
-| `index.html` | 첫 화면. 사이트 카드 다섯 장과, 각 사이트가 공개한 파일에서 읽은 최신 업데이트 날짜 |
-| `assets/site.css` | 다섯 사이트 공통 스타일(글꼴·색·맨 위 경로 줄·바닥글). 쓰는 법은 파일 첫머리 주석 |
+| `index.html` | 첫 화면. 사이트 카드 여섯 장과, 각 사이트가 공개한 파일에서 읽은 최신 업데이트 날짜 |
+| `assets/site.css` | 사이트 공통 스타일(글꼴·색·맨 위 경로 줄·바닥글). 쓰는 법은 파일 첫머리 주석 |
 | `assets/fonts/pretendard/` | Pretendard 글꼴(SIL OFL). `site.css`가 불러온다 |
 | `jinhak/` | 대입·진로 추천 자료: `index.html`(화면), `resources.json`(자료 목록), `thumbs/`(미리보기 그림) |
 | `scripts/` | 추천 자료 검사·링크 점검·미리보기 그림 만들기 |
