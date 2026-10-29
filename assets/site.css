@@ -41,6 +41,7 @@
   --bon-c-gg: #0e7490;     /* 경기도 고등학교 학생수 추이 */
   --bon-c-news: #15803d;   /* 뉴스 읽고 진로 확장하기 */
   --bon-c-book: #c2410c;   /* 독서나눔 릴레이 */
+  --bon-c-matrix: #be185d; /* 블룸 교과탐구활동 매트릭스 */
   --bon-accent: var(--bon-brand);
 
   /* 모양 */
@@ -57,7 +58,7 @@
     --bon-bg: #0f1216; --bon-card: #171b21; --bon-soft: #222831;
     --bon-text: #f3f4f6; --bon-body: #d1d5db; --bon-muted: #9ca3af; --bon-line: #2a3039;
     --bon-brand: #a5b4fc;
-    --bon-c-plan: #7aa2ff; --bon-c-jinhak: #b79bff; --bon-c-gg: #4fc3dc; --bon-c-news: #4ade80; --bon-c-book: #fb923c;
+    --bon-c-plan: #7aa2ff; --bon-c-jinhak: #b79bff; --bon-c-gg: #4fc3dc; --bon-c-news: #4ade80; --bon-c-book: #fb923c; --bon-c-matrix: #f472b6;
     --bon-shadow: none; --bon-shadow-hover: 0 14px 32px rgba(0,0,0,.45);
   }
 }

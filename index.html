@@ -4,26 +4,26 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>봉일천고 진로진학 자료실</title>
-<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 추천 자료, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이">
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 추천 자료, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이, 블룸 교과탐구활동 매트릭스">
 <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png?v=1" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="봉일천고 진로진학 자료실">
-<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 추천 자료 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이">
+<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 추천 자료 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이 · 블룸 교과탐구활동 매트릭스">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:image" content="https://2023swhs3rd-a11y.github.io/2028plan/og.png">
 <script>
   // 예전 주소(루트 + #대학 등)로 들어온 링크는 그대로 2028 대시보드로 보낸다
   if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
 </script>
-<link rel="stylesheet" href="/assets/site.css?v=1">
+<link rel="stylesheet" href="/assets/site.css?v=2">
 <style>
   /* 글꼴·바탕·글자색·사이트별 색은 /assets/site.css 의 --bon-* 값을 그대로 쓴다 */
   :root {
     --bg: var(--bon-bg); --card: var(--bon-card); --text: var(--bon-text); --body: var(--bon-body); --muted: var(--bon-muted); --line: var(--bon-line);
-    --plan: var(--bon-c-plan); --jinhak: var(--bon-c-jinhak); --gg: var(--bon-c-gg); --news: var(--bon-c-news); --book: var(--bon-c-book);
+    --plan: var(--bon-c-plan); --jinhak: var(--bon-c-jinhak); --gg: var(--bon-c-gg); --news: var(--bon-c-news); --book: var(--bon-c-book); --matrix: var(--bon-c-matrix);
     --shadow: var(--bon-shadow); --shadow-hover: var(--bon-shadow-hover);
   }
   .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
@@ -93,7 +93,7 @@
   <header class="bon-header">
     <p class="bon-school">봉일천고등학교 진로진학부</p>
     <h1 class="bon-title">진로진학 자료실</h1>
-    <p class="bon-lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책으로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
+    <p class="bon-lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책과 교과 탐구로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
   </header>
 
   <main>
@@ -147,7 +147,7 @@
     <section aria-labelledby="s2">
       <div class="sec-h">
         <h2 id="s2">읽고 탐구하기</h2>
-        <p>뉴스와 책으로 관심 분야를 넓힐 때</p>
+        <p>뉴스와 책, 교과 탐구로 관심 분야를 넓힐 때</p>
       </div>
       <div class="grid three">
         <a class="card" href="/book/" style="--c: var(--book)">
@@ -175,6 +175,18 @@
             <span class="go">이번 주 뉴스 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
           </div>
         </a>
+        <a class="card" href="/matrix/" style="--c: var(--matrix)">
+          <div class="thumb"><img src="/assets/matrix.jpg" alt="" loading="lazy"></div>
+          <div class="body">
+            <div class="top">
+              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9.5h17M3.5 15h17M9.5 3.5v17M15 3.5v17"/></svg></span>
+              <div class="tags"><span class="tag">교과 탐구</span><span class="tag plain">학생·선생님</span></div>
+            </div>
+            <h3>블룸 교과탐구활동 매트릭스</h3>
+            <p class="desc">블룸의 개정 교육목표 분류 24칸에 2022 개정 교육과정 70과목의 성취기준을 놓고, 과목이나 탐구 주제에 맞는 활동을 추천합니다.</p>
+            <span class="go">매트릭스 열기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+          </div>
+        </a>
       </div>
     </section>
   </main>
@@ -192,6 +204,7 @@
     '/jinhak/': ['/jinhak/resources.json', /"updated":\s*"(\d{4})-(\d{2})-(\d{2})/, '자료 목록을 마지막으로 정리한 날'],
     '/gg-highschool-students/': ['/gg-highschool-students/data/db.json', /"collected":\s*"(\d{4})-(\d{2})-(\d{2})/, '학교알리미 자료를 마지막으로 모은 날'],
     '/news/': ['/news/data/index.json', /"date":\s*"(\d{4})-(\d{2})-(\d{2})/g, '가장 최근 호 발행일'],
+    '/matrix/': ['/matrix/index.html', /id="version">업데이트 (\d{4})-(\d{2})-(\d{2})/, '매트릭스를 마지막으로 고친 날'],
     '/book/': ['/book/js/common.js', /VERSION\s*=\s*"[^"(]*\((\d{4})\.(\d{1,2})\.(\d{1,2})\)/, '게시판을 마지막으로 고친 날'],
   };
   const today = new Date(); today.setHours(0, 0, 0, 0);
