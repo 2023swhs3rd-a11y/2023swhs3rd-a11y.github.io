@@ -58,6 +58,9 @@
   .icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, var(--card)); }
   .icon svg { width: 19px; height: 19px; }
   .tags { display: flex; flex-wrap: wrap; gap: 5px; }
+  /* 최신 업데이트 날짜: 각 사이트가 공개한 파일에서 읽어 카드 오른쪽 위에 둔다. 최근 7일 안이면 사이트 색 점 */
+  .upd { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .upd.fresh::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
   .tag { font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--card)); }
   .tag.plain { color: var(--muted); background: transparent; border: 1px solid var(--line); }
   .card h3 { margin: 4px 0 0; color: var(--text); font-size: 1.22rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.35; }
@@ -181,5 +184,34 @@
     <p>모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
   </footer>
 </div>
+<script>
+  // 사이트별 최신 업데이트 날짜. 모두 같은 주소의 공개 파일이라 외부 서비스가 필요 없다.
+  // 어느 하나를 읽지 못해도 그 카드만 날짜 없이 둔다.
+  const UPD = {
+    '/2028plan/': ['/2028plan/sitemap.xml', /<lastmod>(\d{4})-(\d{2})-(\d{2})/, '데이터 버전 기준일'],
+    '/jinhak/': ['/jinhak/resources.json', /"updated":\s*"(\d{4})-(\d{2})-(\d{2})/, '자료 목록을 마지막으로 정리한 날'],
+    '/gg-highschool-students/': ['/gg-highschool-students/data/db.json', /"collected":\s*"(\d{4})-(\d{2})-(\d{2})/, '학교알리미 자료를 마지막으로 모은 날'],
+    '/news/': ['/news/data/index.json', /"date":\s*"(\d{4})-(\d{2})-(\d{2})/g, '가장 최근 호 발행일'],
+    '/book/': ['/book/js/common.js', /VERSION\s*=\s*"[^"(]*\((\d{4})\.(\d{1,2})\.(\d{1,2})\)/, '게시판을 마지막으로 고친 날'],
+  };
+  const today = new Date(); today.setHours(0, 0, 0, 0);
+  document.querySelectorAll('a.card').forEach(async (card) => {
+    const src = UPD[card.getAttribute('href')];
+    if (!src) return;
+    try {
+      const text = await (await fetch(src[0], { cache: 'no-cache' })).text();
+      // 여러 개가 나오면(news의 호 목록) 가장 늦은 날짜
+      const dates = [...text.matchAll(new RegExp(src[1].source, 'g'))].map((m) => new Date(+m[1], +m[2] - 1, +m[3]));
+      if (!dates.length) return;
+      const d = new Date(Math.max(...dates));
+      const days = Math.round((today - d) / 864e5);
+      const el = document.createElement('span');
+      el.className = 'upd' + (days <= 7 ? ' fresh' : '');
+      el.title = src[2];
+      el.textContent = (days === 0 ? '오늘' : days === 1 ? '어제' : (d.getFullYear() === today.getFullYear() ? '' : d.getFullYear() + '년 ') + (d.getMonth() + 1) + '월 ' + d.getDate() + '일') + ' 업데이트';
+      card.querySelector('.top').appendChild(el);
+    } catch (e) { /* 날짜 없이 둔다 */ }
+  });
+</script>
 </body>
 </html>
