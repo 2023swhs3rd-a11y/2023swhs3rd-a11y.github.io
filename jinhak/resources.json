@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-28",
+ "updated": "2026-10-30",
  "categories": [
   {
    "id": "course",
@@ -9,7 +9,7 @@
   {
    "id": "explore",
    "name": "진로 찾기",
-   "desc": "적성 검사, 직업 정보, 진로 체험과 멘토링, 진로 설계 워크북으로 관심 분야를 찾습니다."
+   "desc": "적성 검사, 직업 정보, 진로 체험과 멘토링, 진로 설계 워크북, 달라지는 직업 세계를 다룬 다큐 영상으로 관심 분야를 찾습니다."
   },
   {
    "id": "major",
@@ -171,6 +171,83 @@
    "kind": "웹사이트",
    "who": "t",
    "grade": ["고1", "고2"]
+  },
+  {
+   "id": "8fbebb7e39",
+   "cat": "explore",
+   "title": "[추적60분] 당신의 직업은 안녕하십니까 (멋진 신AI세계 1부)",
+   "url": "https://drive.google.com/file/d/18BVhkp_oEaSSc7CFqrjs0pOLzyKeyVYw/view",
+   "src": "KBS 추적60분",
+   "desc": "2026년 1월 2일 방송된 신년기획 1부입니다. 인공지능이 일자리와 직업 세계를 어떻게 바꾸고 있는지 다룹니다. 희망 직업이 앞으로 어떻게 달라질지 생각해 볼 때 봅니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "6c5f09d0a7",
+   "cat": "explore",
+   "title": "[추적60분] AI와 범죄, 진짜가 사라졌다 (멋진 신AI세계 2부)",
+   "url": "https://drive.google.com/file/d/1kx50HnXS6GGYJhhpFL8SX-fg-RAlw56a/view",
+   "src": "KBS 추적60분",
+   "desc": "2026년 1월 9일 방송된 신년기획 2부입니다. 인공지능이 범죄에 쓰이는 사례와 진짜와 가짜를 가리기 어려워진 사회를 다룹니다. 정보보안·법·미디어 분야에 관심 있는 학생에게 맞습니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "4c7feffc72",
+   "cat": "explore",
+   "title": "[SBS 뉴스토리] 컴공 = 취업 공식은 깨졌다",
+   "url": "https://drive.google.com/file/d/1GfjWiu-v2ZIYJVuKfJBhcLvlrBf9DsXa/view",
+   "src": "SBS 뉴스토리",
+   "desc": "컴퓨터공학 전공이 곧 취업이라는 공식이 흔들리는 상황을 취재한 영상입니다. 인공지능 시대에 전공과 일자리의 관계를 다시 생각해 봅니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "d1d15c95cb",
+   "cat": "explore",
+   "title": "[KBS 다큐 인사이트] 인재전쟁 1부 공대에 미친 중국",
+   "url": "https://drive.google.com/file/d/15Rcjtoj6LeE2kdUGTZj5h_bRVXx9Y1Wg/view",
+   "src": "KBS 다큐 인사이트",
+   "desc": "2025년 7월 10일 방송입니다. 중국의 우수한 학생들이 의대보다 공대를 택하는 이유와 과학기술 인재 양성 방식을 보여 줍니다. 2부와 이어서 보면 좋습니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "83a64c8279",
+   "cat": "explore",
+   "title": "[KBS 다큐 인사이트] 인재전쟁 2부 의대에 미친 한국",
+   "url": "https://drive.google.com/file/d/1PhJTlcpi748U_7UchmMdcC53vhH7OKjX/view",
+   "src": "KBS 다큐 인사이트",
+   "desc": "2025년 7월 24일 방송입니다. 이공계 인재가 의대로 몰리는 한국의 현실과 과학기술 분야에 미치는 영향을 다룹니다. 이공계·의약계열 진로를 고민하는 학생에게 권합니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "3253c04415",
+   "cat": "explore",
+   "title": "[KBS 다큐 인사이트] 블루칼라 전성시대",
+   "url": "https://drive.google.com/file/d/1OIw_SI0GCw12Eli1sfdRYODlDAeqp-Oz/view",
+   "src": "KBS 다큐 인사이트",
+   "desc": "2026년 4월 23일 방송입니다. 기술직·현장직(블루칼라)에 대한 고정관념을 깨고 높은 소득과 전문성을 갖춘 사람들의 이야기를 들려줍니다. 대학 진학 밖의 진로도 함께 살펴볼 때 봅니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
+  },
+  {
+   "id": "5decd6dbba",
+   "cat": "explore",
+   "title": "[유퀴즈온더블럭] 대체 불가능한 K-이색 직업 모음",
+   "url": "https://drive.google.com/file/d/1WLSmkzNx8qnCcFLsgjg_5G2PNVF4b0Qy/view",
+   "src": "tvN 유 퀴즈 온 더 블럭",
+   "desc": "잘 알려지지 않았지만 꼭 필요한 이색 직업인들의 이야기를 모은 영상입니다. 직업 세계를 넓게 둘러보며 관심 분야를 찾을 때 가볍게 보기 좋습니다.",
+   "kind": "영상",
+   "who": "st",
+   "added": "2026-10-30"
   },
   {
    "id": "c0bdfe6c7b",
