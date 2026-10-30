@@ -308,11 +308,24 @@
     return true;
   }
 
+  // 유튜브 영상 주소 → 영상 id (재생목록·채널은 null)
+  function ytId(url) {
+    try {
+      const u = new URL(url), host = u.hostname.replace(/^www\.|^m\./, '');
+      if (host === 'youtu.be') return u.pathname.slice(1).split('/')[0] || null;
+      if (host === 'youtube.com') return u.searchParams.get('v') || (u.pathname.match(/^\/(?:shorts|embed|live)\/([\w-]+)/) || [])[1] || null;
+    } catch {}
+    return null;
+  }
+
   function card(it) {
     const kind = it.kind || '웹사이트';
     const isVideo = kind === '영상';
-    // 미리보기 그림은 thumbs/<id>.jpg. 아직 없으면 그림이 지워지고 밑에 깔린 형태 아이콘이 보인다
-    const pic = `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span><img src="thumbs/${esc(it.id)}.jpg" alt="" loading="lazy" decoding="async" onerror="this.remove()">`
+    // 미리보기 그림은 thumbs/<id>.jpg. 아직 없으면 유튜브 영상은 대표 이미지를 바로 쓰고,
+    // 그것도 없으면 그림이 지워지고 밑에 깔린 형태 아이콘이 보인다
+    const yt = ytId(it.url);
+    const alt = yt ? ` data-alt="https://i.ytimg.com/vi/${esc(yt)}/hqdefault.jpg"` : '';
+    const pic = `<span class="ph">${ICON[kind] || ICON['웹사이트']}</span><img src="thumbs/${esc(it.id)}.jpg" alt="" loading="lazy" decoding="async"${alt} onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=''}else this.remove()">`
       + (isVideo ? `<span class="play"><span>${PLAY}</span></span>` : '');
     const verb = isVideo ? '영상 보기' : kind === 'PDF' ? '자료 열기' : '바로 가기';
     const meta = [
