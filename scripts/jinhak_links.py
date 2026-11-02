@@ -150,7 +150,7 @@ def main():
         out = Path(sys.argv[sys.argv.index("--md") + 1])
         note = ("깨짐은 주소를 고치거나 목록에서 빼야 합니다. 확인 필요는 직접 열어 보고, 정상이면 그대로 두어도 됩니다"
                 "(일부 사이트는 자동 점검을 막습니다).")
-        out.write_text(f"{head}\n\n{body}\n{note}\n\n이 이슈는 매주 '추천 자료 링크 점검' 작업이 고쳐 씁니다.\n", encoding="utf-8")
+        out.write_text(f"{head}\n\n{body}\n{note}\n\n이 이슈는 매주 '주간 상태 점검' 작업이 고쳐 씁니다.\n", encoding="utf-8")
     sys.exit(2 if any(r[1] == BROKEN for r in results) else 0)
 
 
