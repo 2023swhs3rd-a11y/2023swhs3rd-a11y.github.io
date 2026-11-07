@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>픽셀 학교 · 봉일천고 진로진학부</title>
+<meta name="description" content="학생 캐릭터를 골라 픽셀 학교 복도를 걷고, 여섯 교실에 들어가 진로진학부 사이트를 여는 길잡이 페이지">
+<link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
+<link rel="icon" href="/favicon-32.png?v=1" sizes="32x32" type="image/png">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
+<link rel="canonical" href="https://2023swhs3rd-a11y.github.io/school/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="픽셀 학교 · 봉일천고 진로진학부">
+<meta property="og:description" content="캐릭터를 골라 복도를 걷고, 교실 문을 열면 진로진학부 사이트가 열립니다.">
+<meta property="og:url" content="https://2023swhs3rd-a11y.github.io/school/">
+<link rel="preload" href="fonts/galmuri11-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="school.css?v=1">
+</head>
+<body>
+<div class="page">
+  <header class="top">
+    <a class="home" href="/">← 진로진학 자료실</a>
+    <h1>픽셀 학교</h1>
+    <p class="lead">함께 걸을 학생을 고르고, 교실 문으로 들어가면 사이트가 열려요.</p>
+  </header>
+
+  <main>
+    <div class="stage" id="stage" tabindex="0" aria-label="픽셀 학교 복도. 방향키로 걷고 교실 문 앞에서 Enter로 들어갑니다. 아래 교실 목록에서 바로 열 수도 있습니다.">
+      <canvas id="screen" aria-hidden="true"></canvas>
+      <div class="labels" id="labels" aria-hidden="true"></div>
+      <button class="hud" id="change" type="button" hidden>학생 바꾸기</button>
+
+      <div class="dialog" id="dialog" role="dialog" aria-modal="false" aria-labelledby="dlg-title" hidden>
+        <p class="dlg-say" id="dlg-say"></p>
+        <p class="dlg-room"><span id="dlg-num"></span> <strong id="dlg-title"></strong></p>
+        <p class="dlg-desc" id="dlg-desc"></p>
+        <div class="dlg-btns">
+          <button type="button" id="dlg-go">▶ 들어가기 <kbd>Enter</kbd></button>
+          <button type="button" id="dlg-no">돌아가기 <kbd>Esc</kbd></button>
+        </div>
+      </div>
+
+      <div class="menu" id="menu" role="dialog" aria-labelledby="menu-title" hidden>
+        <p class="menu-kicker">PRESS START</p>
+        <h2 id="menu-title">함께 걸을 학생을 골라 주세요</h2>
+        <div class="kids" id="kids"></div>
+        <p class="menu-hint">방향키로 고르고 Enter · 클릭 · 터치</p>
+      </div>
+
+      <div class="fade" id="fade" hidden><span>이동 중…</span></div>
+    </div>
+
+    <div class="pad" id="pad" aria-hidden="true">
+      <div class="dpad">
+        <button type="button" data-dir="up" class="u">▲</button>
+        <button type="button" data-dir="left" class="l">◀</button>
+        <button type="button" data-dir="right" class="r">▶</button>
+        <button type="button" data-dir="down" class="d">▼</button>
+      </div>
+      <button type="button" class="abtn" id="abtn">A<small>확인</small></button>
+    </div>
+
+    <p class="help" id="help">
+      <span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 또는 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 걷기</span>
+      <span><kbd>Enter</kbd> 들어가기 · <kbd>Esc</kbd> 돌아가기</span>
+      <span>교실이나 복도를 클릭·터치하면 그곳까지 걸어가요</span>
+    </p>
+
+    <!-- 교실 목록: 게임 화면이 읽는 원본(주소·이름·색·벽 그림)이자, 키보드·화면낭독기·스크립트 없는 환경의 바로가기 -->
+    <nav class="rooms" aria-label="교실 바로가기">
+      <h2>교실 바로가기</h2>
+      <ol id="rooms">
+        <li><a href="/2028plan/" data-short="2028 대입" data-color="#1d4ed8" data-icon="pennant"><b>2028 대입전형 시행계획 요약</b><span>대학별 2028학년도 전형과 바뀐 점을 찾아봐요.</span></a></li>
+        <li><a href="/jinhak/" data-short="진로 자료" data-color="#6d28d9" data-icon="star"><b>대입·진로 추천 자료</b><span>학년별로 골라 둔 대입·진로 자료 모음이에요.</span></a></li>
+        <li><a href="/gg-highschool-students/" data-short="학생수 통계" data-color="#0e7490" data-icon="chart"><b>경기도 고등학교 학생수 추이</b><span>시·군별 학생수 변화를 지도와 그래프로 봐요.</span></a></li>
+        <li><a href="/book/" data-short="독서나눔" data-color="#c2410c" data-icon="book"><b>독서나눔 릴레이</b><span>읽는 책과 마음에 남은 문장을 함께 나눠요.</span></a></li>
+        <li><a href="/news/" data-short="뉴스 탐구" data-color="#15803d" data-icon="news"><b>뉴스 읽고 진로 확장하기</b><span>한 주의 뉴스를 탐구 질문으로 읽어요.</span></a></li>
+        <li><a href="/matrix/" data-short="탐구 매트릭스" data-color="#be185d" data-icon="pyramid"><b>블룸 교과탐구활동 매트릭스</b><span>과목과 주제에 맞는 탐구 활동을 추천받아요.</span></a></li>
+      </ol>
+    </nav>
+  </main>
+
+  <footer class="foot">
+    <p>봉일천고등학교 진로진학부 · 그림과 캐릭터는 이 페이지를 위해 새로 그렸습니다 · 글꼴 <a href="https://github.com/quiple/galmuri">갈무리</a>(SIL OFL)</p>
+  </footer>
+</div>
+<script src="school.js?v=1"></script>
+</body>
+</html>

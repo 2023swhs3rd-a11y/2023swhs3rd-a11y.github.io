@@ -11,6 +11,7 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 | `assets/site.css` | 사이트 공통 스타일(글꼴·색·맨 위 경로 줄·바닥글). 쓰는 법은 파일 첫머리 주석 |
 | `assets/fonts/pretendard/` | Pretendard 글꼴(SIL OFL). `site.css`가 불러온다 |
 | `jinhak/` | 대입·진로 추천 자료: `index.html`(화면), `resources.json`(자료 목록), `thumbs/`(미리보기 그림) |
+| `school/` | 픽셀 학교: 학생 캐릭터를 골라 복도를 걷고 교실 여섯 칸에서 각 사이트를 연다. 교실 주소·이름·색은 `school/index.html`의 교실 바로가기 목록 하나만 고치면 된다 |
 | `scripts/` | 추천 자료 검사, 주간 상태 점검(사이트·링크), 미리보기 그림 만들기 |
 | `404.html`, `sitemap.xml`, `robots.txt` | 없는 주소 안내, 검색엔진용 목록 |
 
@@ -31,3 +32,12 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 - 대입·진로 추천 자료의 링크 전부(`scripts/jinhak_links.py`).
 
 문제가 있을 때만 이슈 '주간 상태 점검'에 결과를 쓰고, 깨진 것이 새로 생기면 댓글로 알린다. 모두 정상이면 이슈를 닫는다.
+
+## 픽셀 학교 글꼴
+
+`school/fonts/galmuri11-subset.woff2`는 갈무리11(SIL OFL)에서 페이지에 쓰는 글자만 남긴 파일이다. 화면 글자를 바꾸면 다시 만든다(fonttools·brotli 필요, 원본은 npm `galmuri` 패키지의 `dist/Galmuri11.woff2`).
+
+```
+cat school/index.html school/school.js > /tmp/text.txt
+pyftsubset Galmuri11.woff2 --text-file=/tmp/text.txt --unicodes="U+0020-007E,U+00B7,U+2026,U+2190-2193,U+25B2-25C0" --flavor=woff2 --output-file=school/fonts/galmuri11-subset.woff2
+```
