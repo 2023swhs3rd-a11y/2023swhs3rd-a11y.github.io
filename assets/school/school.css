@@ -133,6 +133,23 @@ main { display: flex; flex-direction: column; align-items: center; }
 .dlg-btns button:hover, .dlg-btns button:focus-visible { outline: 2px dashed #fff; outline-offset: 2px; }
 @keyframes blink { 50% { box-shadow: 0 0 0 2px #fff; } }
 
+/* 게시판 메시지 */
+.memo { max-height: 92%; overflow: auto; }
+.memo-note { color: #d6dcff; margin-top: 2px !important; }
+.memo-field { display: block; margin-top: 6px; color: #fff; }
+.memo-field small { color: #b9c3ff; font-size: 11px; }
+.memo-field input, .memo-field textarea {
+  display: block; width: 100%; box-sizing: border-box; margin-top: 2px; padding: 5px 7px;
+  border: 2px solid #fff; border-radius: 0; background: #fffdf4; color: #2b1d2e;
+  font: 14px/1.4 system-ui, -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif; resize: vertical;
+}
+.memo-field input:focus, .memo-field textarea:focus { outline: 2px dashed var(--gold); outline-offset: 1px; }
+.memo-hp { position: absolute; left: -9999px; width: 1px; height: 1px; opacity: 0; }
+.memo-status { min-height: 1.3em; margin-top: 4px !important; color: var(--gold); }
+.memo-status.err { color: #ffb4b4; }
+#memo-send { background: var(--gold); color: var(--ink); border-color: var(--gold); }
+#memo-send:disabled { opacity: .6; cursor: wait; }
+
 /* 캐릭터 고르기 */
 .menu {
   position: absolute; inset: 0; z-index: 4; overflow: auto;
@@ -226,7 +243,8 @@ body.touch .help { display: none; }
   .menu h2 { font-size: 14px; margin-bottom: 8px; }
   .dialog { font-size: 12px; padding: 8px 10px 10px; }
   .dlg-room { font-size: 13px; }
-  .dlg-desc { display: none; }
+  .dlg-desc, .memo-note { display: none; }
+  .memo-field textarea { min-height: 3.2em; }
   .dlg-btns button kbd { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
