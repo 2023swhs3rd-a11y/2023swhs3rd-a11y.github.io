@@ -724,6 +724,8 @@
     // 브라우저는 사용자가 누르거나 터치한 순간에만 소리를 켜 준다. 켜질 때까지 매번 다시 시도하고,
     // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
     function unlock() {
+      // 맥 사파리는 켜 둔 오디오를 나중에 스스로 멈출 때가 있어서, 누를 때마다 확인한다(켜져 있으면 아무것도 안 함)
+      if (ac && ac.state === 'running') return;
       // 눌렀는데도 켜지지 않은 채 남은 오디오는 버리고, 이번 누름 안에서 새로 만든다
       if (ac && ac.state !== 'running' && ac.__tried && performance.now() - ac.__tried > 1000) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
       const a = ctx(true); if (!a) return;
@@ -1396,10 +1398,9 @@
   const unlockAudio = (e) => {
     SFX.unlock();
     if (soundDebug) setTimeout(() => toast('소리 점검', `${e.type} → ${SFX.state} · ${SFX.on ? '켬' : '끔'} · ${navigator.userAgent.match(/Version\/[\d.]+/) || ''}`), 150);
-    else if (SFX.state === 'running') unlockEvents.forEach((t) => removeEventListener(t, unlockAudio, true));
   };
   unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true));
-  addEventListener('pageshow', () => { if (SFX.state !== 'running') unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true)); });
+
 
   /* ───────── 키보드 ───────── */
   const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' };
