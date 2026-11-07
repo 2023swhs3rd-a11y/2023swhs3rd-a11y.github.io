@@ -1,18 +1,19 @@
 /*
   픽셀 학교 (첫 화면 /)
   - 교실 여섯 칸은 index.html의 "교실 바로가기" 목록(#rooms a)에서 읽는다. 주소·이름·설명·색·벽 그림을 바꾸려면 그 목록만 고친다.
-  - 그림은 모두 이 파일에서 캔버스에 직접 찍는다(그림 파일 없음). 지도 단위는 가로형 384×256, 세로형(휴대폰) 240×336이고,
-    한 단위를 2×2 픽셀로 그려 캐릭터와 소품을 두 배 해상도로 표현한다.
-  - 걷기: 방향키·WASD, 터치 방향 패드, 화면 클릭·터치. 교실 문으로 들어가면 선생님이 맞아 주고 Enter·A·클릭으로 연다.
+  - 그림은 모두 이 파일에서 캔버스에 직접 찍는다(그림 파일 없음). 16비트 게임처럼 지도 한 칸 = 1픽셀이고,
+    지도는 가로형 384×256, 세로형(휴대폰) 240×336 픽셀이다.
+  - 걷기: 방향키·WASD(Shift는 달리기), 터치 방향 패드, 화면 클릭·터치(길을 찾아 걸어감). 복도와 교실 안을 자유롭게 다닌다.
+    교실 문으로 들어서거나 선생님·학생에게 다가가면 사이트로 가는 대화창이 뜨고 Enter·A·클릭으로 연다.
     숫자키 1~6은 그 교실 사이트를 바로 연다. M은 소리 켜기·끄기.
+  - 숨은 재미: 반짝이는 별 스티커 3개, 복도에서 뛰면 선생님 잔소리, 계단 끝, ↑↑↓↓←→←→BA.
   - 효과음은 Web Audio로 그 자리에서 합성한다(소리 파일 없음).
-  - 고른 학생과 소리 설정은 localStorage, 마지막에 들어간 교실은 sessionStorage에 두어 뒤로 오면 그 교실 문 앞에서 다시 시작한다.
+  - 고른 학생·소리 설정·주운 스티커는 localStorage, 마지막에 들어간 교실은 sessionStorage에 둔다.
 */
 'use strict';
 (() => {
   const $ = (s) => document.querySelector(s);
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const RES = 2; // 지도 한 단위 = 2픽셀
 
   function mix(a, b, t) {
     const p = (h) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
@@ -54,294 +55,190 @@
     gold: '#ffd36b',
   };
 
-  /* ───────── 사람 그리기(학생·선생님 모두 새로 만든 캐릭터) ─────────
-     도형(타원·사각형)으로 칸을 칠한 뒤 오른쪽·아래 가장자리에 그늘, 머리에 윤기, 색마다 다른 테두리를 자동으로 넣는다. */
+  /* ───────── 사람(학생·선생님, 모두 이 페이지를 위해 새로 그린 캐릭터) ─────────
+     글자 하나가 1픽셀: h 머리 l 머리 윤기 s 피부 S 피부 그늘 e 눈 W 눈 반짝임 b 볼 m 입 c 겉옷 C 겉옷 아랫단
+     w 셔츠·옷깃 t 넥타이·리본·지퍼 p 바지·치마 k 신발 g 안경 r 머리끈 H 콧수염. 바깥 테두리와 오른쪽 그늘은 자동으로 넣는다. */
+  const HEAD = {
+    down: [
+      '....hhhhhh....',
+      '..hhhhhhhhhh..',
+      '.hhllhhhhhhhh.',
+      '.hlhhhhhhhhhh.',
+      'hhhhhhhhhhhhhh',
+      'hhhshhhhhhshhh',
+      'hhsssssssssshh',
+      'hsseWsssseWssh',
+      'hsseesssseessh',
+      'hsbsssmmsssbsh',
+      '.hssssssssssh.',
+      '...ssssssss...',
+    ],
+    up: [
+      '....hhhhhh....',
+      '..hhhhhhhhhh..',
+      '.hhllhhhhhhhh.',
+      '.hlhhhhhhhhhh.',
+      'hhhhhhhhhhhhhh',
+      'hhhhhhhhhhhhhh',
+      'hhhhhhhhhhhhhh',
+      'hhhhhhhhhhhhhh',
+      'shhhhhhhhhhhhs',
+      'shhhhhhhhhhhhs',
+      '.hhhhhhhhhhhh.',
+      '...ssssssss...',
+    ],
+    side: [
+      '....hhhhhh....',
+      '..hhhhhhhhhh..',
+      '.hhllhhhhhhhh.',
+      '.hlhhhhhhhhhh.',
+      'hhhhhhhhhhhhhh',
+      'hshhhhhhhhhhhh',
+      'sssssshhhhhhhh',
+      'sseWsssShhhhhh',
+      'sseesssShhhhhh',
+      'sbsmssssshhhh.',
+      '.ssssssshhhh..',
+      '..sssssss.....',
+    ],
+  };
+  const BODY = {
+    kid: {
+      down: ['....cwttwc....', '...ccwttwcc...', '..sccccccccs..', '...CCCCCCCC...'],
+      up: ['....cccccc....', '...cccccccc...', '..sccccccccs..', '...CCCCCCCC...'],
+      side: ['....wccccc....', '....cccccc....', '....cscccc....', '....CCCCCC....'],
+    },
+    adult: {
+      down: ['....cwttwc....', '...ccwttwcc...', '..cccwttwccc..', '..ccccttcccc..', '..sccccccccs..', '...CCCCCCCC...'],
+      up: ['....cccccc....', '...cccccccc...', '..cccccccccc..', '..cccccccccc..', '..sccccccccs..', '...CCCCCCCC...'],
+      side: ['....wccccc....', '....cccccc....', '....cccccc....', '....cccccc....', '....cscccc....', '....CCCCCC....'],
+    },
+  };
+  const LEGS = {
+    kid: {
+      down: { idle: ['....pp..pp....', '...kkk..kkk...'], a: ['....pp..kk....', '...kkk........'], b: ['....kk..pp....', '........kkk...'] },
+      side: { idle: ['.....pppp.....', '....kkkk......'], a: ['....pp..pp....', '...kkk..kkk...'], b: ['.....pppp.....', '....kkkk......'] },
+    },
+    adult: {
+      down: { idle: ['....pp..pp....', '....pp..pp....', '...kkk..kkk...'], a: ['....pp..pp....', '....pp..kk....', '...kkk........'], b: ['....pp..pp....', '....kk..pp....', '........kkk...'] },
+      side: { idle: ['.....pppp.....', '.....pppp.....', '....kkkk......'], a: ['....pppppp....', '....pp..pp....', '...kkk..kkk...'], b: ['.....pppp.....', '.....pppp.....', '....kkkk......'] },
+    },
+  };
+  // 덧그림: [모드, 색, x, y, w, h] — u는 빈 칸에만, o는 위에 덮어 칠한다(위 템플릿 좌표)
+  const ALL = (list) => ({ down: list, up: list, side: list });
+  const EXTRA = {
+    long: { down: [['u', 'h', 0, 9, 2, 7], ['u', 'h', 12, 9, 2, 7]], up: [['o', 'h', 1, 10, 12, 5], ['u', 'h', 1, 15, 12, 1]], side: [['u', 'h', 8, 9, 5, 7]] },
+    pony: { down: [['u', 'h', 12, 0, 3, 4]], up: [['o', 'r', 6, 9, 2, 1], ['o', 'h', 6, 10, 2, 5]], side: [['u', 'h', 13, 2, 2, 7], ['o', 'r', 13, 3, 1, 1]] },
+    bob: { down: [['u', 'h', 0, 10, 2, 2], ['u', 'h', 12, 10, 2, 2]], up: [['o', 'h', 2, 11, 10, 1]], side: [['u', 'h', 9, 10, 4, 2]] },
+    spiky: ALL([['u', 'h', 2, 1, 1, 1], ['u', 'h', 3, 0, 1, 1], ['u', 'h', 4, -1, 1, 1], ['u', 'h', 6, -1, 2, 1], ['u', 'h', 7, -2, 1, 1], ['u', 'h', 9, -1, 1, 1], ['u', 'h', 10, 0, 1, 1], ['u', 'h', 11, 1, 1, 1]]),
+    buns: { down: [['u', 'h', 0, -1, 3, 3], ['u', 'h', 11, -1, 3, 3], ['o', 't', 2, 1, 1, 1], ['o', 't', 11, 1, 1, 1]], up: [['u', 'h', 0, -1, 3, 3], ['u', 'h', 11, -1, 3, 3]], side: [['u', 'h', 10, -1, 3, 3]] },
+    bun: { down: [['u', 'h', 5, -3, 4, 3]], up: [['u', 'h', 5, -3, 4, 3]], side: [['u', 'h', 9, -2, 4, 3]] },
+    ahoge: ALL([['u', 'h', 7, -1, 1, 1], ['u', 'h', 8, -2, 1, 1], ['u', 'h', 9, -2, 1, 1]]),
+    ribbon: { down: [['o', 'r', 10, 1, 3, 1], ['o', 'r', 11, 0, 1, 3]], up: [['o', 'r', 10, 1, 3, 1], ['o', 'r', 11, 0, 1, 3]], side: [['o', 'r', 9, 1, 3, 1], ['o', 'r', 10, 0, 1, 3]] },
+    glasses: { down: [['o', 'g', 2, 7, 1, 2], ['o', 'g', 5, 7, 1, 2], ['o', 'g', 8, 7, 1, 2], ['o', 'g', 11, 7, 1, 2], ['o', 'g', 6, 7, 2, 1]], side: [['o', 'g', 1, 7, 1, 2], ['o', 'g', 4, 7, 1, 2], ['o', 'g', 5, 7, 2, 1]] },
+    mustache: { down: [['o', 'H', 5, 9, 4, 1]], side: [['o', 'H', 1, 9, 3, 1]] },
+    hood: { down: [['u', 'w', 2, 11, 10, 2]], up: [['o', 'w', 3, 11, 8, 3]], side: [['u', 'w', 8, 10, 4, 3]] },
+  };
+
   const KIDS = [
-    { id: 'haneul', name: '하늘', line: '아침마다 1등으로 등교해요', style: 'short', outfit: 'blazer',
-      pal: { h: '#2a2440', s: '#f7cba4', c: '#2f3f73', t: '#d8394a', p: '#6b7280', E: '#4a3a6a' } },
-    { id: 'bora', name: '보라', line: '도서관 창가 자리가 제 자리예요', style: 'long', outfit: 'blazer', skirt: true,
-      pal: { h: '#7a4a2e', s: '#f8d2b0', c: '#2f3f73', t: '#e0475a', p: '#a33a4a', E: '#7a4a2e' } },
-    { id: 'doyun', name: '도윤', line: '궁금한 건 바로 찾아봐야 해요', style: 'spiky', outfit: 'sweater', glasses: true,
-      pal: { h: '#3a2e2a', s: '#efbe94', c: '#3f7d4e', t: '#2f3f73', p: '#3b4252', E: '#3a2e2a' } },
-    { id: 'seoa', name: '서아', line: '체육대회 계주 마지막 주자!', style: 'pony', outfit: 'track',
-      pal: { h: '#5b3524', s: '#f3c49c', c: '#ee7a3c', t: '#ffffff', p: '#2f3f73', r: '#ffd36b', E: '#5b3524' } },
-    { id: 'jimin', name: '지민', line: '오늘의 뉴스는 제가 스크랩해요', style: 'bob', outfit: 'cardigan', skirt: true,
-      pal: { h: '#1f1b2e', s: '#f8d2b0', c: '#f2c14e', t: '#2f3f73', p: '#3b4a7a', E: '#3a3a6a' } },
-    { id: 'yuchan', name: '유찬', line: '그래프 그리는 게 제일 재밌어요', style: 'short', outfit: 'hoodie',
-      pal: { h: '#8a3b22', s: '#e9b386', c: '#7c5cc4', t: '#ffffff', p: '#4b5563', E: '#8a3b22' } },
+    { id: 'haneul', name: '하늘', line: '아침마다 1등으로 등교해요', look: ['ahoge'],
+      pal: { h: '#2a2440', s: '#ffd9b8', c: '#33508f', w: '#ffffff', t: '#e2475a', p: '#6b7280' } },
+    { id: 'bora', name: '보라', line: '도서관 창가 자리가 제 자리예요', look: ['long', 'ribbon'], skirt: true,
+      pal: { h: '#8a5232', s: '#ffe0c4', c: '#33508f', w: '#ffffff', t: '#e2475a', p: '#b33d55', r: '#ff6f91' } },
+    { id: 'doyun', name: '도윤', line: '궁금한 건 바로 찾아봐야 해요', look: ['spiky', 'glasses'],
+      pal: { h: '#40322c', s: '#f7caa0', c: '#4a9a5c', w: '#ffffff', t: '#33508f', p: '#3b4252' } },
+    { id: 'seoa', name: '서아', line: '체육대회 계주 마지막 주자!', look: ['pony'],
+      pal: { h: '#6a3a26', s: '#ffd4ae', c: '#ff8a3d', w: '#ffffff', t: '#ffffff', p: '#33508f', r: '#ffd36b' } },
+    { id: 'jimin', name: '지민', line: '오늘의 뉴스는 제가 스크랩해요', look: ['buns'], skirt: true,
+      pal: { h: '#2b2440', s: '#ffe0c4', c: '#ffc94d', w: '#ffffff', t: '#ff6f91', p: '#3f56a0' } },
+    { id: 'yuchan', name: '유찬', line: '그래프 그리는 게 제일 재밌어요', look: ['bob', 'hood'],
+      pal: { h: '#9a4426', s: '#f7caa0', c: '#8a6ad8', w: '#b9a5f0', t: '#ffffff', p: '#4b5563' } },
   ];
   const TEACHERS = [
-    { id: 't1', name: '김 선생님', adult: true, style: 'sidepart', outfit: 'blazer', glasses: true,
-      pal: { h: '#55546a', s: '#f1c49c', c: '#2b3a66', t: '#d8394a', p: '#353b4a' }, say: '대입 전형은 무엇이든 물어보세요.' },
-    { id: 't2', name: '박 선생님', adult: true, style: 'bun', outfit: 'cardigan', skirt: true,
-      pal: { h: '#5a3424', s: '#f6cfa8', c: '#e98aa8', t: '#c2410c', p: '#4b4f7a' }, say: '진로 고민, 같이 찾아봐요.' },
-    { id: 't3', name: '이 선생님', adult: true, style: 'short', outfit: 'labcoat', glasses: true,
-      pal: { h: '#2a2440', s: '#ecba8f', c: '#f4f4f4', x: '#7fb3e0', t: '#0e7490', p: '#3b4252' }, say: '숫자 속에 우리 동네 이야기가 있어요.' },
-    { id: 't4', name: '최 선생님', adult: true, style: 'long', outfit: 'cardigan', skirt: true,
-      pal: { h: '#2e2030', s: '#f8d2b0', c: '#6fae6a', w: '#fff6e0', t: '#c2410c', p: '#a35a3a' }, say: '오늘은 어떤 책을 읽고 있나요?' },
-    { id: 't5', name: '정 선생님', adult: true, style: 'sidepart', outfit: 'sweater', mustache: true,
-      pal: { h: '#3a2a20', s: '#e7b088', c: '#c97b3a', t: '#15803d', p: '#4a3a30' }, say: '뉴스 한 줄이 진로가 되기도 해요.' },
-    { id: 't6', name: '한 선생님', adult: true, style: 'bob', outfit: 'dress',
-      pal: { h: '#1f1b2e', s: '#f3c49c', c: '#b04a8a', p: '#b04a8a', t: '#ffffff' }, say: '생각을 한 단계씩 키워 봐요.' },
+    { id: 't1', name: '김 선생님', adult: true, look: ['glasses'], say: '대입 전형은 무엇이든 물어보세요.',
+      pal: { h: '#5a596e', s: '#f7caa0', c: '#2b3a66', w: '#ffffff', t: '#e2475a', p: '#353b4a' } },
+    { id: 't2', name: '박 선생님', adult: true, look: ['bun'], skirt: true, say: '진로 고민, 같이 찾아봐요.',
+      pal: { h: '#6a3a26', s: '#ffd9b8', c: '#f08fb0', w: '#ffffff', t: '#c2410c', p: '#4b4f7a' } },
+    { id: 't3', name: '이 선생님', adult: true, look: ['glasses'], say: '숫자 속에 우리 동네 이야기가 있어요.',
+      pal: { h: '#2a2440', s: '#f2bf94', c: '#f4f4f4', w: '#7fb3e0', t: '#0e7490', p: '#3b4252' } },
+    { id: 't4', name: '최 선생님', adult: true, look: ['long'], skirt: true, say: '오늘은 어떤 책을 읽고 있나요?',
+      pal: { h: '#2e2030', s: '#ffe0c4', c: '#74b46e', w: '#fff6e0', t: '#c2410c', p: '#a35a3a' } },
+    { id: 't5', name: '정 선생님', adult: true, look: ['mustache'], say: '뉴스 한 줄이 진로가 되기도 해요.',
+      pal: { h: '#3a2a20', s: '#efb98e', c: '#cf8240', w: '#ffffff', t: '#15803d', p: '#4a3a30' } },
+    { id: 't6', name: '한 선생님', adult: true, look: ['bob'], skirt: true, say: '생각을 한 단계씩 키워 봐요.',
+      pal: { h: '#1f1b2e', s: '#ffd4ae', c: '#b55094', w: '#ffffff', t: '#ffd36b', p: '#b55094' } },
   ];
-  const BASEPAL = { e: '#2b1d2e', E: '#4a3a5a', W: '#ffffff', b: '#f59b9b', m: '#c0504d', w: '#ffffff', k: '#3b2a24', g: '#2b1d2e', r: '#e0475a', x: '#ffffff' };
-  [...KIDS, ...TEACHERS].forEach((p) => { p.pal = { ...BASEPAL, ...p.pal }; });
+  const BASEPAL = { e: '#2b1d2e', W: '#ffffff', b: '#ff9fa8', m: '#d0505a', w: '#ffffff', k: '#3b2a24', g: '#8a9cc8', r: '#e0475a', H: '#3a2a20' };
+  [...KIDS, ...TEACHERS].forEach((p) => {
+    p.pal = { ...BASEPAL, ...p.pal };
+    p.pal.l = mix(p.pal.h, '#ffffff', 0.38);
+    p.pal.S = mix(p.pal.s, '#a0603a', 0.3);
+    p.pal.C = mix(p.pal.c, C.ink, 0.25);
+  });
 
-  const SPR_W = 24;
+  const SPR_W = 18, OX = 2, OY = 3;
   const spriteCache = new Map();
   function personSprite(sp, dir, frame, blink) {
     const key = `${sp.id}|${dir}|${frame}|${blink ? 1 : 0}`;
     let cv = spriteCache.get(key);
-    if (cv) return cv;
-    cv = drawPerson(sp, dir, frame, blink);
-    spriteCache.set(key, cv);
+    if (!cv) { cv = drawPerson(sp, dir, frame, blink); spriteCache.set(key, cv); }
     return cv;
   }
   function drawPerson(sp, dir, frame, blink) {
-    const A = !!sp.adult, W = SPR_W;
-    const side = dir === 'left' || dir === 'right', up = dir === 'up', down = dir === 'down';
-    const top = 3;
-    const hr = A ? 8 : 9.5, hry = A ? 8 : 9;
-    const cx = side ? 11.5 : 12;
-    const hcy = top + hry + 0.5;
-    const headBottom = hcy + hry;
-    const bodyTop = Math.round(headBottom) - 1;
-    const bodyH = A ? 15 : 10;
-    const legTop = bodyTop + bodyH;
-    const legH = A ? 8 : 4;
-    const shoeY = legTop + legH;
-    const H = shoeY + 3;
-    const G = Array.from({ length: H }, () => Array(W).fill(null));
-    const set = (x, y, k, under) => {
-      x = Math.round(x); y = Math.round(y);
-      if (x < 0 || y < 0 || x >= W || y >= H) return;
-      if (under && G[y][x]) return;
-      G[y][x] = k;
-    };
-    const rect = (x, y, w, h, k, under) => { for (let j = 0; j < h; j++) for (let i = 0; i < w; i++) set(x + i, y + j, k, under); };
-    const ell = (ex, ey, rx, ry, k, clip, under) => {
-      for (let y = Math.floor(ey - ry) - 1; y <= Math.ceil(ey + ry); y++) for (let x = Math.floor(ex - rx) - 1; x <= Math.ceil(ex + rx); x++) {
-        const dx = (x + 0.5 - ex) / rx, dy = (y + 0.5 - ey) / ry;
-        if (dx * dx + dy * dy <= 1 && (!clip || clip(x, y))) set(x, y, k, under);
-      }
-    };
-    const st = sp.style, out = sp.outfit;
-    const L0 = Math.round(cx);
-
-    /* 1. 뒷머리 */
-    if (st === 'long' && !up) {
-      if (side) rect(cx - 1, hcy - 3, hr + 2.5, bodyTop + (A ? 10 : 8) - (hcy - 3), 'h');
-      else { rect(cx - hr - 0.5, hcy - 2, 2 * hr + 1, bodyTop + (A ? 10 : 8) - (hcy - 2), 'h'); }
+    const age = sp.adult ? 'adult' : 'kid';
+    const d = dir === 'left' || dir === 'right' ? 'side' : dir;
+    const head = HEAD[d].map((r) => r.split(''));
+    if (blink && d !== 'up') {
+      for (const y of [7, 8]) head[y] = head[y].map((c) => (c === 'e' || c === 'W' ? (y === 8 ? 'e' : 's') : c));
     }
-    if (st === 'bob' && !up) {
-      if (side) rect(cx - 1, hcy - 3, hr + 2, hry + 3, 'h');
-      else rect(cx - hr - 0.5, hcy - 2, 2 * hr + 1, hry + 2, 'h');
+    const body = BODY[age][d].map((r) => r.split(''));
+    const legSet = LEGS[age][d === 'up' ? 'down' : d];
+    let legs = (legSet[frame] || legSet.idle).map((r) => r.split(''));
+    if (sp.skirt) {
+      const skirt = (d === 'side' ? '....pppppp....' : age === 'adult' ? '..pppppppppp..' : '...pppppppp...').split('');
+      legs = legs.map((r, i) => (i < legs.length - 1 ? r.map((c) => (c === 'p' ? 's' : c)) : r));
+      legs.unshift(skirt);
     }
-    if (st === 'pony') {
-      if (side) { rect(cx + hr - 1.5, hcy - 4, 3, 4, 'h'); rect(cx + hr - 0.5, hcy - 1, 3, 8, 'h'); }
-      else if (down) { rect(cx + hr - 2.5, hcy - 6, 4, 5, 'h'); }
-    }
-    if (st === 'bun' && !up) {
-      if (side) ell(cx + hr - 2, hcy - hry + 1, 3.5, 3.2, 'h');
-      else ell(cx, top - 0.2, 3.8, 3.2, 'h');
-    }
-    if (out === 'hoodie' && !up) rect(cx - 6, bodyTop - 2, 12, 4, 'c');
-
-    /* 2. 다리와 신발 */
-    const lift = frame === 'a' ? 'R' : frame === 'b' ? 'L' : '';
-    if (!side) {
-      const legs = [['L', L0 - 4], ['R', L0 + 1]];
-      for (const [id, x] of legs) {
-        const lf = lift === id ? 1 : 0;
-        if (sp.skirt) { rect(x, legTop, 3, legH - lf, 's'); rect(x, legTop + legH - 1 - lf, 3, 1, 'w'); }
-        else rect(x, legTop, 3, legH - lf, 'p');
-        rect(id === 'L' ? x - 1 : x, shoeY - lf, 4, 2, 'k');
-      }
-    } else {
-      const stride = frame === 'a';
-      const legsS = stride ? [[cx - 5, 0], [cx + 1, 0]] : [[cx - 2, 0]];
-      for (const [x] of legsS) {
-        rect(x, legTop, 4, legH, sp.skirt ? 's' : 'p');
-        if (sp.skirt) rect(x, legTop + legH - 1, 4, 1, 'w');
-        rect(x - 1, shoeY, 5, 2, 'k');
+    const rows = [...head, ...body, ...legs];
+    const H = rows.length + OY + 1;
+    const G = Array.from({ length: H }, () => Array(SPR_W).fill(null));
+    rows.forEach((r, y) => r.forEach((c, x) => { if (c !== '.') G[y + OY][x + OX] = c; }));
+    const ovs = [];
+    for (const name of sp.look || []) ovs.push(...(((EXTRA[name] || {})[d]) || []));
+    for (const [mode, c, x0, y0, w, h] of ovs) {
+      for (let y = y0; y < y0 + h; y++) for (let x = x0; x < x0 + w; x++) {
+        const gx = x + OX, gy = y + OY;
+        if (gy < 0 || gy >= H || gx < 0 || gx >= SPR_W) continue;
+        if (mode === 'o' || !G[gy][gx]) G[gy][gx] = c;
       }
     }
-
-    /* 3. 몸 */
-    const tx0 = side ? cx - 3.5 : L0 - 5, tw = side ? 8 : 10;
-    const bodyEnd = legTop + (out === 'labcoat' || out === 'dress' ? 2 : 0);
-    rect(tx0, bodyTop, tw, bodyEnd - bodyTop, 'c');
-    if (out !== 'track' && out !== 'hoodie' && !side) { rect(tx0 - 1, legTop - 2, 1, 2 + (bodyEnd - legTop), 'c'); rect(tx0 + tw, legTop - 2, 1, 2 + (bodyEnd - legTop), 'c'); }
-    if (sp.skirt || out === 'dress') {
-      const sk = out === 'dress' ? 'c' : 'p';
-      const sh = A ? 5 : 3;
-      if (!side) { rect(tx0 - 1, legTop, tw + 2, sh, sk); rect(tx0 - 2, legTop + sh - 1, tw + 4, 1, sk); }
-      else { rect(tx0 - 1, legTop, tw + 2, sh, sk); }
-    }
-    // 팔
-    const armK = out === 'sweater' ? 'w' : out === 'labcoat' ? 'c' : 'c';
-    if (!side) {
-      const swing = frame === 'a' ? 1 : frame === 'b' ? -1 : 0;
-      rect(tx0 - 2, bodyTop + 1, 2, bodyH - 3 + swing, armK); rect(tx0 - 2, bodyTop + bodyH - 2 + swing, 2, 2, 's');
-      rect(tx0 + tw, bodyTop + 1, 2, bodyH - 3 - swing, armK); rect(tx0 + tw, bodyTop + bodyH - 2 - swing, 2, 2, 's');
-      if (out === 'track') { rect(tx0 - 2, bodyTop + 1, 1, bodyH - 3, 'w'); rect(tx0 + tw + 1, bodyTop + 1, 1, bodyH - 3, 'w'); }
-    }
-    // 옷 앞모양
-    if (down) {
-      const mid = L0 - 1;
-      if (out === 'blazer' || out === 'sweater' || out === 'labcoat') {
-        const inner = out === 'labcoat' ? 'x' : 'w';
-        rect(mid - 2, bodyTop, 6, 1, inner); rect(mid - 1, bodyTop + 1, 4, 1, inner); rect(mid, bodyTop + 2, 2, 1, inner);
-        if (out === 'sweater') rect(mid - 1, bodyTop + 3, 4, 1, 'w');
-        rect(mid, bodyTop + 1, 2, A ? 7 : 5, 't'); rect(mid + 0.5, bodyTop + (A ? 8 : 6), 1, 1, 't');
-        if (out === 'blazer') { set(mid + 3, bodyTop + (A ? 9 : 6), 'k'); set(mid + 3, bodyTop + (A ? 12 : 8), 'k'); }
-        if (out === 'labcoat') { rect(mid - 3, bodyTop + 3, 1, bodyEnd - bodyTop - 3, 'C'); rect(mid + 4, bodyTop + 3, 1, bodyEnd - bodyTop - 3, 'C'); rect(tx0 + 1, legTop - 4, 3, 2, 'C'); }
-      } else if (out === 'cardigan') {
-        rect(mid - 1, bodyTop, 4, bodyH, 'w'); rect(mid, bodyTop + 1, 2, 2, 't');
-        for (let y = bodyTop + 4; y < legTop - 1; y += 3) set(mid - 2, y, 'k');
-      } else if (out === 'track') {
-        rect(mid - 2, bodyTop, 6, 1, 'w'); rect(mid + 1, bodyTop + 1, 1, bodyH - 1, 't');
-      } else if (out === 'hoodie') {
-        rect(mid - 1, bodyTop, 1, 4, 't'); rect(mid + 2, bodyTop, 1, 4, 't');
-        rect(tx0 + 2, legTop - 4, tw - 4, 3, 'C');
-      } else if (out === 'dress') {
-        rect(mid - 2, bodyTop, 6, 1, 'w'); rect(tx0, legTop - 4, tw, 1, 't');
-      }
-    } else if (up) {
-      if (out === 'hoodie') { rect(L0 - 4, bodyTop, 8, 4, 'C'); }
-      else if (out === 'blazer' || out === 'labcoat') rect(L0 - 3, bodyTop, 6, 1, out === 'labcoat' ? 'x' : 'w');
-      else if (out === 'track') rect(L0 - 3, bodyTop, 6, 1, 'w');
-    } else {
-      // 옆모습 팔
-      const sw = frame === 'a' ? -2 : 0;
-      rect(cx - 1 + sw, bodyTop + 1, 3, bodyH - 3, armK === 'w' ? 'w' : 'C');
-      rect(cx - 1 + sw, bodyTop + bodyH - 2, 3, 2, 's');
-      if (out === 'blazer' || out === 'labcoat' || out === 'sweater') rect(tx0, bodyTop, 2, 3, out === 'labcoat' ? 'x' : 'w');
-      if (out === 'hoodie') rect(cx + 1, bodyTop - 1, 4, 4, 'C');
-    }
-
-    /* 4. 머리(피부) */
-    ell(cx, hcy, hr, hry, 's');
-    if (sp.adult && down) rect(L0 - 2, bodyTop - 1, 4, 2, 's');
-
-    /* 5. 얼굴 */
-    const eyeY = Math.round(hcy + (A ? 1 : 1.5));
-    const eyeRows = A ? ['ee', 'We', 'eE'] : ['ee', 'We', 'eE', 'EE'];
-    const drawEye = (x0) => {
-      if (blink) { rect(x0, eyeY + (A ? 1 : 2), 2, 1, 'e'); return; }
-      eyeRows.forEach((row, j) => [...row].forEach((c, i) => set(x0 + i, eyeY + j, c)));
-    };
-    if (down) {
-      const lx = L0 - 6 + (A ? 1 : 0), rx = L0 + 3 - (A ? 1 : 0);
-      drawEye(lx); drawEye(rx);
-      if (!A) { rect(lx - 2, eyeY + 4, 2, 1, 'b'); rect(rx + 2, eyeY + 4, 2, 1, 'b'); }
-      else { rect(lx, eyeY - 2, 2, 1, 'H'); rect(rx, eyeY - 2, 2, 1, 'H'); }
-      rect(L0 - 1, eyeY + (A ? 5 : 5), 2, 1, 'm');
-      if (sp.mustache) rect(L0 - 2, eyeY + 4, 4, 1, 'H');
-      if (sp.glasses) {
-        for (const x0 of [lx, rx]) {
-          const gh = A ? 4 : 5;
-          rect(x0 - 1, eyeY - 1, 4, 1, 'g'); rect(x0 - 1, eyeY + gh - 1, 4, 1, 'g');
-          rect(x0 - 1, eyeY - 1, 1, gh, 'g'); rect(x0 + 2, eyeY - 1, 1, gh, 'g');
-        }
-        rect(lx + 3, eyeY, rx - lx - 4, 1, 'g');
-      }
-    } else if (side) {
-      const ex = Math.round(cx - 6.5);
-      drawEye(ex);
-      if (!A) rect(ex - 2, eyeY + 4, 2, 1, 'b');
-      set(ex - 2, eyeY + 5, 'm');
-      if (sp.mustache) rect(ex - 2, eyeY + 4, 3, 1, 'H');
-      if (A) rect(ex, eyeY - 2, 2, 1, 'H');
-      if (sp.glasses) {
-        const gh = A ? 4 : 5;
-        rect(ex - 1, eyeY - 1, 4, 1, 'g'); rect(ex - 1, eyeY + gh - 1, 4, 1, 'g');
-        rect(ex - 1, eyeY - 1, 1, gh, 'g'); rect(ex + 2, eyeY - 1, 1, gh, 'g');
-        rect(ex + 3, eyeY, 4, 1, 'g');
-      }
-    }
-
-    /* 6. 앞머리 */
-    if (up) {
-      ell(cx, hcy - 0.5, hr + 0.7, hry + 0.6, 'h');
-      if (st === 'long') rect(cx - hr - 0.5, hcy, 2 * hr + 1, bodyTop + (A ? 10 : 8) - hcy, 'h');
-      if (st === 'bob') rect(cx - hr - 0.5, hcy, 2 * hr + 1, hry + 1, 'h');
-      if (st === 'pony') { rect(L0 - 1, hcy + 2, 3, A ? 10 : 12, 'h'); rect(L0 - 2, hcy + 1, 5, 2, 'r'); }
-      if (st === 'bun') ell(cx, hcy - hry + 1.5, 3.8, 3.2, 'h');
-      if (st === 'short' || st === 'spiky' || st === 'sidepart') { set(cx - hr - 0.3, hcy + 1, 's'); set(cx - hr - 0.3, hcy + 2, 's'); set(cx + hr - 0.7, hcy + 1, 's'); set(cx + hr - 0.7, hcy + 2, 's'); }
-    } else if (down) {
-      ell(cx, hcy - 0.8, hr + 0.7, hry + 0.5, 'h', (x, y) => y < hcy - 1.5);
-      const x0 = Math.round(cx - hr), x1 = Math.round(cx + hr);
-      for (let x = x0; x < x1; x++) {
-        if (st === 'sidepart') {
-          set(x, hcy - 1.5, 'h');
-          if (x < cx + 3) set(x, hcy - 0.5, 'h');
-          if (x < cx - 3) set(x, hcy + 0.5, 'h');
-        } else {
-          set(x, hcy - 1.5, 'h');
-          if ((x - x0) % 4 !== 1) set(x, hcy - 0.5, 'h');
-          if ((x - x0) % 4 === 3 || (x - x0) % 4 === 0) set(x, hcy + 0.5, 'h');
-        }
-      }
-      const burn = st === 'long' || st === 'bob' ? (A ? 9 : 9) : 4;
-      rect(x0, hcy - 1, 2, burn, 'h'); rect(x1 - 2, hcy - 1, 2, burn, 'h');
-    } else {
-      ell(cx + 0.5, hcy - 0.8, hr + 0.6, hry + 0.5, 'h', (x, y) => y < hcy - 1.5 || x > cx + 0.5);
-      for (let x = Math.round(cx - hr); x < cx; x++) {
-        set(x, hcy - 1.5, 'h');
-        if (st !== 'sidepart' && (x % 3) !== 0) set(x, hcy - 0.5, 'h');
-      }
-      if (st === 'short' || st === 'spiky' || st === 'sidepart') { rect(cx + 1, hcy + 1, 2, 3, 's'); set(cx + 1.5, hcy + 2, 'S'); }
-    }
-    if (st === 'spiky') {
-      const tY = Math.round(hcy - hry - 0.6);
-      for (const dx of [-7, -4, -1, 2, 5]) { const x = cx + dx + (side ? 1 : 0); set(x, tY - 1, 'h'); set(x + 1, tY - 1, 'h'); set(x + 1, tY - 2, 'h'); }
-    }
-    if (st === 'pony' && side) set(cx + hr - 0.5, hcy - 1, 'r');
-    if (st === 'pony' && down) rect(cx + hr - 2.5, hcy - 6, 2, 1, 'r');
-
     if (dir === 'right') G.forEach((r) => r.reverse());
-
-    /* 7. 그늘·윤기·테두리 */
-    const shadeable = new Set(['h', 's', 'c', 'p', 'k', 'w', 'x']);
+    // 오른쪽 가장자리 그늘(머리·옷·바지)
     const S = G.map((r) => r.slice());
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const shade = { h: 'H2', c: 'C', p: 'P2', w: 'w2', k: 'k2' };
+    for (let y = 0; y < H; y++) for (let x = 0; x < SPR_W; x++) {
       const k = G[y][x];
-      if (!shadeable.has(k)) continue;
-      const rgt = G[y][x + 1], lft = G[y][x - 1];
-      const below = (G[y + 1] || [])[x], above = (G[y - 1] || [])[x];
-      if ((rgt !== k && lft === k) || (below !== k && above === k && k !== 's')) S[y][x] = k + '2';
-    }
-    for (let x = 0; x < W; x++) {
-      const inBand = x > cx - 7 && x < cx;
-      if (!inBand) continue;
-      for (let y = 0; y < H; y++) {
-        if (G[y][x] === 'h') { if (G[y + 1] && G[y + 1][x] === 'h' && G[y + 2] && G[y + 2][x] === 'h') S[y + 1][x] = 'hL'; break; }
-        if (G[y][x]) break;
-      }
+      if (!shade[k]) continue;
+      if (G[y][x + 1] !== k && G[y][x - 1] === k && (k !== 'h' || G[y][x + 1] == null)) S[y][x] = shade[k];
     }
     const pal = sp.pal;
-    const colorOf = (k) => {
-      if (!k) return null;
-      if (k.length === 2) {
-        const b = pal[k[0]] || '#ff00ff';
-        return k[1] === 'L' ? mix(b, '#ffffff', 0.32) : mix(b, C.ink, 0.26);
-      }
-      if (k === 'S') return mix(pal.s, C.ink, 0.2);
-      if (k === 'H') return mix(pal.h, C.ink, 0.25);
-      if (k === 'C') return mix(pal.c, C.ink, 0.22);
+    const col = (k) => {
+      if (k === 'H2') return mix(pal.h, C.ink, 0.3);
+      if (k === 'P2') return mix(pal.p, C.ink, 0.25);
+      if (k === 'w2') return mix(pal.w, '#9a8fb0', 0.35);
+      if (k === 'k2') return mix(pal.k, C.ink, 0.3);
       return pal[k] || '#ff00ff';
     };
     const cv = document.createElement('canvas');
-    cv.width = W; cv.height = H;
+    cv.width = SPR_W; cv.height = H;
     const g = cv.getContext('2d');
-    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    for (let y = 0; y < H; y++) for (let x = 0; x < SPR_W; x++) {
       const k = S[y][x];
-      if (k) { g.fillStyle = colorOf(k); g.fillRect(x, y, 1, 1); continue; }
+      if (k) { g.fillStyle = col(k); g.fillRect(x, y, 1, 1); continue; }
       const nb = [[0, 1], [0, -1], [-1, 0], [1, 0]].map(([dx, dy]) => (G[y + dy] || [])[x + dx]).find(Boolean);
-      if (nb) { g.fillStyle = mix(colorOf(nb), C.ink, 0.62); g.fillRect(x, y, 1, 1); }
+      if (nb) { g.fillStyle = mix(col(nb), C.ink, 0.7); g.fillRect(x, y, 1, 1); }
     }
-    cv.foot = shoeY + 2; // 발바닥 줄
+    cv.foot = OY + rows.length; // 발바닥 바로 아래 줄
     return cv;
   }
 
@@ -372,14 +269,14 @@
           const cx = r.x + 92;
           r.door = { side: 'S', cx, gap: { x: cx - 10, y: r.y + r.h - 12, w: 20, h: 12 },
             walk: { x: cx - 9, y: r.y + r.h - 14, w: 18, h: 20 },
-            entry: { x: cx, y: r.y + r.h - 9 }, front: { x: cx, y: L.hall.y + 16 },
-            inside: (x, y) => y < r.y + r.h - 6 };
+            entry: { x: cx, y: r.y + r.h - 17 }, front: { x: cx, y: L.hall.y + 16 },
+            zone: { x: cx - 12, y: r.y + r.h - 30, w: 24, h: 38 }, inward: 'up' };
         } else {
           const cx = r.x + 30;
           r.door = { side: 'N', cx, gap: { x: cx - 10, y: r.y, w: 20, h: 24 },
-            walk: { x: cx - 9, y: r.y - 6, w: 18, h: 30 },
-            entry: { x: cx, y: r.y + 20 }, front: { x: cx, y: r.y - 12 },
-            inside: (x, y) => y > r.y + 14 };
+            walk: { x: cx - 9, y: r.y - 6, w: 18, h: 38 },
+            entry: { x: cx, y: r.y + 31 }, front: { x: cx, y: r.y - 12 },
+            zone: { x: cx - 12, y: r.y - 8, w: 24, h: 48 }, inward: 'down' };
         }
         L.rooms.push(r);
       }
@@ -395,13 +292,13 @@
         if (left) {
           r.door = { side: 'E', cy, gap: { x: r.x + r.w - 6, y: cy - 10, w: 6, h: 20 },
             walk: { x: r.x + r.w - 16, y: cy - 7, w: 23, h: 15 },
-            entry: { x: r.x + r.w - 11, y: cy + 2 }, front: { x: L.hall.x + 14, y: cy + 2 },
-            inside: (x) => x < r.x + r.w - 7 };
+            entry: { x: r.x + r.w - 17, y: cy + 2 }, front: { x: L.hall.x + 14, y: cy + 2 },
+            zone: { x: r.x + r.w - 28, y: cy - 10, w: 36, h: 24 }, inward: 'left' };
         } else {
           r.door = { side: 'W', cy, gap: { x: r.x, y: cy - 10, w: 6, h: 20 },
             walk: { x: r.x - 7, y: cy - 7, w: 23, h: 15 },
-            entry: { x: r.x + 11, y: cy + 2 }, front: { x: L.hall.x + L.hall.w - 14, y: cy + 2 },
-            inside: (x) => x > r.x + 7 };
+            entry: { x: r.x + 17, y: cy + 2 }, front: { x: L.hall.x + L.hall.w - 14, y: cy + 2 },
+            zone: { x: r.x - 8, y: cy - 10, w: 36, h: 24 }, inward: 'right' };
         }
         L.rooms.push(r);
       }
@@ -419,22 +316,32 @@
       r.poster = right >= 16 ? { x: bx + bw + 6, y: r.y + 8 } : null;
       r.clock = right >= 28 ? { x: bx + bw + 19, y: r.y + 8 } : (!r.window && r.door.side !== 'N' && bx - fx0 >= 14 ? { x: fx0 + 4, y: r.y + 9 } : null);
     }
-    L.walk = [L.walkHall, ...L.rooms.map((r) => r.door.walk)];
+    for (const r of L.rooms) r.walkFloor = { x: r.floor.x + 5, y: r.floor.y + 5, w: r.floor.w - 10, h: r.floor.h - 5 };
+    L.walk = [L.walkHall, ...L.rooms.map((r) => r.door.walk), ...L.rooms.map((r) => r.walkFloor)];
+    L.obst = []; L.things = []; L.signs = [];
     L.bg = drawBackground(L);
     return L;
   }
 
   /* ───────── 배경(교실·복도는 한 번만 그려 둔다) ───────── */
-  let R = null, gctx = null;
-  function useCtx(g) { gctx = g; R = (x, y, w, h, c) => { g.fillStyle = c; g.fillRect(x, y, w, h); }; }
+  let R = null, gctx = null, L_signs = [];
+  // 16비트 느낌을 지키려고 모든 칠하기를 정수 픽셀에 맞춘다
+  function useCtx(g) {
+    gctx = g;
+    R = (x, y, w, h, c) => {
+      const x0 = Math.floor(x), y0 = Math.floor(y);
+      g.fillStyle = c;
+      g.fillRect(x0, y0, Math.max(1, Math.round(x + w) - x0), Math.max(1, Math.round(y + h) - y0));
+    };
+  }
   function hash(a, b) { let h = (a * 374761393 + b * 668265263) | 0; h = (h ^ (h >>> 13)) * 1274126177; return ((h ^ (h >>> 16)) >>> 0) / 4294967296; }
 
   function drawBackground(L) {
     const cv = document.createElement('canvas');
-    cv.width = L.W * RES; cv.height = L.H * RES;
+    cv.width = L.W; cv.height = L.H;
     const g = cv.getContext('2d');
-    g.scale(RES, RES);
     useCtx(g);
+    L_signs = L.signs;
     const h = L.hall;
     // 복도 바닥: 반질반질한 타일
     for (let y = h.y; y < h.y + h.h; y += 8) for (let x = h.x; x < h.x + h.w; x += 8) {
@@ -455,6 +362,8 @@
       R(h.x, 24, h.w, 2, '#8f7a58');
       R(h.x + 8, L.H - 8, h.w - 16, 8, '#7c9a6a'); R(h.x + 10, L.H - 6, h.w - 20, 0.5, '#5e7c50'); R(h.x + 10, L.H - 3, h.w - 20, 0.5, '#5e7c50');
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
+      sign(h.x + 6, 5, 36, 12, '정숙');
+      standSign(h.x + 4, L.H - 36, 40, 12, '뛰지 맙시다', L);
     }
     for (const r of L.rooms) drawRoom(r, L);
     if (!L.portrait) R(0, h.y, 384, 2, C.shadow);
@@ -569,6 +478,18 @@
     DIGITS[room.n].forEach((row, j) => [...row].forEach((c, i) => { if (c === '#') R(x + 1 + i, y + 1 + j, 1, 1, '#ffffff'); }));
   }
 
+  // 표지판: 판은 캔버스에, 글자는 겹쳐 놓은 HTML(칠판 이름과 같은 방식)로 쓴다
+  function sign(x, y, w, h, text) {
+    R(x - 1, y - 1, w + 2, h + 2, C.out); R(x, y, w, h, '#fffdf4'); R(x, y, w, 1, '#ffffff');
+    R(x + 1, y + h - 2, w - 2, 1, '#e8dcc0'); R(x, y, 2, h, '#e0475a'); R(x + w - 2, y, 2, h, '#e0475a');
+    L_signs.push({ x: x + 2, y, w: w - 4, h, text });
+  }
+  function standSign(x, y, w, h, text, L) {
+    R(x + 4, y + h, 2, 6, C.leg); R(x + w - 6, y + h, 2, 6, C.leg); R(x + 2, y + h + 6, w - 4, 1, C.shadow);
+    R(x - 1, y - 1, w + 2, h + 2, C.out); R(x, y, w, h, '#ffd36b'); R(x, y, w, 1, '#fff1b8'); R(x + 1, y + h - 2, w - 2, 1, '#e0a93a');
+    L_signs.push({ x: x + 1, y, w: w - 2, h, text, dark: true });
+    L.obst.push({ x: x + 2, y: y + h + 2, w: w - 4, h: 5 });
+  }
   function drawRoom(r, L) {
     const room = r.room, f = r.floor, d = r.door;
     // 나무 바닥
@@ -591,11 +512,18 @@
     // 교탁: 꽃병·책·사과
     const tdx = Math.round(r.board.x + r.board.w / 2 - 11);
     r.tdesk = { x: tdx, y: f.y + 6, w: 22 };
-    desk(tdx, f.y + 6, 22, 7, false);
-    R(tdx + 2, f.y + 3, 3, 4, room.light); R(tdx + 2.5, f.y + 4, 2, 0.5, '#ffffff');
-    R(tdx + 1.5, f.y + 1, 1.5, 1.5, '#ff8fa3'); R(tdx + 3.5, f.y + 0.5, 1.5, 1.5, '#ffd36b'); R(tdx + 2.5, f.y + 2, 1, 1.5, C.leaf);
-    R(tdx + 8, f.y + 5, 6, 1, '#3f7dd8'); R(tdx + 8.5, f.y + 4, 5, 1, '#e0475a'); R(tdx + 9, f.y + 3, 4, 1, '#f2c14e');
-    R(tdx + 17, f.y + 4, 2.5, 2.5, '#e0475a'); R(tdx + 18, f.y + 3.5, 0.5, 1, C.leaf); R(tdx + 17.5, f.y + 4.5, 0.5, 0.5, '#ffb3b3');
+    L.obst.push({ x: tdx, y: f.y + 6, w: 22, h: 10 });
+    L.things.push({ y: f.y + 16, fn: () => {
+      desk(tdx, f.y + 6, 22, 7, false);
+      R(tdx + 2, f.y + 3, 3, 4, room.light); R(tdx + 3, f.y + 4, 1, 1, '#ffffff');
+      R(tdx + 1, f.y + 1, 2, 2, '#ff8fa3'); R(tdx + 3, f.y + 0, 2, 2, '#ffd36b'); R(tdx + 3, f.y + 2, 1, 1, C.leaf);
+      R(tdx + 8, f.y + 5, 6, 1, '#3f7dd8'); R(tdx + 9, f.y + 4, 5, 1, '#e0475a'); R(tdx + 9, f.y + 3, 4, 1, '#f2c14e');
+      R(tdx + 17, f.y + 4, 3, 2, '#e0475a'); R(tdx + 18, f.y + 3, 1, 1, C.leaf);
+    } });
+    // 선생님 자리: 교탁 옆(구석 소품과 겹치지 않는 쪽)
+    const tright = tdx + 22 + 7;
+    r.tpos = { x: tright + 6 > f.x + f.w - 17 ? tdx - 7 : tright, y: f.y + 18 };
+    L.obst.push({ x: r.tpos.x - 4, y: r.tpos.y - 4, w: 8, h: 5 });
 
     // 학생 책상(3열)
     const cols = Math.max(2, Math.floor((f.w - 40) / 26)), rows = Math.max(1, Math.floor((f.h - 26) / 21));
@@ -604,7 +532,9 @@
     for (let j = 0; j < rows; j++) for (let i = 0; i < cols; i++) {
       const x = gx + i * 26, y = gy + j * 21;
       if (Math.abs(x + 7 - e.x) < 22 && Math.abs(y + 6 - e.y) < 24) continue;
-      desk(x, y, 14, 6, true, r.i * 13 + j * 5 + i, room);
+      const seed = r.i * 13 + j * 5 + i;
+      L.things.push({ y: y + 16, fn: () => desk(x, y, 14, 6, true, seed, room) });
+      L.obst.push({ x, y: y + 1, w: 14, h: 15 });
       r.seats.push({ x: x + 7, y: y + 18 });
     }
     // 구석 소품(문과 가까운 구석은 비운다)
@@ -613,7 +543,18 @@
       { x: f.x + 2, y: f.y + f.h - 21 }, { x: f.x + f.w - 16, y: f.y + f.h - 21 },
     ].filter((c) => Math.hypot(c.x + 7 - e.x, c.y + 10 - e.y) > 24);
     corners.sort((a, b) => Math.hypot(b.x - e.x, b.y - e.y) - Math.hypot(a.x - e.x, a.y - e.y));
-    (PROPS[room.icon] || ['plant']).slice(0, corners.length).forEach((kind, i) => drawProp(kind, corners[i].x, corners[i].y, room));
+    (PROPS[room.icon] || ['plant']).slice(0, corners.length).forEach((kind, i) => {
+      const c = corners[i];
+      L.things.push({ y: c.y + 20, fn: () => drawProp(kind, c.x, c.y, room) });
+      L.obst.push({ x: c.x + 1, y: c.y + 11, w: 12, h: 9 });
+    });
+    r.corners = corners;
+    // 다른 학생 자리(문에서 먼 자리)
+    if (r.seats.length) {
+      const s = r.seats[(r.i * 2 + 1) % r.seats.length];
+      r.npcSeat = s;
+      L.obst.push({ x: s.x - 4, y: s.y - 4, w: 8, h: 5 });
+    }
 
     // 북쪽 벽(윗면 + 정면)
     R(r.x, r.y, r.w, 4, C.wallTop); R(r.x, r.y, r.w, 0.5, C.wallHi);
@@ -677,12 +618,17 @@
       R(r.x, r.y + r.h - 8, r.w, 8, C.face); R(r.x, r.y + r.h - 6, r.w, 1, C.trim);
       R(r.x, r.y + r.h - 5, r.w, 5, C.wains); R(r.x, r.y + r.h - 5, r.w, 0.5, C.wainsHi); R(r.x, r.y + r.h - 1, r.w, 1, C.wainsDk);
       for (let x = r.x + 3; x < r.x + r.w; x += 6) R(x, r.y + r.h - 4, 0.5, 3, C.wainsDk);
-      // 복도 쪽 게시판
-      const nb = r.x + 14;
-      R(nb - 0.5, r.y + r.h - 8.5, 22, 5.5, C.frame); R(nb, r.y + r.h - 8, 21, 4.5, '#d9a86b');
-      [['#ffffff', 1], ['#ffd36b', 6], [room.light, 11], ['#a8dcef', 16]].forEach(([c, ox], i) => {
-        R(nb + ox, r.y + r.h - 7.5 + (i % 2) * 0.5, 4, 3.5, c); R(nb + ox + 1.5, r.y + r.h - 7.8 + (i % 2) * 0.5, 1, 0.8, '#e0475a');
-      });
+      // 복도 쪽 표지판과 게시판
+      if (r.i === 1) {
+        sign(r.x + 8, r.y + r.h - 12, 26, 11, '정숙');
+        const nb = r.x + 38;
+        R(nb - 1, r.y + r.h - 9, 23, 6, C.frame); R(nb, r.y + r.h - 8, 21, 4, '#d9a86b');
+        [['#ffffff', 1], ['#ffd36b', 6], [room.light, 11], ['#a8dcef', 16]].forEach(([c, ox], i) => {
+          R(nb + ox, r.y + r.h - 8 + (i % 2), 4, 3, c); R(nb + ox + 1, r.y + r.h - 8 + (i % 2), 1, 1, '#e0475a');
+        });
+      } else {
+        sign(r.x + 8, r.y + r.h - 12, 48, 11, '뛰지 맙시다');
+      }
     } else {
       R(r.x, r.y + r.h - r.S, r.w, r.S, C.wallTop); R(r.x, r.y + r.h - r.S, r.w, 0.5, C.wallHi);
     }
@@ -715,6 +661,7 @@
       plate(east ? gp.x + gp.w + 2 : gp.x - 9, gp.y - 14, room);
     }
   }
+
 
   /* ───────── 효과음(Web Audio로 합성) ───────── */
   const SFX = (() => {
@@ -775,8 +722,13 @@
       enter() { noise(0, 0.16, 0.35, 2200, 0.8); seq([392, 523, 659, 784, 1047], 0.06, 0.1, 'square', 0.32, 0.1); tone(1568, 0.42, 0.25, 'triangle', 0.3); },
       exit() { seq([784, 659, 523, 392], 0.065, 0.1, 'square', 0.28); noise(0.27, 0.14, 0.28, 1800, 0.8); },
       toggle() { tone(660, 0, 0.06, 'square', 0.3); tone(880, 0.06, 0.08, 'square', 0.3); },
+      door() { noise(0, 0.12, 0.25, 2600, 0.9); tone(523, 0.05, 0.07, 'triangle', 0.3); tone(659, 0.11, 0.09, 'triangle', 0.3); },
+      pickup() { seq([1047, 1319, 1568, 2093], 0.045, 0.08, 'square', 0.3); },
+      warn() { tone(880, 0, 0.12, 'square', 0.3); tone(698, 0.14, 0.18, 'square', 0.3); },
+      party() { seq([523, 659, 784, 1047, 784, 1047, 1319, 1568], 0.08, 0.12, 'square', 0.3); seq([262, 0, 392, 0, 262, 0, 392, 523], 0.08, 0.14, 'triangle', 0.35); },
     };
   })();
+
 
   /* ───────── 화면·상태 ───────── */
   const stage = $('#stage'), screen = $('#screen'), sctx = screen.getContext('2d');
@@ -786,28 +738,31 @@
   if (isTouch) document.body.classList.add('touch');
 
   let L = null, kid = null, mode = 'menu';
-  const P = { x: 0, y: 0, dir: 'down', moving: false, anim: 0, path: [], lastStep: -1 };
+  const P = { x: 0, y: 0, dir: 'down', moving: false, anim: 0, path: [], lastStep: -1, quietRoom: null, room: null, runFor: 0, runBan: 0 };
   const keys = new Set();
   const padDirs = new Set();
-  let dlgRoom = null, armed = null, hoverRoom = null, scale = 2, k = 1, leaving = false, bumpAt = 0;
+  let dlg = null, armed = null, hoverRoom = null, scale = 2, k = 1, leaving = false, bumpAt = 0, party = 0, clock = 0;
+  const found = new Set(load('pixelSchoolStars', localStorage) || []);
+  const said = new Set();
 
   function choosePortrait() { return innerWidth < 700 && innerHeight > innerWidth * 1.05; }
 
   function setLayout(portrait) {
     const prevRoom = L ? nearestDoorRoom() : null;
     L = buildLayout(portrait);
-    buf.width = L.W * RES; buf.height = L.H * RES;
+    buf.width = L.W; buf.height = L.H;
+    buildGrid();
+    placeStickers();
     labels.innerHTML = '';
-    for (const r of L.rooms) {
+    const put = (cls, text, x, y, w, h) => {
       const el = document.createElement('div');
-      el.className = 'chalk';
-      el.textContent = r.room.short;
-      Object.assign(el.style, {
-        left: (r.board.x / L.W) * 100 + '%', top: (r.board.y / L.H) * 100 + '%',
-        width: (r.board.w / L.W) * 100 + '%', height: ((r.board.h - 1.5) / L.H) * 100 + '%',
-      });
+      el.className = cls;
+      el.textContent = text;
+      Object.assign(el.style, { left: (x / L.W) * 100 + '%', top: (y / L.H) * 100 + '%', width: (w / L.W) * 100 + '%', height: (h / L.H) * 100 + '%' });
       labels.appendChild(el);
-    }
+    };
+    for (const r of L.rooms) put('chalk', r.room.short, r.board.x, r.board.y, r.board.w, r.board.h - 1);
+    for (const sg of L.signs) put('sign' + (sg.dark ? ' dark' : ''), sg.text, sg.x, sg.y, sg.w, sg.h - 1);
     if (prevRoom != null) placeAtDoor(prevRoom);
     else placeCenter();
   }
@@ -819,7 +774,7 @@
     const d = L.rooms[i].door;
     P.x = d.front.x; P.y = d.front.y; P.path = [];
     P.dir = { S: 'down', N: 'up', E: 'right', W: 'left' }[d.side];
-    armed = null;
+    armed = 'door' + i;
   }
   function nearestDoorRoom() {
     let best = null, bd = 40;
@@ -843,35 +798,119 @@
     const cssW = Math.floor(L.W * scale), cssH = Math.floor(L.H * scale);
     stage.style.width = cssW + 8 + 'px';
     stage.style.height = cssH + 8 + 'px';
-    k = Math.max(1, Math.ceil((scale * (devicePixelRatio || 1)) / RES));
-    screen.width = L.W * RES * k; screen.height = L.H * RES * k;
+    k = Math.max(1, Math.ceil(scale * (devicePixelRatio || 1)));
+    screen.width = L.W * k; screen.height = L.H * k;
     stage.style.setProperty('--chalk', Math.max(9, Math.min(22, Math.round(scale * 5.4))) + 'px');
+    stage.style.setProperty('--sign', Math.max(8, Math.min(18, Math.round(scale * 4.6))) + 'px');
     render();
   }
 
-  /* ───────── 이동 ───────── */
+  /* ───────── 걷는 곳·부딪히는 것 ───────── */
   const inRect = (x, y, r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
+  const hits = (x, y, w, h, o) => x < o.x + o.w && x + w > o.x && y < o.y + o.h && y + h > o.y;
   function free(x, y) {
     const pts = [[x - 4, y - 3], [x + 3, y - 3], [x - 4, y], [x + 3, y]];
-    return pts.every(([a, b]) => L.walk.some((r) => inRect(a, b, r)));
+    if (!pts.every(([a, b]) => L.walk.some((r) => inRect(a, b, r)))) return false;
+    return !L.obst.some((o) => hits(x - 4, y - 3, 8, 3, o));
   }
+  // 길찾기용 4픽셀 칸
+  const CELL = 4;
+  function buildGrid() {
+    L.gw = Math.ceil(L.W / CELL); L.gh = Math.ceil(L.H / CELL);
+    L.grid = new Uint8Array(L.gw * L.gh);
+    for (let j = 0; j < L.gh; j++) for (let i = 0; i < L.gw; i++) L.grid[j * L.gw + i] = free(i * CELL + 2, j * CELL + 2) ? 1 : 0;
+    // 복도에서 닿지 않는 작은 틈(가구 사이 구석)은 막힌 칸으로 친다
+    const W = L.gw, seen = new Uint8Array(W * L.gh);
+    const h = L.walkHall, s0 = Math.floor((h.y + h.h / 2) / CELL) * W + Math.floor((h.x + h.w / 2) / CELL);
+    const q = [s0]; seen[s0] = 1;
+    for (let k = 0; k < q.length; k++) {
+      const c = q[k], ci = c % W;
+      for (const n of [c + 1, c - 1, c + W, c - W]) {
+        if (n < 0 || n >= seen.length || seen[n] || !L.grid[n]) continue;
+        if ((n === c + 1 && ci === W - 1) || (n === c - 1 && ci === 0)) continue;
+        seen[n] = 1; q.push(n);
+      }
+    }
+    for (let i = 0; i < seen.length; i++) if (!seen[i]) L.grid[i] = 0;
+  }
+  const cellOf = (x, y) => [Math.max(0, Math.min(L.gw - 1, Math.floor(x / CELL))), Math.max(0, Math.min(L.gh - 1, Math.floor(y / CELL)))];
+  // 가장 가까운 걸을 수 있는 칸. 교실 안을 가리켰으면 그 교실 안에서만 찾는다(벽 너머 복도로 새지 않게)
+  function nearestOpen(x, y) {
+    const [ci, cj] = cellOf(x, y);
+    const room = L.rooms.find((r) => inRect(x, y, r));
+    const ok = (px, py) => !room || inRect(px, py, { x: room.x, y: room.y, w: room.w, h: room.h + 4 }) || inRect(px, py, room.door.walk);
+    for (let rad = 0; rad < 14; rad++) {
+      let best = null, bd = 1e9;
+      for (let j = cj - rad; j <= cj + rad; j++) for (let i = ci - rad; i <= ci + rad; i++) {
+        if (i < 0 || j < 0 || i >= L.gw || j >= L.gh || !L.grid[j * L.gw + i] || !ok(i * CELL + 2, j * CELL + 2)) continue;
+        const dd = Math.hypot(i * CELL + 2 - x, j * CELL + 2 - y);
+        if (dd < bd) { bd = dd; best = [i, j]; }
+      }
+      if (best) return best;
+    }
+    return null;
+  }
+  function lineFree(ax, ay, bx, by) {
+    const n = Math.ceil(Math.hypot(bx - ax, by - ay) / 2);
+    for (let i = 1; i <= n; i++) { const t = i / n; if (!free(ax + (bx - ax) * t, ay + (by - ay) * t)) return false; }
+    return true;
+  }
+  function findPath(tx, ty) {
+    const goal = nearestOpen(tx, ty), startC = nearestOpen(P.x, P.y);
+    if (!goal || !startC) return null;
+    const W = L.gw, sIdx = startC[1] * W + startC[0], gIdx = goal[1] * W + goal[0];
+    const prev = new Int32Array(W * L.gh).fill(-1);
+    prev[sIdx] = sIdx;
+    const q = [sIdx];
+    for (let h = 0; h < q.length && prev[gIdx] < 0; h++) {
+      const c = q[h], ci = c % W, cj = (c - ci) / W;
+      for (const [di, dj] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const ni = ci + di, nj = cj + dj;
+        if (ni < 0 || nj < 0 || ni >= W || nj >= L.gh) continue;
+        const n = nj * W + ni;
+        if (prev[n] >= 0 || !L.grid[n]) continue;
+        prev[n] = c; q.push(n);
+      }
+    }
+    if (prev[gIdx] < 0) return null;
+    const cells = [];
+    for (let c = gIdx; c !== sIdx; c = prev[c]) cells.push({ x: (c % W) * CELL + 2, y: Math.floor(c / W) * CELL + 2 });
+    cells.reverse();
+    const exact = free(tx, ty) ? { x: tx, y: ty } : null;
+    if (exact) cells.push(exact);
+    // 곧게 갈 수 있는 칸은 건너뛴다
+    const out = [];
+    let cx = P.x, cy = P.y, i = 0;
+    while (i < cells.length) {
+      let j = cells.length - 1;
+      while (j > i && !lineFree(cx, cy, cells[j].x, cells[j].y)) j--;
+      out.push(cells[j]); cx = cells[j].x; cy = cells[j].y; i = j + 1;
+    }
+    return out;
+  }
+  function walkTo(x, y, quietRoom) {
+    const p = findPath(x, y);
+    P.path = p || [];
+    P.quietRoom = quietRoom == null ? null : quietRoom;
+  }
+
   function tryMove(dx, dy) {
     let moved = false;
     if (dx && free(P.x + dx, P.y)) { P.x += dx; moved = true; }
     if (dy && free(P.x, P.y + dy)) { P.y += dy; moved = true; }
     if (moved) return true;
-    // 문 근처에서 살짝 비껴 서 있으면 문 가운데로 당겨 준다
+    // 문 가까이에서 비껴 서 있으면 문 가운데로 당겨 준다(교실 안에서 나갈 때도)
     for (const r of L.rooms) {
       const d = r.door, step = Math.abs(dx || dy);
-      if ((d.side === 'S' && dy < 0) || (d.side === 'N' && dy > 0)) {
-        if (Math.abs(P.x - d.cx) < 12 && Math.abs(P.y - d.front.y) < 26) {
+      if ((d.side === 'S' || d.side === 'N') && dy && !dx) {
+        if (Math.abs(P.x - d.cx) < 13 && inRect(P.x, P.y, d.zone)) {
           const nx = P.x + Math.sign(d.cx - P.x) * Math.min(step, Math.abs(d.cx - P.x));
           if (free(nx, P.y)) { P.x = nx; return true; }
         }
       }
-      if ((d.side === 'E' && dx < 0) || (d.side === 'W' && dx > 0)) {
+      if ((d.side === 'E' || d.side === 'W') && dx && !dy) {
         const cy = d.entry.y;
-        if (Math.abs(P.y - cy) < 12 && Math.abs(P.x - d.front.x) < 26) {
+        if (Math.abs(P.y - cy) < 12 && inRect(P.x, P.y, d.zone)) {
           const ny = P.y + Math.sign(cy - P.y) * Math.min(step, Math.abs(cy - P.y));
           if (free(P.x, ny)) { P.y = ny; return true; }
         }
@@ -879,119 +918,191 @@
     }
     return false;
   }
-  function currentDoorRoom() {
-    if ([[P.x - 4, P.y - 3], [P.x + 3, P.y]].every(([a, b]) => inRect(a, b, L.walkHall))) return null;
-    return L.rooms.find((r) => inRect(P.x, P.y, r.door.walk)) || null;
-  }
-  function walkTo(points) { P.path = points.map((p) => ({ x: p.x, y: p.y })); }
-  function goToRoom(r) {
-    const pts = [];
-    const cur = currentDoorRoom();
-    if (cur && cur !== r) pts.push(cur.door.front);
-    pts.push(r.door.front, r.door.entry);
-    walkTo(pts);
-  }
-  function goToPoint(x, y) {
-    const h = L.walkHall;
-    const tx = Math.max(h.x + 5, Math.min(h.x + h.w - 4, x));
-    const ty = Math.max(h.y + 4, Math.min(h.y + h.h - 1, y));
-    const pts = [];
-    const cur = currentDoorRoom();
-    if (cur) pts.push(cur.door.front);
-    pts.push({ x: tx, y: ty });
-    walkTo(pts);
+  const roomOfPoint = (x, y) => L.rooms.find((r) => inRect(x, y, r.walkFloor)) || null;
+
+  /* ───────── 별 스티커(숨은 재미) ───────── */
+  function placeStickers() {
+    const spot = (x, y) => { const c = nearestOpen(x, y); return c ? { x: c[0] * CELL + 2, y: c[1] * CELL + 2 } : { x, y }; };
+    const r4 = L.rooms[3], r6 = L.rooms[5];
+    L.stickers = [
+      { id: 'hall', ...(L.portrait ? spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + 6) : spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + L.walkHall.h - 2)) },
+      { id: 'book', ...spot(r4.walkFloor.x + 2, r4.walkFloor.y + r4.walkFloor.h - 1) },
+      { id: 'matrix', ...spot(r6.walkFloor.x + r6.walkFloor.w - 2, r6.walkFloor.y + 2) },
+    ];
   }
 
-  const SPEED = 66;
+  /* ───────── 움직임 ───────── */
+  const SPEED = 62;
   function update(dt) {
+    if (party > 0) party -= dt;
     if (mode !== 'play' || leaving) { P.moving = false; return; }
     let dx = 0, dy = 0;
     const has = (n) => keys.has(n) || padDirs.has(n);
-    if (!dlgRoom) {
+    if (!dlg) {
       if (has('left')) dx -= 1;
       if (has('right')) dx += 1;
       if (has('up')) dy -= 1;
       if (has('down')) dy += 1;
     }
+    const running = keys.has('run') && P.runBan <= 0;
+    if (P.runBan > 0) P.runBan -= dt;
     P.moving = false;
     if (dx || dy) {
-      P.path = [];
-      const s = SPEED * dt / (dx && dy ? Math.SQRT2 : 1);
+      P.path = []; P.quietRoom = null;
+      const s = SPEED * (running ? 1.8 : 1) * dt / (dx && dy ? Math.SQRT2 : 1);
       if (tryMove(dx * s, dy * s)) P.moving = true;
       else if (clock - bumpAt > 0.4) { bumpAt = clock; SFX.bump(); }
       P.dir = dx && !dy ? (dx < 0 ? 'left' : 'right') : dy ? (dy < 0 ? 'up' : 'down') : P.dir;
-    } else if (P.path.length && !dlgRoom) {
+    } else if (P.path.length && !dlg) {
       const t = P.path[0];
       const vx = t.x - P.x, vy = t.y - P.y, dist = Math.hypot(vx, vy), s = SPEED * dt;
       if (dist <= s) { P.x = t.x; P.y = t.y; P.path.shift(); }
       else { P.x += (vx / dist) * s; P.y += (vy / dist) * s; }
       if (dist > 0.5) P.dir = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down');
       P.moving = true;
+      if (!P.path.length && P.onArrive) { const f = P.onArrive; P.onArrive = null; f(); }
     }
-    P.anim = P.moving ? P.anim + dt : 0;
-    // 발걸음 소리: 발이 바닥에 닿는 순간마다
+    P.anim = P.moving ? P.anim + dt * (running && (dx || dy) ? 1.6 : 1) : 0;
     const stepIdx = P.moving ? Math.floor(P.anim * 7 / 2) : -1;
     if (stepIdx !== P.lastStep && stepIdx >= 0) SFX.step(stepIdx % 2);
     P.lastStep = stepIdx;
 
-    const r = L.rooms.find((rr) => inRect(P.x, P.y, rr.door.walk) && rr.door.inside(P.x, P.y));
-    if (r && armed !== r.i && !dlgRoom) { armed = r.i; P.path = []; openDialog(r); }
-    if (!r && armed != null && !dlgRoom) armed = null;
+    // 복도에서 뛰면 선생님이 말린다
+    const inHall = inRect(P.x, P.y, L.walkHall);
+    if (running && P.moving && inHall) {
+      P.runFor += dt;
+      if (P.runFor > 0.9) { P.runFor = 0; P.runBan = 2.5; SFX.warn(); toast('김 선생님', '복도에서는 뛰지 맙시다! 천천히 걸어요.'); }
+    } else P.runFor = 0;
+
+    // 교실에 들고 날 때 문소리·퇴실 소리
+    const nowRoom = roomOfPoint(P.x, P.y);
+    if (nowRoom !== P.room) {
+      if (nowRoom && !P.room) SFX.door();
+      if (!nowRoom && P.room && inHall) SFX.exit();
+      if (!nowRoom && !inHall) { /* 문턱 */ } else P.room = nowRoom;
+    }
+    // 계단 끝
+    const stairs = L.portrait ? P.y < L.walkHall.y + 3 && P.dir === 'up' : P.x < L.walkHall.x + 4 && P.dir === 'left';
+    if (stairs && dx + dy !== 0 && !said.has('stairs')) { said.add('stairs'); toast('안내', '위층은 공사 중이에요. 옥상 문도 잠겨 있답니다.'); }
+
+    // 별 스티커 줍기
+    for (const st of L.stickers) {
+      if (found.has(st.id) || Math.hypot(P.x - st.x, P.y - st.y) > 7) continue;
+      found.add(st.id);
+      save('pixelSchoolStars', [...found], localStorage);
+      SFX.pickup();
+      if (found.size >= L.stickers.length) {
+        party = 6; SFX.party();
+        toast('축하해요!', '반짝이는 별 스티커 3개를 모두 찾았어요. 오늘의 명예 탐험가!');
+      } else toast('반짝!', `별 스티커를 주웠어요 (${found.size}/${L.stickers.length})`);
+      paintStars();
+    }
+
+    if (!dlg) checkMeet();
+  }
+
+  // 대화창을 띄울 곳: 문으로 들어설 때, 선생님·학생 가까이 갔을 때
+  function checkMeet() {
+    let hit = null;
+    for (const r of L.rooms) {
+      const d = r.door;
+      if (inRect(P.x, P.y, d.zone) && P.dir === d.inward && P.moving && P.quietRoom !== r.i) { hit = { id: 'door' + r.i, r, who: 'door' }; break; }
+      if (Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 17) { hit = { id: 't' + r.i, r, who: 'teacher' }; break; }
+      if (r.npcSeat && r.npc && Math.hypot(P.x - r.npcSeat.x, P.y - r.npcSeat.y) < 16) { hit = { id: 's' + r.i, r, who: 'student' }; break; }
+    }
+    if (hit && armed !== hit.id) {
+      armed = hit.id;
+      // 걷던 길은 기억해 두었다가 '교실 둘러보기'를 누르면 이어 간다
+      P.resume = P.path.length ? { path: P.path, onArrive: P.onArrive } : null;
+      P.path = []; P.onArrive = null;
+      openDialog(hit.r, hit.who);
+    }
+    if (!hit && armed) {
+      // 멀어지면 다시 뜰 수 있게
+      const r = L.rooms[+armed.slice(armed.startsWith('door') ? 4 : 1)];
+      const far = armed.startsWith('door') ? !inRect(P.x, P.y, r.door.zone)
+        : armed[0] === 't' ? Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) > 22
+          : Math.hypot(P.x - r.npcSeat.x, P.y - r.npcSeat.y) > 21;
+      if (far) armed = null;
+    }
   }
 
   /* ───────── 그리기 ───────── */
-  let clock = 0;
-  const snap = (v) => Math.round(v * RES) / RES;
-  function drawSprite(cv, x, y) { g.drawImage(cv, snap(x - SPR_W / RES / 2), snap(y - cv.foot / RES), cv.width / RES, cv.height / RES); }
-  function shadowAt(x, y, w) { g.fillStyle = C.shadow; g.fillRect(snap(x - w / 2), snap(y - 1.5), w, 2.5); g.fillRect(snap(x - w / 2 + 1), snap(y - 2), w - 2, 0.5); }
-  function blinking(seed) { return !reduceMotion && ((clock + seed * 1.7) % 4.2) < 0.14; }
+  const rnd = Math.round;
+  function drawSprite(cv, x, y) { g.drawImage(cv, rnd(x - SPR_W / 2), rnd(y - cv.foot)); }
+  function shadowAt(x, y, w) { g.fillStyle = C.shadow; g.fillRect(rnd(x - w / 2), rnd(y - 2), w, 2); g.fillRect(rnd(x - w / 2 + 1), rnd(y - 3), w - 2, 1); }
+  function blinking(seed) { return !reduceMotion && ((clock + seed * 1.7) % 4.2) < 0.15; }
+  const hop = (i) => (party > 0 && !reduceMotion && Math.floor(clock * 6 + i) % 2 ? -2 : 0);
 
   function render() {
     if (!L) return;
-    g.setTransform(RES, 0, 0, RES, 0, 0);
+    useCtx(g);
+    g.setTransform(1, 0, 0, 1, 0, 0);
     g.imageSmoothingEnabled = false;
-    g.drawImage(L.bg, 0, 0, L.W, L.H);
+    g.drawImage(L.bg, 0, 0);
+    // 별 스티커(반짝임)
+    for (const st of L.stickers) {
+      if (found.has(st.id)) continue;
+      const tw = Math.floor(clock * 2 + st.x) % 6 === 0;
+      g.fillStyle = '#ffd36b'; g.fillRect(st.x - 1, st.y - 2, 3, 1); g.fillRect(st.x, st.y - 3, 1, 3);
+      if (tw && !reduceMotion) { g.fillStyle = '#ffffff'; g.fillRect(st.x - 2, st.y - 2, 1, 1); g.fillRect(st.x + 2, st.y - 2, 1, 1); g.fillRect(st.x, st.y - 4, 1, 1); g.fillRect(st.x, st.y, 1, 1); }
+    }
+    // 앞뒤 순서대로: 가구·소품·사람
+    const list = L.things.slice();
     const others = KIDS.filter((x) => x !== kid);
     L.rooms.forEach((r, i) => {
-      // 선생님: 교탁 옆에 서서 학생을 본다(문으로 들어오면 그쪽을 본다)
-      const t = r.teacher, td = r.tdesk;
-      const f = r.floor;
-      const tx = td.x + td.w + 7 + 6 > f.x + f.w - 17 ? td.x - 7 : td.x + td.w + 7, ty = td.y + 12;
+      const t = r.teacher, tp = r.tpos;
       let tdir = 'down';
-      if (dlgRoom === r) tdir = Math.abs(r.door.entry.x - tx) > Math.abs(r.door.entry.y - ty) ? (r.door.entry.x < tx ? 'left' : 'right') : 'down';
-      shadowAt(tx, ty, 10);
-      const tb = !reduceMotion && Math.floor(clock * 1.2 + i) % 5 === 0 ? -0.5 : 0;
-      drawSprite(personSprite(t, tdir, 'idle', blinking(i + 3)), tx, ty + tb);
-      // 다른 학생: 자리에 앉아 칠판을 본다
+      if (dlg && dlg.r === r || Math.hypot(P.x - tp.x, P.y - tp.y) < 40) {
+        const vx = P.x - tp.x, vy = P.y - tp.y;
+        tdir = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down');
+      }
+      list.push({ y: tp.y, fn: () => { shadowAt(tp.x, tp.y, 10); drawSprite(personSprite(t, tdir, 'idle', blinking(i + 3)), tp.x, tp.y + hop(i)); } });
       const o = others[i];
-      if (o && r.seats.length) {
-        const s = r.seats[(i * 2 + 1) % r.seats.length];
-        const bob = !reduceMotion && Math.floor(clock * 1.5 + i) % 4 === 0 ? -0.5 : 0;
-        shadowAt(s.x, s.y, 10);
-        drawSprite(personSprite(o, 'up', 'idle', false), s.x, s.y + bob);
+      r.npc = o || null;
+      if (o && r.npcSeat) {
+        const s = r.npcSeat;
+        const near = Math.hypot(P.x - s.x, P.y - s.y) < 30;
+        let sd = 'up';
+        if (near) { const vx = P.x - s.x, vy = P.y - s.y; sd = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down'); }
+        list.push({ y: s.y, fn: () => { shadowAt(s.x, s.y, 10); drawSprite(personSprite(o, sd, 'idle', near && blinking(i)), s.x, s.y + hop(i + 1)); } });
       }
     });
-    const hi = hoverRoom != null ? L.rooms[hoverRoom] : dlgRoom;
+    if (kid && mode === 'play') {
+      const frames = P.dir === 'left' || P.dir === 'right' ? ['a', 'idle'] : ['a', 'idle', 'b', 'idle'];
+      const fr = P.moving ? frames[Math.floor(P.anim * 7) % frames.length] : 'idle';
+      list.push({ y: P.y + 0.1, fn: () => {
+        shadowAt(P.x, P.y, 11);
+        drawSprite(personSprite(kid, P.dir, fr, !P.moving && blinking(0)), P.x, P.y - (P.moving && fr !== 'idle' ? 1 : 0) + hop(9));
+      } });
+    }
+    list.sort((a, b) => a.y - b.y).forEach((it) => it.fn());
+
+    const hi = hoverRoom != null ? L.rooms[hoverRoom] : dlg && dlg.r;
     if (hi) {
       const f = hi.floor, on = reduceMotion || Math.floor(clock * 4) % 2 === 0;
       g.fillStyle = on ? hi.room.color : '#ffffff';
       for (let x = f.x; x < f.x + f.w; x += 4) { g.fillRect(x, f.y, 2, 1); g.fillRect(x + 2, f.y + f.h - 1, 2, 1); }
       for (let y = f.y; y < f.y + f.h; y += 4) { g.fillRect(f.x, y + 2, 1, 2); g.fillRect(f.x + f.w - 1, y, 1, 2); }
     }
-    if (mode === 'play' && !dlgRoom) {
+    if (mode === 'play' && !dlg) {
       for (const r of L.rooms) {
         const d = r.door;
-        if (Math.hypot(P.x - d.front.x, P.y - d.front.y) < 30 || hoverRoom === r.i) arrow(d, r);
+        if ((Math.hypot(P.x - d.front.x, P.y - d.front.y) < 30 && !roomOfPoint(P.x, P.y)) || hoverRoom === r.i) arrow(d, r);
       }
     }
-    if (kid && mode === 'play') {
-      const frames = P.dir === 'left' || P.dir === 'right' ? ['a', 'idle'] : ['a', 'idle', 'b', 'idle'];
-      const fr = P.moving ? frames[Math.floor(P.anim * 7) % frames.length] : 'idle';
-      shadowAt(P.x, P.y, 11);
-      drawSprite(personSprite(kid, P.dir, fr, !P.moving && blinking(0)), P.x, P.y - (P.moving && fr !== 'idle' ? 0.5 : 0));
-    }
+    if (party > 0 && !reduceMotion) confetti();
     sctx.imageSmoothingEnabled = false;
     sctx.drawImage(buf, 0, 0, screen.width, screen.height);
+  }
+  function confetti() {
+    const cs = ['#ffd36b', '#ff6f91', '#7fc6e8', '#74b46e', '#b9a5f0', '#ffffff'];
+    for (let i = 0; i < 70; i++) {
+      const x = (i * 53.3 + Math.sin(clock * 2 + i) * 6) % L.W;
+      const y = ((i * 37.7) + clock * (30 + (i % 5) * 8)) % L.H;
+      g.fillStyle = cs[i % cs.length];
+      g.fillRect(Math.floor(x), Math.floor(y), i % 3 ? 2 : 1, i % 2 ? 1 : 2);
+    }
   }
   function arrow(d, r) {
     const up = Math.floor(clock * 3) % 2 && !reduceMotion ? 1 : 0;
@@ -1020,20 +1131,44 @@
     requestAnimationFrame(loop);
   }
 
+  /* ───────── 말풍선(짧은 알림) ───────── */
+  const toastEl = $('#toast');
+  let toastTimer = 0;
+  function toast(who, text) {
+    toastEl.replaceChildren();
+    const b = document.createElement('b'); b.textContent = who;
+    toastEl.append(b, document.createTextNode(' ' + text));
+    toastEl.hidden = false;
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => { toastEl.hidden = true; }, 3200);
+  }
+  const starsEl = $('#stars');
+  function paintStars() {
+    starsEl.hidden = found.size === 0;
+    starsEl.textContent = '★ ' + found.size + '/3';
+    starsEl.title = '찾은 별 스티커';
+  }
+
   /* ───────── 대화창 ───────── */
-  const dlg = $('#dialog');
+  const dlgEl = $('#dialog');
   let typer = 0;
-  function openDialog(r) {
-    dlgRoom = r;
+  function openDialog(r, who) {
+    who = who || 'door';
+    dlg = { r, who };
     const room = r.room, t = r.teacher;
     SFX.chime();
-    dlg.style.setProperty('--room', room.color);
+    dlgEl.style.setProperty('--room', room.color);
     $('#dlg-num').textContent = room.n + '반';
     $('#dlg-title').textContent = room.title;
     $('#dlg-desc').textContent = room.desc;
     $('#dlg-upd').textContent = room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
-    $('#dlg-face').replaceChildren(faceCanvas(t));
-    const say = `${t.name}: 어서 와요, ${kid ? kid.name : '친구'}! ${t.say}`;
+    const me = kid ? kid.name : '친구';
+    let face = t, say;
+    if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${r.npc.line}${/[!?.]$/.test(r.npc.line) ? '' : '.'} 여기 ${room.short} 사이트 같이 볼래?`; }
+    else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${t.say}`;
+    else say = `${t.name}: 어서 와요, ${me}! 여기는 ${room.n}반 ${room.short} 교실이에요.`;
+    $('#dlg-face').replaceChildren(faceCanvas(face));
+    $('#dlg-no').firstChild.textContent = '교실 둘러보기 ';
     const el = $('#dlg-say');
     clearInterval(typer);
     if (reduceMotion) el.textContent = say;
@@ -1043,22 +1178,22 @@
         n++; el.textContent = say.slice(0, n);
         if (n % 2 === 0 && say[n - 1] !== ' ') SFX.type();
         if (n >= say.length) clearInterval(typer);
-      }, 30);
+      }, 28);
     }
-    dlg.hidden = false;
+    dlgEl.hidden = false;
   }
   function faceCanvas(sp) {
     const src = personSprite(sp, 'down', 'idle', false);
     const c = document.createElement('canvas');
-    c.width = 24; c.height = 22;
-    c.getContext('2d').drawImage(src, 0, 0, 24, 22, 0, 0, 24, 22);
+    c.width = 16; c.height = 14;
+    c.getContext('2d').drawImage(src, 1, 1, 16, 14, 0, 0, 16, 14);
     return c;
   }
-  function closeDialog(stepBack) {
-    if (!dlgRoom) return;
-    const r = dlgRoom;
-    dlgRoom = null; dlg.hidden = true; clearInterval(typer);
-    if (stepBack) { walkTo([r.door.front]); SFX.exit(); }
+  function closeDialog(resume) {
+    if (!dlg) return;
+    dlg = null; dlgEl.hidden = true; clearInterval(typer);
+    if (resume && P.resume) { P.path = P.resume.path; P.onArrive = P.resume.onArrive; }
+    P.resume = null;
     stage.focus({ preventScroll: true });
   }
   function enter(r) {
@@ -1070,7 +1205,7 @@
     $('#fade').hidden = false;
     setTimeout(() => { location.href = r.room.url; }, reduceMotion ? 120 : 560);
   }
-  $('#dlg-go').addEventListener('click', () => dlgRoom && enter(dlgRoom));
+  $('#dlg-go').addEventListener('click', () => dlg && enter(dlg.r));
   $('#dlg-no').addEventListener('click', () => closeDialog(true));
 
   /* ───────── 학생 고르기 ───────── */
@@ -1092,7 +1227,7 @@
   });
   function openMenu() {
     mode = 'menu';
-    closeDialog(false);
+    closeDialog();
     menu.hidden = false;
     $('#change').hidden = true;
     const saved = load('pixelSchoolKid', localStorage);
@@ -1133,11 +1268,12 @@
   }
   soundBtn.addEventListener('click', (e) => { e.stopPropagation(); SFX.set(!SFX.on); paintSound(); SFX.toggle(); });
   paintSound();
-  // 브라우저는 사람이 한 번 누른 뒤에야 소리를 낸다
   ['pointerdown', 'keydown'].forEach((t) => addEventListener(t, () => SFX.unlock(), { once: true, capture: true }));
 
   /* ───────── 키보드 ───────── */
   const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' };
+  const KONAMI = ['ArrowUp', 'ArrowUp', 'ArrowDown', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'ArrowLeft', 'ArrowRight', 'b', 'a'];
+  let konami = 0;
   function gameHasFocus() {
     const a = document.activeElement;
     return a === document.body || a === stage || (stage.contains(a) && !menu.contains(a));
@@ -1145,22 +1281,26 @@
   function openByNumber(n) {
     const r = L.rooms[n - 1];
     if (!r) return;
-    closeDialog(false);
-    if (mode === 'play') { P.path = []; P.x = r.door.entry.x; P.y = r.door.entry.y; armed = r.i; }
+    closeDialog();
+    if (mode === 'play') { P.path = []; P.x = r.door.entry.x; P.y = r.door.entry.y; armed = 'door' + r.i; }
     enter(r);
   }
   addEventListener('keydown', (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     const tag = (document.activeElement && document.activeElement.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
-    // 숫자키 1~6: 어디서든 그 교실 사이트를 바로 연다
+    // ↑↑↓↓←→←→BA
+    const kk = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    konami = kk === KONAMI[konami] ? konami + 1 : kk === KONAMI[0] ? 1 : 0;
+    if (konami === KONAMI.length) { konami = 0; party = 7; SFX.party(); toast('다 같이', '쉬는 시간이다! 모두 신나게 콩콩!'); }
     if (/^[1-6]$/.test(e.key) && !leaving) { e.preventDefault(); openByNumber(+e.key); return; }
     if ((e.key === 'm' || e.key === 'M') && (gameHasFocus() || menu.contains(document.activeElement))) { SFX.set(!SFX.on); paintSound(); SFX.toggle(); return; }
+    if (e.key === 'Shift') keys.add('run');
     if (mode !== 'play' || !gameHasFocus()) return;
     const dir = KEYMAP[e.key];
     if (dir) {
       e.preventDefault();
-      if (dlgRoom) closeDialog(true);
+      if (dlg) closeDialog();
       keys.add(dir);
       return;
     }
@@ -1168,23 +1308,30 @@
     if ((e.key === 'Enter' || e.key === ' ') && !onButton) {
       e.preventDefault();
       interact();
-    } else if (e.key === 'Escape' && dlgRoom) {
+    } else if (e.key === 'Escape' && dlg) {
       e.preventDefault();
       closeDialog(true);
     }
   });
-  addEventListener('keyup', (e) => { const dir = KEYMAP[e.key]; if (dir) keys.delete(dir); });
+  addEventListener('keyup', (e) => { const dir = KEYMAP[e.key]; if (dir) keys.delete(dir); if (e.key === 'Shift') keys.delete('run'); });
   addEventListener('blur', () => { keys.clear(); padDirs.clear(); });
   document.addEventListener('visibilitychange', () => { keys.clear(); padDirs.clear(); });
 
+  // Enter·A: 대화창이 떠 있으면 사이트로, 아니면 가까운 문·선생님·학생에게 말을 건다
   function interact() {
-    if (dlgRoom) { enter(dlgRoom); return; }
+    if (dlg) { enter(dlg.r); return; }
     let best = null, bd = 34;
     for (const r of L.rooms) {
-      const dd = Math.hypot(P.x - r.door.front.x, P.y - r.door.front.y);
-      if (dd < bd) { bd = dd; best = r; }
+      const cands = [[r.door.front, 'door'], [r.door.entry, 'door'], [r.tpos, 'teacher']];
+      if (r.npcSeat && r.npc) cands.push([r.npcSeat, 'student']);
+      for (const [p, who] of cands) {
+        const dd = Math.hypot(P.x - p.x, P.y - p.y);
+        if (dd < bd) { bd = dd; best = { r, who }; }
+      }
     }
-    if (best) { armed = null; goToRoom(best); }
+    if (!best) return;
+    armed = (best.who === 'door' ? 'door' : best.who === 'teacher' ? 't' : 's') + best.r.i;
+    openDialog(best.r, best.who);
   }
 
   /* ───────── 마우스·터치 ───────── */
@@ -1199,16 +1346,28 @@
     stage.focus({ preventScroll: true });
     const { x, y } = toMap(e);
     const r = roomAt(x, y);
-    if (dlgRoom) {
-      if (r && r === dlgRoom) { enter(r); return; }
-      closeDialog(true);
+    if (dlg) {
+      if (r && r === dlg.r && y < r.y + r.F + 2) { enter(r); return; }
+      closeDialog();
     }
-    if (r) {
-      if (inRect(P.x, P.y, r.door.walk) && r.door.inside(P.x, P.y)) { openDialog(r); return; }
+    if (!r) { walkTo(x, y); return; }
+    // 칠판·벽·문을 누르면 문으로 가서 대화창, 선생님·학생을 누르면 그 앞으로, 바닥은 그 자리로
+    const onWall = y < r.y + r.F || inRect(x, y, r.door.gap);
+    const nearT = Math.hypot(x - r.tpos.x, y - (r.tpos.y - 8)) < 11;
+    const nearS = r.npcSeat && Math.hypot(x - r.npcSeat.x, y - (r.npcSeat.y - 8)) < 11;
+    if (nearT || nearS) {
+      const p = nearT ? r.tpos : r.npcSeat;
       armed = null;
-      goToRoom(r);
+      const spot = [[0, 8], [-11, 0], [11, 0], [0, -9], [-11, 6], [11, 6]].map(([dx, dy]) => ({ x: p.x + dx, y: p.y + dy })).find((q) => free(q.x, q.y)) || { x: p.x, y: p.y + 8 };
+      walkTo(spot.x, spot.y, r.i);
+      P.onArrive = () => { if (!dlg) { armed = (nearT ? 't' : 's') + r.i; openDialog(r, nearT ? 'teacher' : 'student'); } };
+    } else if (onWall) {
+      armed = null;
+      walkTo(r.door.entry.x, r.door.entry.y);
+      P.onArrive = () => { if (!dlg) { armed = 'door' + r.i; openDialog(r, 'door'); } };
     } else {
-      goToPoint(x, y);
+      // 이미 그 교실 안이면 조용히 걷고, 밖에서 누르면 문을 지날 때 대화창이 뜬다
+      walkTo(x, y, roomOfPoint(P.x, P.y) === r ? r.i : null);
     }
   });
   screen.addEventListener('pointermove', (e) => {
@@ -1225,7 +1384,7 @@
     const on = (e) => {
       e.preventDefault();
       try { b.setPointerCapture(e.pointerId); } catch { /* 합성 이벤트 */ }
-      if (dlgRoom) closeDialog(true);
+      if (dlg) closeDialog();
       padDirs.add(dir); b.classList.add('on');
     };
     const off = () => { padDirs.delete(dir); b.classList.remove('on'); };
@@ -1239,7 +1398,6 @@
   abtn.addEventListener('pointerdown', (e) => { e.preventDefault(); abtn.classList.add('on'); if (mode === 'play') interact(); });
   ['pointerup', 'pointercancel', 'pointerleave'].forEach((t) => abtn.addEventListener(t, () => abtn.classList.remove('on')));
 
-  // 교실 바로가기 목록을 눌러 나갈 때도 문 여는 소리와 함께
   ROOMS.forEach((room, i) => room.el.addEventListener('click', (e) => {
     if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || leaving) return;
     e.preventDefault();
@@ -1247,24 +1405,29 @@
   }));
 
   addEventListener('resize', fit);
-  // 뒤로 가기로 돌아왔을 때(bfcache): 검은 화면을 걷고 교실 문 앞에 다시 세운 뒤 퇴실 소리
   addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     leaving = false;
     $('#fade').hidden = true;
-    closeDialog(false);
+    closeDialog();
     const st = load('pixelSchool', sessionStorage);
-    if (st && L.rooms[st.room]) { placeAtDoor(st.room); SFX.exit(); }
+    if (st && L.rooms[st.room]) { placeAtDoor(st.room); P.room = null; SFX.exit(); }
   });
 
   /* ───────── 시작 ───────── */
   fit();
+  paintStars();
   const st = load('pixelSchool', sessionStorage);
   const back = st && KIDS.find((x) => x.id === st.kid);
   if (back) start(back, st.room, true);
   else openMenu();
   requestAnimationFrame((t) => { last = t; loop(t); });
 
-  // 화면 확인용(개발자 도구): pixelSchool.go(1) 은 1반 문으로 걸어간다
-  window.pixelSchool = { go: (n) => L.rooms[n - 1] && goToRoom(L.rooms[n - 1]), state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlgRoom && dlgRoom.room.n, portrait: L.portrait, sound: SFX.on }) };
+  // 화면 확인용(개발자 도구)
+  window.pixelSchool = {
+    go: (n) => { const r = L.rooms[n - 1]; walkTo(r.door.entry.x, r.door.entry.y); },
+    walk: (x, y) => walkTo(x, y),
+    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, stars: found.size, room: P.room && P.room.i }),
+    layout: () => L,
+  };
 })();

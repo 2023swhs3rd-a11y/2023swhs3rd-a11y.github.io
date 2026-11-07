@@ -19,20 +19,22 @@
   if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
 </script>
 <link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/school/school.css?v=2">
+<link rel="stylesheet" href="/assets/school/school.css?v=3">
 </head>
 <body>
 <div class="page">
   <header class="top">
     <p class="school">봉일천고등학교 진로진학부</p>
     <h1>진로진학 자료실 <span>픽셀 학교</span></h1>
-    <p class="lead">함께 걸을 학생을 고르고 교실 문으로 들어가면 사이트가 열려요. 숫자키 <kbd>1</kbd>~<kbd>6</kbd>을 누르면 그 반으로 바로 갑니다.</p>
+    <p class="lead">함께 걸을 학생을 고르고 교실에 들어가거나 선생님·친구에게 말을 걸면 사이트로 갈 수 있어요. 숫자키 <kbd>1</kbd>~<kbd>6</kbd>을 누르면 그 반으로 바로 갑니다.</p>
   </header>
 
   <main>
     <div class="stage" id="stage" tabindex="0" aria-label="픽셀 학교 복도. 방향키로 걷고 교실 문 앞에서 Enter로 들어갑니다. 숫자키 1부터 6은 그 반 사이트를 바로 엽니다. 아래 교실 목록에서 열 수도 있습니다.">
       <canvas id="screen" aria-hidden="true"></canvas>
       <div class="labels" id="labels" aria-hidden="true"></div>
+      <div class="toast" id="toast" role="status" hidden></div>
+      <div class="stars" id="stars" hidden></div>
       <div class="hud-row">
         <button class="hud" id="sound" type="button" aria-pressed="true">♪ 소리 켬</button>
         <button class="hud" id="change" type="button" hidden>학생 바꾸기</button>
@@ -46,7 +48,7 @@
           <p class="dlg-desc" id="dlg-desc"></p>
           <div class="dlg-btns">
             <button type="button" id="dlg-go">▶ 들어가기 <kbd>Enter</kbd></button>
-            <button type="button" id="dlg-no">돌아가기 <kbd>Esc</kbd></button>
+            <button type="button" id="dlg-no">교실 둘러보기 <kbd>Esc</kbd></button>
           </div>
         </div>
       </div>
@@ -73,9 +75,9 @@
 
     <p class="help" id="help">
       <span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 또는 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 걷기</span>
-      <span><kbd>Enter</kbd> 들어가기 · <kbd>Esc</kbd> 돌아가기</span>
+      <span><kbd>Enter</kbd> 말 걸기·들어가기 · <kbd>Esc</kbd> 둘러보기</span>
       <span><kbd>1</kbd>~<kbd>6</kbd> 그 반으로 바로 · <kbd>M</kbd> 소리</span>
-      <span>교실이나 복도를 클릭하면 그곳까지 걸어가요</span>
+      <span>교실 안도 걸어 다닐 수 있고, 클릭한 곳까지 길을 찾아가요</span>
     </p>
 
     <!-- 교실 목록: 게임 화면이 읽는 원본(주소·이름·설명·색·벽 그림)이자, 키보드·화면낭독기·스크립트 없는 환경의 바로가기.
@@ -95,7 +97,7 @@
 
   <footer class="foot">
     <p>© 봉일천고등학교 진로진학부 · 모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
-    <p>학교 그림·캐릭터·효과음은 이 페이지를 위해 새로 만들었습니다 · 글꼴 <a href="https://github.com/quiple/galmuri">갈무리</a>(SIL OFL)</p>
+    <p>학교 그림·캐릭터·효과음은 이 페이지를 위해 새로 만들었습니다 · 어딘가에 반짝이는 별 스티커가 3개 숨어 있어요 · 글꼴 <a href="https://github.com/quiple/galmuri">갈무리</a>(SIL OFL)</p>
   </footer>
 </div>
 <script>
@@ -130,6 +132,6 @@
     } catch (e) { /* 날짜 없이 둔다 */ }
   });
 </script>
-<script src="/assets/school/school.js?v=2"></script>
+<script src="/assets/school/school.js?v=3"></script>
 </body>
 </html>

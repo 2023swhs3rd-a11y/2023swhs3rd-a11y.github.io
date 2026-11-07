@@ -78,6 +78,20 @@ main { display: flex; flex-direction: column; align-items: center; }
   text-shadow: 0 0 1px #f4f1de88;
 }
 
+.sign {
+  position: absolute; display: flex; align-items: center; justify-content: center;
+  color: #c2283c; font-size: var(--sign, 9px); font-weight: 700; line-height: 1; white-space: nowrap; overflow: hidden; letter-spacing: .02em;
+}
+.sign.dark { color: #4a2a10; }
+.toast {
+  position: absolute; left: 50%; top: 4%; z-index: 3; transform: translateX(-50%);
+  max-width: 88%; padding: 6px 12px;
+  background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px;
+  box-shadow: 3px 3px 0 #00000066; font-size: 12px; line-height: 1.5;
+}
+.toast b { color: #c2283c; margin-right: 4px; }
+.stars { position: absolute; left: 6px; bottom: 6px; z-index: 2; padding: 2px 8px; background: var(--ink); color: var(--gold); border: 2px solid var(--gold); font-size: 11px; }
+.stars[hidden], .toast[hidden] { display: none; }
 .hud-row { position: absolute; right: 6px; bottom: 6px; z-index: 2; display: flex; gap: 6px; }
 .hud {
   padding: 3px 8px; border: 2px solid var(--ink); border-radius: 0;
@@ -98,7 +112,7 @@ main { display: flex; flex-direction: column; align-items: center; }
   font-size: 13px;
   display: flex; gap: 12px; align-items: flex-start;
 }
-.dlg-face { flex: none; width: 56px; height: 52px; padding: 2px; background: #fff8e6; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink); }
+.dlg-face { flex: none; width: 64px; height: 56px; padding: 2px; background: #fff8e6; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink); }
 .dlg-face canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
 .dlg-body { flex: 1; min-width: 0; }
 .dlg-room small { color: #b9c3ff; font-size: 11px; }
@@ -137,7 +151,7 @@ main { display: flex; flex-direction: column; align-items: center; }
   border: 3px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 #00000066;
   font: inherit; cursor: pointer;
 }
-.kid canvas { width: 60px; height: 95px; image-rendering: pixelated; }
+.kid canvas { width: 72px; height: 104px; image-rendering: pixelated; }
 .kid b { font-size: 14px; }
 .kid small { font-size: 11px; color: #5b4a63; line-height: 1.35; }
 .kid:hover, .kid:focus-visible, .kid.on { outline: none; background: var(--gold); transform: translate(-1px, -2px); }
@@ -206,8 +220,8 @@ body.touch .help { display: none; }
   .top .lead { font-size: 12px; }
   .kids { grid-template-columns: repeat(2, minmax(0, 140px)); gap: 8px; }
   .kid { padding: 6px 4px; }
-  .kid canvas { width: 36px; height: 57px; }
-  .dlg-face { width: 40px; height: 37px; }
+  .kid canvas { width: 45px; height: 65px; }
+  .dlg-face { width: 40px; height: 35px; }
   .kid small { display: none; }
   .menu h2 { font-size: 14px; margin-bottom: 8px; }
   .dialog { font-size: 12px; padding: 8px 10px 10px; }
