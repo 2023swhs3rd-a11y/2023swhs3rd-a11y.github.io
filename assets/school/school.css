@@ -207,6 +207,7 @@ body.touch.overlay-pad .top, body.touch.overlay-pad .help { display: none; }
 
 .help { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 16px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 body.touch .help { display: none; }
+body.touch .hud { min-height: 36px; padding: 6px 12px; font-size: 12px; }
 
 /* 교실 바로가기 */
 .rooms { width: 100%; max-width: 980px; margin-top: 26px; }
