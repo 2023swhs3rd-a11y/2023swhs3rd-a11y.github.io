@@ -672,8 +672,8 @@
       if (!ac) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
-        // 아이폰 무음 스위치가 켜져 있어도 효과음이 나도록 재생용 오디오 세션을 쓴다(지원하는 브라우저만)
-        try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* 무시 */ }
+        // 효과음은 휴대폰 무음 모드를 따른다(무음이면 소리 없음). 지원하는 브라우저에서는 그렇게 정해 둔다.
+        try { if (navigator.audioSession) navigator.audioSession.type = 'ambient'; } catch (e) { /* 무시 */ }
         ac = new AC();
         const comp = ac.createDynamicsCompressor();
         comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4;
