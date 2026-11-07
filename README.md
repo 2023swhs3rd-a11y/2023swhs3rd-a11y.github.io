@@ -34,11 +34,21 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 
 문제가 있을 때만 이슈 '주간 상태 점검'에 결과를 쓰고, 깨진 것이 새로 생기면 댓글로 알린다. 모두 정상이면 이슈를 닫는다.
 
+## 게시판 메시지 받기
+
+첫 화면 복도 게시판에 가까이 가거나 누르면 "진로 선생님께 메시지 남기기" 창이 뜬다. 보낸 글은 구글 시트에 한 줄씩 쌓인다.
+
+1. 메시지를 모을 구글 시트를 열고 확장 프로그램 › Apps Script 에 `scripts/memo-apps-script.gs` 내용을 붙여 넣고 저장한다.
+2. 배포 › 새 배포 › 유형 **웹 앱**, 실행 사용자 **나**, 액세스 권한 **모든 사용자**로 배포하고 권한을 허용한다.
+3. 나온 웹 앱 주소(`https://script.google.com/macros/s/…/exec`)를 `index.html`의 `<form id="memo-form" data-endpoint="">`에 넣는다.
+
+주소가 비어 있으면 창에 "준비하고 있어요"가 뜨고 보내지 않는다. 스크립트를 고치면 배포 › 배포 관리에서 새 버전으로 다시 배포해야 반영된다.
+
 ## 픽셀 학교 글꼴
 
 `assets/school/fonts/galmuri11-subset.woff2`는 갈무리11(SIL OFL)에서 페이지에 쓰는 글자만 남긴 파일이다. 화면 글자를 바꾸면 다시 만든다(fonttools·brotli 필요, 원본은 npm `galmuri` 패키지의 `dist/Galmuri11.woff2`).
 
 ```
 cat index.html assets/school/school.js > /tmp/text.txt
-pyftsubset Galmuri11.woff2 --text-file=/tmp/text.txt --unicodes="U+0020-007E,U+00B7,U+2026,U+2190-2193,U+25B2-25C0,U+25CF,U+2605,U+266A" --flavor=woff2 --output-file=assets/school/fonts/galmuri11-subset.woff2
+pyftsubset Galmuri11.woff2 --text-file=/tmp/text.txt --unicodes="U+0020-007E,U+00B7,U+2026,U+2190-2193,U+25B2-25C0,U+25CF,U+2605,U+266A,U+2709" --flavor=woff2 --output-file=assets/school/fonts/galmuri11-subset.woff2
 ```

@@ -154,6 +154,28 @@
     { id: 'yuchan', name: '유찬', line: '그래프 그리는 게 제일 재밌어요', look: ['bob', 'hood'],
       pal: { h: '#9a4426', s: '#f7caa0', c: '#8a6ad8', w: '#b9a5f0', t: '#ffffff', p: '#4b5563' } },
   ];
+  // 교실 안 학생에게 다가가면 이 가운데 하나를 무작위로 말한다(학생마다 하나 + 모두가 쓰는 말)
+  const KID_TALK = {
+    haneul: ['오늘도 1등으로 왔더니 교실이 조용해서 좋았어.', '아침 자습 시간에 진로 노트를 써 봤어.'],
+    bora: ['요즘 읽는 소설 결말이 너무 궁금해!', '도서관 신간 코너 벌써 가 봤어?'],
+    doyun: ['방금 궁금한 걸 검색하다가 새 전공을 알게 됐어.', '내 안경 어때? 새로 맞췄어.'],
+    seoa: ['계주 연습하다 왔어. 숨차!', '복도에서는 안 뛰어. 운동장에서만 뛰어!'],
+    jimin: ['오늘 스크랩한 기사, 생각보다 재밌더라.', '뉴스 하나로 탐구 주제가 세 개나 나왔어.'],
+    yuchan: ['어제 그린 그래프가 꽤 예쁘게 나왔어.', '숫자로 보면 우리 동네가 달라 보여.'],
+  };
+  const COMMON_TALK = [
+    '쉬는 시간 10분은 왜 이렇게 짧을까?', '급식 메뉴 봤어? 오늘 디저트 있대!', '수행평가 주제 아직 못 정했어…',
+    '선생님이 이 사이트 꼭 보래.', '어디 숨은 별 스티커 본 적 있어?', '창밖 하늘이 참 맑다.',
+    '다음 시간 뭐더라?', '같이 공부할래?', '진로 고민은 혼자 하는 것보다 같이 하는 게 좋대.',
+  ];
+  const lastTalk = {};
+  function kidTalk(npc) {
+    const pool = (KID_TALK[npc.id] || []).concat(COMMON_TALK, [npc.line + (/[!?.…]$/.test(npc.line) ? '' : '.')]);
+    let line;
+    do { line = pool[Math.floor(Math.random() * pool.length)]; } while (pool.length > 1 && line === lastTalk[npc.id]);
+    lastTalk[npc.id] = line;
+    return line;
+  }
   const TEACHERS = [
     { id: 't1', name: '김 선생님', adult: true, look: ['glasses'], say: '대입 전형은 무엇이든 물어보세요.',
       pal: { h: '#5a596e', s: '#f7caa0', c: '#2b3a66', w: '#ffffff', t: '#e2475a', p: '#353b4a' } },
@@ -364,6 +386,14 @@
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
       sign(h.x + 3, 5, 42, 12, '정숙');
       standSign(h.x + 4, L.H - 36, 40, 12, '뛰지 맙시다', L);
+      // 세워 둔 게시판(가까이 가거나 누르면 진로 선생님께 메시지)
+      const bx = h.x + 6, by = 136;
+      R(bx + 3, by + 12, 2, 6, C.leg); R(bx + 13, by + 12, 2, 6, C.leg); R(bx + 1, by + 18, 16, 1, C.shadow);
+      R(bx - 1, by - 1, 20, 14, C.out); R(bx, by, 18, 12, C.frame); R(bx + 1, by + 1, 16, 10, '#d9a86b');
+      R(bx + 2, by + 2, 5, 4, '#ffffff'); R(bx + 8, by + 3, 4, 3, '#ffd36b'); R(bx + 3, by + 7, 4, 3, '#a8dcef');
+      R(bx + 10, by + 7, 6, 4, '#ffffff'); R(bx + 11, by + 8, 1, 1, '#e0475a'); R(bx + 14, by + 8, 1, 1, '#e0475a'); R(bx + 12, by + 9, 2, 1, '#e0475a');
+      L.obst.push({ x: bx + 1, y: by + 14, w: 16, h: 5 });
+      L.board = { x: bx - 1, y: by - 1, w: 20, h: 20, spot: { x: bx + 26, y: by + 14 } };
     }
     for (const r of L.rooms) drawRoom(r, L);
     if (!L.portrait) R(0, h.y, 384, 2, C.shadow);
@@ -623,11 +653,15 @@
       if (r.i === 0) sign(r.x + 8, r.y + r.h - 12, 48, 11, '뛰지 맙시다');
       if (r.i === 1) sign(r.x + 8, r.y + r.h - 12, 48, 11, '정숙');
       if (r.i === 2) {
-        const nb = r.x + 8;
-        R(nb - 1, r.y + r.h - 9, 23, 6, C.frame); R(nb, r.y + r.h - 8, 21, 4, '#d9a86b');
-        [['#ffffff', 1], ['#ffd36b', 6], [room.light, 11], ['#a8dcef', 16]].forEach(([c, ox], i) => {
-          R(nb + ox, r.y + r.h - 8 + (i % 2), 4, 3, c); R(nb + ox + 1, r.y + r.h - 8 + (i % 2), 1, 1, '#e0475a');
+        // 복도 게시판: 가까이 가거나 누르면 진로 선생님께 메시지를 남긴다
+        const nb = r.x + 8, by = r.y + r.h - 11;
+        R(nb - 1, by - 1, 34, 10, C.out); R(nb, by, 32, 8, C.frame); R(nb + 1, by + 1, 30, 6, '#d9a86b');
+        [['#ffffff', 2], ['#ffd36b', 8], [room.light, 14], ['#a8dcef', 20]].forEach(([c, ox], i) => {
+          R(nb + ox, by + 2 + (i % 2), 5, 3, c); R(nb + ox + 2, by + 2 + (i % 2), 1, 1, '#e0475a');
         });
+        // 편지 봉투
+        R(nb + 26, by + 2, 5, 4, '#ffffff'); R(nb + 27, by + 3, 1, 1, '#e0475a'); R(nb + 29, by + 3, 1, 1, '#e0475a'); R(nb + 28, by + 4, 1, 1, '#e0475a');
+        L.board = { x: nb - 1, y: by - 1, w: 34, h: 10, spot: { x: nb + 16, y: L.walkHall.y + 6 } };
       }
     } else {
       R(r.x, r.y + r.h - r.S, r.w, r.S, C.wallTop); R(r.x, r.y + r.h - r.S, r.w, 0.5, C.wallHi);
@@ -675,13 +709,11 @@
       if (!ac) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
-        // 효과음은 휴대폰 무음 모드를 따른다(무음이면 소리 없음). 지원하는 브라우저에서는 그렇게 정해 둔다.
-        try { if (navigator.audioSession) navigator.audioSession.type = 'ambient'; } catch (e) { /* 무시 */ }
+        // 처음 버전(맥 사파리에서 소리가 나던 때)과 같은 단순한 연결: 음량 노드 하나 → 스피커.
+        // 휴대폰 무음 모드는 브라우저 기본값대로 따른다(아이폰은 무음이면 소리 없음).
         ac = new AC();
-        const comp = ac.createDynamicsCompressor();
-        comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4;
-        master = ac.createGain(); master.gain.value = 0.55;
-        master.connect(comp); comp.connect(ac.destination);
+        master = ac.createGain(); master.gain.value = 0.3;
+        master.connect(ac.destination);
       }
       if (ac.state !== 'running') {
         const p = ac.resume();
@@ -693,7 +725,7 @@
     // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
     function unlock() {
       // 눌렀는데도 켜지지 않은 채 남은 오디오는 버리고, 이번 누름 안에서 새로 만든다
-      if (ac && ac.state === 'suspended' && ac.__tried && performance.now() - ac.__tried > 1000) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
+      if (ac && ac.state !== 'running' && ac.__tried && performance.now() - ac.__tried > 1000) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
       const a = ctx(true); if (!a) return;
       if (a.state !== 'running' && !a.__tried) a.__tried = performance.now();
       try {
@@ -968,7 +1000,7 @@
   const SPEED = 62;
   function update(dt) {
     if (party > 0) party -= dt;
-    if (mode !== 'play' || leaving) { P.moving = false; return; }
+    if (mode !== 'play' || leaving || memoOpen) { P.moving = false; return; }
     let dx = 0, dy = 0;
     const has = (n) => keys.has(n) || padDirs.has(n);
     if (!dlg) {
@@ -1015,8 +1047,10 @@
       if (!nowRoom && !inHall) { /* 문턱 */ } else P.room = nowRoom;
     }
     // 계단 끝
-    const stairs = L.portrait ? P.y < L.walkHall.y + 3 && P.dir === 'up' : P.x < L.walkHall.x + 4 && P.dir === 'left';
-    if (stairs && dx + dy !== 0 && !said.has('stairs')) { said.add('stairs'); toast('안내', '위층은 공사 중이에요. 옥상 문도 잠겨 있답니다.'); }
+    // 계단 가까이 가면 한마디(멀어졌다 다시 오면 또)
+    const stairGap = !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? P.y - L.walkHall.y : P.x - L.walkHall.x;
+    if (stairGap < 8 && !said.has('stairs')) { said.add('stairs'); SFX.bump(); toast(kid ? kid.name : '나', '아아, 계단으로는 갈 수 없는 모양이다…'); }
+    else if (stairGap > 24) said.delete('stairs');
 
     // 별 스티커 줍기
     for (const st of L.stickers) {
@@ -1037,7 +1071,9 @@
   // 대화창을 띄울 곳: 문으로 들어설 때, 선생님·학생 가까이 갔을 때
   function checkMeet() {
     let hit = null;
+    if (L.board && Math.hypot(P.x - L.board.spot.x, P.y - L.board.spot.y) < 14) hit = { id: 'board', who: 'board' };
     for (const r of L.rooms) {
+      if (hit) break;
       const d = r.door;
       if (inRect(P.x, P.y, d.zone) && P.dir === d.inward && P.moving && P.quietRoom !== r.i) { hit = { id: 'door' + r.i, r, who: 'door' }; break; }
       if (Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 17) { hit = { id: 't' + r.i, r, who: 'teacher' }; break; }
@@ -1048,9 +1084,11 @@
       // 걷던 길은 기억해 두었다가 '교실 둘러보기'를 누르면 이어 간다
       P.resume = P.path.length ? { path: P.path, onArrive: P.onArrive } : null;
       P.path = []; P.onArrive = null;
-      openDialog(hit.r, hit.who);
+      if (hit.who === 'board') openMemo(); else openDialog(hit.r, hit.who);
     }
-    if (!hit && armed) {
+    if (!hit && armed === 'board') {
+      if (Math.hypot(P.x - L.board.spot.x, P.y - L.board.spot.y) > 20) armed = null;
+    } else if (!hit && armed) {
       // 멀어지면 다시 뜰 수 있게
       const r = L.rooms[+armed.slice(armed.startsWith('door') ? 4 : 1)];
       const far = armed.startsWith('door') ? !inRect(P.x, P.y, r.door.zone)
@@ -1201,7 +1239,7 @@
     $('#dlg-upd').textContent = room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
     const me = kid ? kid.name : '친구';
     let face = t, say;
-    if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${r.npc.line}${/[!?.]$/.test(r.npc.line) ? '' : '.'} 여기 ${room.short} 사이트 같이 볼래?`; }
+    if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`; }
     else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${t.say}`;
     else say = `${t.name}: 어서 와요, ${me}! 여기는 ${room.n}반 ${room.short} 교실이에요.`;
     $('#dlg-face').replaceChildren(faceCanvas(face));
@@ -1244,6 +1282,53 @@
   }
   $('#dlg-go').addEventListener('click', () => dlg && enter(dlg.r));
   $('#dlg-no').addEventListener('click', () => closeDialog(true));
+
+  /* ───────── 복도 게시판: 진로 선생님께 메시지 ───────── */
+  const memoEl = $('#memo'), memoForm = $('#memo-form'), memoStatus = $('#memo-status'), memoSend = $('#memo-send');
+  let memoOpen = false;
+  function memoSay(text, err) { memoStatus.textContent = text; memoStatus.classList.toggle('err', !!err); }
+  function openMemo() {
+    if (memoOpen || !memoEl) return;
+    closeDialog();
+    memoOpen = true; keys.clear(); padDirs.clear();
+    P.resume = P.path.length ? { path: P.path, onArrive: P.onArrive } : null;
+    P.path = []; P.onArrive = null;
+    SFX.chime();
+    $('#memo-face').replaceChildren(faceCanvas(TEACHERS[1]));
+    if (!memoForm.dataset.endpoint) memoSay('아직 메시지 받는 곳을 준비하고 있어요. 조금만 기다려 주세요.', true);
+    else if (!memoStatus.classList.contains('err')) memoSay('');
+    memoEl.hidden = false;
+    memoForm.msg.focus({ preventScroll: true });
+  }
+  function closeMemo() {
+    if (!memoOpen) return;
+    memoOpen = false; memoEl.hidden = true;
+    if (P.resume) { P.path = P.resume.path; P.onArrive = P.resume.onArrive; }
+    P.resume = null;
+    stage.focus({ preventScroll: true });
+  }
+  $('#memo-close').addEventListener('click', closeMemo);
+  memoForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const url = memoForm.dataset.endpoint;
+    const msg = memoForm.msg.value.trim(), who = memoForm.who.value.trim();
+    if (!url) { memoSay('아직 메시지 받는 곳을 준비하고 있어요. 조금만 기다려 주세요.', true); return; }
+    if (msg.length < 2) { memoSay('메시지를 두 글자 넘게 적어 주세요.', true); memoForm.msg.focus(); return; }
+    const last = +(load('pixelSchoolMemoAt', localStorage) || 0);
+    if (Date.now() - last < 30000) { memoSay('조금 전에 보냈어요. 30초 뒤에 다시 보내 주세요.', true); return; }
+    memoSend.disabled = true; memoSay('보내는 중…');
+    try {
+      // 구글 Apps Script 웹 앱은 응답을 읽을 수 없게(no-cors) 보내는 것이 가장 확실하다
+      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ who, msg, kid: kid ? kid.name : '', website: memoForm.website.value }) });
+      save('pixelSchoolMemoAt', Date.now(), localStorage);
+      memoForm.msg.value = '';
+      SFX.pickup();
+      memoSay('보냈어요! 진로 선생님이 꼭 읽어 볼게요.');
+    } catch (err) {
+      memoSay('보내지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.', true);
+    } finally { memoSend.disabled = false; }
+  });
 
   /* ───────── 학생 고르기 ───────── */
   const menu = $('#menu'), kidsEl = $('#kids');
@@ -1306,12 +1391,15 @@
   soundBtn.addEventListener('click', (e) => { e.stopPropagation(); SFX.set(!SFX.on); paintSound(); SFX.toggle(); });
   paintSound();
   const unlockEvents = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
-  const unlockAudio = () => {
+  // 주소 끝에 ?sound 를 붙이면 누를 때마다 오디오 상태를 보여 준다(소리 문제 확인용)
+  const soundDebug = /[?&]sound\b/.test(location.search);
+  const unlockAudio = (e) => {
     SFX.unlock();
-    if (SFX.state === 'running') unlockEvents.forEach((t) => removeEventListener(t, unlockAudio, true));
+    if (soundDebug) setTimeout(() => toast('소리 점검', `${e.type} → ${SFX.state} · ${SFX.on ? '켬' : '끔'} · ${navigator.userAgent.match(/Version\/[\d.]+/) || ''}`), 150);
+    else if (SFX.state === 'running') unlockEvents.forEach((t) => removeEventListener(t, unlockAudio, true));
   };
   unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true));
-  addEventListener('pageshow', () => { if (SFX.state === 'suspended') unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true)); });
+  addEventListener('pageshow', () => { if (SFX.state !== 'running') unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true)); });
 
   /* ───────── 키보드 ───────── */
   const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' };
@@ -1330,6 +1418,7 @@
   }
   addEventListener('keydown', (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
+    if (memoOpen) { if (e.key === 'Escape') { e.preventDefault(); closeMemo(); } return; }
     const tag = (document.activeElement && document.activeElement.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     // ↑↑↓↓←→←→BA
@@ -1363,6 +1452,7 @@
   // Enter·A: 대화창이 떠 있으면 사이트로, 아니면 가까운 문·선생님·학생에게 말을 건다
   function interact() {
     if (dlg) { enter(dlg.r); return; }
+    if (L.board && Math.hypot(P.x - L.board.spot.x, P.y - L.board.spot.y) < 20) { armed = 'board'; openMemo(); return; }
     let best = null, bd = 34;
     for (const r of L.rooms) {
       const cands = [[r.door.front, 'door'], [r.door.entry, 'door'], [r.tpos, 'teacher']];
@@ -1388,6 +1478,15 @@
     e.preventDefault();
     stage.focus({ preventScroll: true });
     const { x, y } = toMap(e);
+    if (memoOpen) closeMemo();
+    const b = L.board;
+    if (b && x > b.x - 3 && x < b.x + b.w + 3 && y > b.y - 3 && y < b.y + b.h + 3) {
+      if (dlg) closeDialog();
+      armed = null;
+      walkTo(b.spot.x, b.spot.y);
+      P.onArrive = () => { if (!memoOpen) { armed = 'board'; openMemo(); } };
+      return;
+    }
     const r = roomAt(x, y);
     if (dlg) {
       if (r && r === dlg.r && y < r.y + r.F + 2) { enter(r); return; }
