@@ -362,7 +362,7 @@
       R(h.x, 24, h.w, 2, '#8f7a58');
       R(h.x + 8, L.H - 8, h.w - 16, 8, '#7c9a6a'); R(h.x + 10, L.H - 6, h.w - 20, 0.5, '#5e7c50'); R(h.x + 10, L.H - 3, h.w - 20, 0.5, '#5e7c50');
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
-      sign(h.x + 6, 5, 36, 12, '정숙');
+      sign(h.x + 3, 5, 42, 12, '정숙');
       standSign(h.x + 4, L.H - 36, 40, 12, '뛰지 맙시다', L);
     }
     for (const r of L.rooms) drawRoom(r, L);
@@ -619,15 +619,15 @@
       R(r.x, r.y + r.h - 5, r.w, 5, C.wains); R(r.x, r.y + r.h - 5, r.w, 0.5, C.wainsHi); R(r.x, r.y + r.h - 1, r.w, 1, C.wainsDk);
       for (let x = r.x + 3; x < r.x + r.w; x += 6) R(x, r.y + r.h - 4, 0.5, 3, C.wainsDk);
       // 복도 쪽 표지판과 게시판
-      if (r.i === 1) {
-        sign(r.x + 8, r.y + r.h - 12, 26, 11, '정숙');
-        const nb = r.x + 38;
+      // 표지판은 같은 크기로 한 번씩: 1반 앞 '뛰지 맙시다', 2반 앞 '정숙', 3반 앞은 게시판
+      if (r.i === 0) sign(r.x + 8, r.y + r.h - 12, 48, 11, '뛰지 맙시다');
+      if (r.i === 1) sign(r.x + 8, r.y + r.h - 12, 48, 11, '정숙');
+      if (r.i === 2) {
+        const nb = r.x + 8;
         R(nb - 1, r.y + r.h - 9, 23, 6, C.frame); R(nb, r.y + r.h - 8, 21, 4, '#d9a86b');
         [['#ffffff', 1], ['#ffd36b', 6], [room.light, 11], ['#a8dcef', 16]].forEach(([c, ox], i) => {
           R(nb + ox, r.y + r.h - 8 + (i % 2), 4, 3, c); R(nb + ox + 1, r.y + r.h - 8 + (i % 2), 1, 1, '#e0475a');
         });
-      } else {
-        sign(r.x + 8, r.y + r.h - 12, 48, 11, '뛰지 맙시다');
       }
     } else {
       R(r.x, r.y + r.h - r.S, r.w, r.S, C.wallTop); R(r.x, r.y + r.h - r.S, r.w, 0.5, C.wallHi);
@@ -672,11 +672,25 @@
       if (!ac) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
+        // 아이폰 무음 스위치가 켜져 있어도 효과음이 나도록 재생용 오디오 세션을 쓴다(지원하는 브라우저만)
+        try { if (navigator.audioSession) navigator.audioSession.type = 'playback'; } catch (e) { /* 무시 */ }
         ac = new AC();
-        master = ac.createGain(); master.gain.value = 0.16; master.connect(ac.destination);
+        const comp = ac.createDynamicsCompressor();
+        comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4;
+        master = ac.createGain(); master.gain.value = 0.55;
+        master.connect(comp).connect(ac.destination);
       }
-      if (ac.state === 'suspended') ac.resume();
+      if (ac.state !== 'running') ac.resume().catch(() => {});
       return ac;
+    }
+    // 브라우저는 사용자가 누르거나 터치한 순간에만 소리를 켜 준다. 켜질 때까지 매번 다시 시도하고,
+    // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
+    function unlock() {
+      const a = ctx(); if (!a) return;
+      try {
+        const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource();
+        s.buffer = b; s.connect(a.destination); s.start(0);
+      } catch (e) { /* 무시 */ }
     }
     function tone(freq, t0, dur, type, vol, slide) {
       const a = ctx(); if (!a) return;
@@ -712,7 +726,8 @@
     return {
       get on() { return on; },
       set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) ctx(); },
-      unlock: ctx,
+      unlock,
+      get state() { return ac ? ac.state : 'none'; },
       step(alt) { noise(0, 0.045, 0.28, alt ? 1400 : 1000, 2.5); tone(alt ? 150 : 130, 0, 0.035, 'triangle', 0.25); },
       bump() { tone(110, 0, 0.09, 'square', 0.25, 0.6); },
       move() { tone(988, 0, 0.045, 'square', 0.28); },
@@ -922,7 +937,17 @@
 
   /* ───────── 별 스티커(숨은 재미) ───────── */
   function placeStickers() {
-    const spot = (x, y) => { const c = nearestOpen(x, y); return c ? { x: c[0] * CELL + 2, y: c[1] * CELL + 2 } : { x, y }; };
+    // 화분·책장 같은 구석 소품 그림에 가려지지 않는 자리만 쓴다
+    const covered = (x, y) => L.rooms.some((r) => r.corners.slice(0, (PROPS[r.room.icon] || ['plant']).length)
+      .some((c) => x > c.x - 4 && x < c.x + 18 && y > c.y - 2 && y < c.y + 24));
+    const spot = (x, y) => {
+      for (let k = 0; k < 40; k++) {
+        const tx = x + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 3 * (x < L.W / 2 ? -1 : 1);
+        const c = nearestOpen(tx, y);
+        if (c && !covered(c[0] * CELL + 2, c[1] * CELL + 2)) return { x: c[0] * CELL + 2, y: c[1] * CELL + 2 };
+      }
+      const c = nearestOpen(x, y); return c ? { x: c[0] * CELL + 2, y: c[1] * CELL + 2 } : { x, y };
+    };
     const r4 = L.rooms[3], r6 = L.rooms[5];
     L.stickers = [
       { id: 'hall', ...(L.portrait ? spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + 6) : spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + L.walkHall.h - 2)) },
@@ -987,7 +1012,7 @@
 
     // 별 스티커 줍기
     for (const st of L.stickers) {
-      if (found.has(st.id) || Math.hypot(P.x - st.x, P.y - st.y) > 7) continue;
+      if (found.has(st.id) || Math.hypot(P.x - st.x, P.y - st.y) > 8) continue;
       found.add(st.id);
       save('pixelSchoolStars', [...found], localStorage);
       SFX.pickup();
@@ -1040,15 +1065,19 @@
     g.setTransform(1, 0, 0, 1, 0, 0);
     g.imageSmoothingEnabled = false;
     g.drawImage(L.bg, 0, 0);
-    // 별 스티커(반짝임)
+    // 앞뒤 순서대로: 가구·소품·사람·별 스티커
+    const list = L.things.slice();
     for (const st of L.stickers) {
       if (found.has(st.id)) continue;
-      const tw = Math.floor(clock * 2 + st.x) % 6 === 0;
-      g.fillStyle = '#ffd36b'; g.fillRect(st.x - 1, st.y - 2, 3, 1); g.fillRect(st.x, st.y - 3, 1, 3);
-      if (tw && !reduceMotion) { g.fillStyle = '#ffffff'; g.fillRect(st.x - 2, st.y - 2, 1, 1); g.fillRect(st.x + 2, st.y - 2, 1, 1); g.fillRect(st.x, st.y - 4, 1, 1); g.fillRect(st.x, st.y, 1, 1); }
+      list.push({ y: st.y + 1, fn: () => {
+        const tw = Math.floor(clock * 2 + st.x) % 4 === 0;
+        const x = st.x, y = st.y - 3;
+        g.fillStyle = C.out; g.fillRect(x - 3, y - 1, 7, 3); g.fillRect(x - 1, y - 3, 3, 7);
+        g.fillStyle = '#ffd36b'; g.fillRect(x - 2, y, 5, 1); g.fillRect(x, y - 2, 1, 5); g.fillRect(x - 1, y - 1, 3, 3);
+        g.fillStyle = '#fff6c8'; g.fillRect(x - 1, y - 1, 1, 1);
+        if (tw && !reduceMotion) { g.fillStyle = '#ffffff'; g.fillRect(x - 4, y - 3, 1, 1); g.fillRect(x + 4, y - 3, 1, 1); g.fillRect(x + 3, y + 3, 1, 1); g.fillRect(x - 3, y + 3, 1, 1); }
+      } });
     }
-    // 앞뒤 순서대로: 가구·소품·사람
-    const list = L.things.slice();
     const others = KIDS.filter((x) => x !== kid);
     L.rooms.forEach((r, i) => {
       const t = r.teacher, tp = r.tpos;
@@ -1268,7 +1297,13 @@
   }
   soundBtn.addEventListener('click', (e) => { e.stopPropagation(); SFX.set(!SFX.on); paintSound(); SFX.toggle(); });
   paintSound();
-  ['pointerdown', 'keydown'].forEach((t) => addEventListener(t, () => SFX.unlock(), { once: true, capture: true }));
+  const unlockEvents = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
+  const unlockAudio = () => {
+    SFX.unlock();
+    if (SFX.state === 'running') unlockEvents.forEach((t) => removeEventListener(t, unlockAudio, true));
+  };
+  unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true));
+  addEventListener('pageshow', () => { if (SFX.state === 'suspended') unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true)); });
 
   /* ───────── 키보드 ───────── */
   const KEYMAP = { ArrowUp: 'up', ArrowDown: 'down', ArrowLeft: 'left', ArrowRight: 'right', w: 'up', s: 'down', a: 'left', d: 'right', W: 'up', S: 'down', A: 'left', D: 'right' };
@@ -1427,7 +1462,7 @@
   window.pixelSchool = {
     go: (n) => { const r = L.rooms[n - 1]; walkTo(r.door.entry.x, r.door.entry.y); },
     walk: (x, y) => walkTo(x, y),
-    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, stars: found.size, room: P.room && P.room.i }),
+    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, audio: SFX.state, stars: found.size, room: P.room && P.room.i }),
     layout: () => L,
   };
 })();
