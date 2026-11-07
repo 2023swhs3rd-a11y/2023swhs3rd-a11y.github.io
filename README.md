@@ -40,5 +40,5 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 
 ```
 cat index.html assets/school/school.js > /tmp/text.txt
-pyftsubset Galmuri11.woff2 --text-file=/tmp/text.txt --unicodes="U+0020-007E,U+00B7,U+2026,U+2190-2193,U+25B2-25C0,U+25CF,U+266A" --flavor=woff2 --output-file=assets/school/fonts/galmuri11-subset.woff2
+pyftsubset Galmuri11.woff2 --text-file=/tmp/text.txt --unicodes="U+0020-007E,U+00B7,U+2026,U+2190-2193,U+25B2-25C0,U+25CF,U+2605,U+266A" --flavor=woff2 --output-file=assets/school/fonts/galmuri11-subset.woff2
 ```
