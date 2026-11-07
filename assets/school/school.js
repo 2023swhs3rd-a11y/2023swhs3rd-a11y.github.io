@@ -665,10 +665,13 @@
 
   /* ───────── 효과음(Web Audio로 합성) ───────── */
   const SFX = (() => {
-    let ac = null, master = null;
+    let ac = null, master = null, noiseBuf = null;
     let on = load('pixelSchoolSound', localStorage) !== false;
-    function ctx() {
+    // 오디오는 누르거나 키를 친 순간(unlock)에만 만든다. 맥 사파리는 그 밖에서 만든 오디오를
+    // 나중에 다시 켜 주지 않을 때가 있어서다. 그 전에 나는 효과음은 그냥 건너뛴다.
+    function ctx(create) {
       if (!on) return null;
+      if (!ac && !create) return null;
       if (!ac) {
         const AC = window.AudioContext || window.webkitAudioContext;
         if (!AC) return null;
@@ -678,15 +681,21 @@
         const comp = ac.createDynamicsCompressor();
         comp.threshold.value = -14; comp.knee.value = 10; comp.ratio.value = 4;
         master = ac.createGain(); master.gain.value = 0.55;
-        master.connect(comp).connect(ac.destination);
+        master.connect(comp); comp.connect(ac.destination);
       }
-      if (ac.state !== 'running') ac.resume().catch(() => {});
+      if (ac.state !== 'running') {
+        const p = ac.resume();
+        if (p && p.catch) p.catch(() => {});
+      }
       return ac;
     }
     // 브라우저는 사용자가 누르거나 터치한 순간에만 소리를 켜 준다. 켜질 때까지 매번 다시 시도하고,
     // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
     function unlock() {
-      const a = ctx(); if (!a) return;
+      // 눌렀는데도 켜지지 않은 채 남은 오디오는 버리고, 이번 누름 안에서 새로 만든다
+      if (ac && ac.state === 'suspended' && ac.__tried && performance.now() - ac.__tried > 1000) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
+      const a = ctx(true); if (!a) return;
+      if (a.state !== 'running' && !a.__tried) a.__tried = performance.now();
       try {
         const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource();
         s.buffer = b; s.connect(a.destination); s.start(0);
@@ -702,10 +711,9 @@
       gn.gain.setValueAtTime(0.0001, t);
       gn.gain.linearRampToValueAtTime(vol == null ? 0.5 : vol, t + 0.006);
       gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      o.connect(gn).connect(master);
+      o.connect(gn); gn.connect(master);
       o.start(t); o.stop(t + dur + 0.03);
     }
-    let noiseBuf = null;
     function noise(t0, dur, vol, freq, q) {
       const a = ctx(); if (!a) return;
       if (!noiseBuf) {
@@ -719,13 +727,13 @@
       const gn = a.createGain();
       gn.gain.setValueAtTime(vol == null ? 0.5 : vol, t);
       gn.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-      s.connect(f).connect(gn).connect(master);
+      s.connect(f); f.connect(gn); gn.connect(master);
       s.start(t); s.stop(t + dur + 0.02);
     }
     const seq = (notes, step, dur, type, vol, start) => notes.forEach((f, i) => f && tone(f, (start || 0) + i * step, dur, type, vol));
     return {
       get on() { return on; },
-      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) ctx(); },
+      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlock(); },
       unlock,
       get state() { return ac ? ac.state : 'none'; },
       step(alt) { noise(0, 0.045, 0.28, alt ? 1400 : 1000, 2.5); tone(alt ? 150 : 130, 0, 0.035, 'triangle', 0.25); },
