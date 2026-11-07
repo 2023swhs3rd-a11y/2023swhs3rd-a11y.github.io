@@ -2,203 +2,105 @@
 <html lang="ko">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>봉일천고 진로진학 자료실</title>
-<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 추천 자료, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이, 블룸 교과탐구활동 매트릭스">
+<meta name="description" content="봉일천고등학교 진로진학부가 만든 학생용 사이트 모음: 2028 대입전형 시행계획 요약, 대입·진로 추천 자료, 경기도 고등학교 학생수 추이, 뉴스 읽고 진로 확장하기, 독서나눔 릴레이, 블룸 교과탐구활동 매트릭스. 픽셀 학교 교실에 들어가면 각 사이트가 열립니다.">
 <link rel="icon" href="/favicon.svg?v=1" type="image/svg+xml">
 <link rel="icon" href="/favicon-32.png?v=1" sizes="32x32" type="image/png">
 <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=1">
 <link rel="canonical" href="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="봉일천고 진로진학 자료실">
-<meta property="og:description" content="2028 대입전형 시행계획 요약 · 대입·진로 추천 자료 · 경기도 고등학교 학생수 추이 · 뉴스 읽고 진로 확장하기 · 독서나눔 릴레이 · 블룸 교과탐구활동 매트릭스">
+<meta property="og:description" content="픽셀 학교 교실 여섯 칸: 2028 대입전형 시행계획 요약 · 대입·진로 추천 자료 · 경기도 고등학교 학생수 추이 · 독서나눔 릴레이 · 뉴스 읽고 진로 확장하기 · 블룸 교과탐구활동 매트릭스">
 <meta property="og:url" content="https://2023swhs3rd-a11y.github.io/">
 <meta property="og:image" content="https://2023swhs3rd-a11y.github.io/2028plan/og.png">
 <script>
   // 예전 주소(루트 + #대학 등)로 들어온 링크는 그대로 2028 대시보드로 보낸다
   if (location.hash.length > 1) location.replace('/2028plan/' + location.hash);
 </script>
-<link rel="stylesheet" href="/assets/site.css?v=2">
-<style>
-  /* 글꼴·바탕·글자색·사이트별 색은 /assets/site.css 의 --bon-* 값을 그대로 쓴다 */
-  :root {
-    --bg: var(--bon-bg); --card: var(--bon-card); --text: var(--bon-text); --body: var(--bon-body); --muted: var(--bon-muted); --line: var(--bon-line);
-    --plan: var(--bon-c-plan); --jinhak: var(--bon-c-jinhak); --gg: var(--bon-c-gg); --news: var(--bon-c-news); --book: var(--bon-c-book); --matrix: var(--bon-c-matrix);
-    --shadow: var(--bon-shadow); --shadow-hover: var(--bon-shadow-hover);
-  }
-  .wrap { max-width: 1160px; margin: 0 auto; padding: 0 16px; }
-
-  /* 머리: 공통 .bon-header에서 위아래 여백만 넓게 */
-  .bon-header { padding: 56px 0 28px; }
-
-  /* 묶음 */
-  section { margin-top: 30px; }
-  .sec-h { display: flex; align-items: baseline; gap: 12px; margin: 0 0 14px; }
-  .sec-h h2 { margin: 0; color: var(--text); font-size: 1.15rem; font-weight: 700; letter-spacing: -0.02em; }
-  .sec-h p { margin: 0; color: var(--muted); font-size: .9rem; }
-  .grid { display: grid; gap: 20px; }
-  .grid.three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-
-  /* 카드 */
-  .card {
-    position: relative; display: flex; flex-direction: column; min-width: 0;
-    background: var(--card); border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
-    color: inherit; text-decoration: none; box-shadow: var(--shadow);
-    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
-  }
-  .card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); border-color: color-mix(in srgb, var(--c) 45%, var(--line)); }
-  .card:focus-visible { outline: 3px solid var(--c); outline-offset: 3px; }
-  .thumb { position: relative; background: color-mix(in srgb, var(--c) 10%, var(--card)); border-bottom: 1px solid var(--line); overflow: hidden; }
-  .thumb img { display: block; width: 100%; aspect-ratio: 1200 / 630; object-fit: cover; object-position: top; transition: transform .35s ease; }
-  .card:hover .thumb img { transform: scale(1.03); }
-  .thumb::after { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 4px; background: var(--c); }
-  .body { display: flex; flex-direction: column; gap: 8px; flex: 1; padding: 18px 20px 20px; }
-  .top { display: flex; align-items: center; gap: 10px; }
-  .icon { flex: none; display: grid; place-items: center; width: 34px; height: 34px; border-radius: 10px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, var(--card)); }
-  .icon svg { width: 19px; height: 19px; }
-  .tags { display: flex; flex-wrap: wrap; gap: 5px; }
-  /* 최신 업데이트 날짜: 각 사이트가 공개한 파일에서 읽어 카드 오른쪽 위에 둔다. 최근 7일 안이면 사이트 색 점 */
-  .upd { margin-left: auto; flex: none; display: inline-flex; align-items: center; gap: 5px; font-size: .78rem; color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
-  .upd.fresh::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--c); }
-  .tag { font-size: .76rem; font-weight: 600; padding: 2px 9px; border-radius: 999px; color: var(--c); background: color-mix(in srgb, var(--c) 10%, var(--card)); }
-  .tag.plain { color: var(--muted); background: transparent; border: 1px solid var(--line); }
-  .card h3 { margin: 4px 0 0; color: var(--text); font-size: 1.22rem; font-weight: 700; letter-spacing: -0.025em; line-height: 1.35; }
-  .desc { margin: 0; font-size: .95rem; flex: 1; }
-  .go { display: inline-flex; align-items: center; gap: 6px; margin-top: 6px; font-weight: 700; font-size: .95rem; color: var(--c); }
-  .go svg { width: 16px; height: 16px; transition: transform .18s ease; }
-  .card:hover .go svg { transform: translateX(3px); }
-
-  @media (max-width: 1000px) {
-    .grid.three, .grid.two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-    /* 세 장일 때 남는 한 장은 가로로 넓게 */
-    .grid.three > .card:last-child:nth-child(odd) { grid-column: 1 / -1; flex-direction: row; }
-    .grid.three > .card:last-child:nth-child(odd) .thumb { flex: 0 0 50%; border-bottom: 0; border-right: 1px solid var(--line); }
-    .grid.three > .card:last-child:nth-child(odd) .thumb img { height: 100%; aspect-ratio: auto; }
-  }
-  @media (max-width: 640px) {
-    .bon-header { padding-top: 36px; }
-    .grid.three, .grid.two { grid-template-columns: minmax(0, 1fr); gap: 16px; }
-    .grid.three > .card:last-child:nth-child(odd) { flex-direction: column; }
-    .grid.three > .card:last-child:nth-child(odd) .thumb { flex: none; border-right: 0; border-bottom: 1px solid var(--line); }
-    .grid.three > .card:last-child:nth-child(odd) .thumb img { height: auto; aspect-ratio: 1200 / 630; }
-    .sec-h { flex-direction: column; gap: 2px; }
-  }
-  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-
-</style>
+<link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/school/school.css?v=2">
 </head>
 <body>
-<div class="wrap">
-  <header class="bon-header">
-    <p class="bon-school">봉일천고등학교 진로진학부</p>
-    <h1 class="bon-title">진로진학 자료실</h1>
-    <p class="bon-lead">대입 전형을 찾아보고, 진로 자료를 읽고, 뉴스와 책과 교과 탐구로 관심 분야를 넓히는 학생용 사이트 모음입니다. 필요한 곳을 골라 들어가세요.</p>
+<div class="page">
+  <header class="top">
+    <p class="school">봉일천고등학교 진로진학부</p>
+    <h1>진로진학 자료실 <span>픽셀 학교</span></h1>
+    <p class="lead">함께 걸을 학생을 고르고 교실 문으로 들어가면 사이트가 열려요. 숫자키 <kbd>1</kbd>~<kbd>6</kbd>을 누르면 그 반으로 바로 갑니다.</p>
   </header>
 
   <main>
-    <section aria-labelledby="s1">
-      <div class="sec-h">
-        <h2 id="s1">대입·진학 정보</h2>
-        <p>전형을 확인하고 진학 자료를 찾을 때</p>
+    <div class="stage" id="stage" tabindex="0" aria-label="픽셀 학교 복도. 방향키로 걷고 교실 문 앞에서 Enter로 들어갑니다. 숫자키 1부터 6은 그 반 사이트를 바로 엽니다. 아래 교실 목록에서 열 수도 있습니다.">
+      <canvas id="screen" aria-hidden="true"></canvas>
+      <div class="labels" id="labels" aria-hidden="true"></div>
+      <div class="hud-row">
+        <button class="hud" id="sound" type="button" aria-pressed="true">♪ 소리 켬</button>
+        <button class="hud" id="change" type="button" hidden>학생 바꾸기</button>
       </div>
-      <div class="grid three">
-        <a class="card" href="/2028plan/" style="--c: var(--plan)">
-          <div class="thumb"><img src="/2028plan/og.png" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6-9 6-9-6z"/><path d="M7 12.5V17c0 1.1 2.2 2.5 5 2.5s5-1.4 5-2.5v-4.5"/></svg></span>
-              <div class="tags"><span class="tag">대입 전형</span><span class="tag plain">전 학년</span></div>
-            </div>
-            <h3>2028 대입전형 시행계획 요약</h3>
-            <p class="desc">95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p>
-            <span class="go">대시보드 열기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
 
-        <a class="card" href="/jinhak/" style="--c: var(--jinhak)">
-          <div class="thumb"><img src="/jinhak/og.png?v=4" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5.5A1.5 1.5 0 0 1 5.5 4H10l2 2h6.5A1.5 1.5 0 0 1 20 7.5v11a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5z"/><path d="M8 12h8M8 15.5h5"/></svg></span>
-              <div class="tags"><span class="tag">자료 모음</span><span class="tag plain">전 학년</span></div>
-            </div>
-            <h3>대입·진로 추천 자료</h3>
-            <p class="desc">과목 선택, 진로 탐색, 전공 안내, 대학 가이드북, 설명회 영상을 학년별로 쓰기 좋게 모으고 자료마다 해설을 붙였습니다.</p>
-            <span class="go">자료 찾아보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
+      <div class="dialog" id="dialog" role="dialog" aria-modal="false" aria-labelledby="dlg-title" hidden>
+        <div class="dlg-face" id="dlg-face" aria-hidden="true"></div>
+        <div class="dlg-body">
+          <p class="dlg-say" id="dlg-say" aria-live="polite"></p>
+          <p class="dlg-room"><span id="dlg-num"></span> <strong id="dlg-title"></strong> <small id="dlg-upd"></small></p>
+          <p class="dlg-desc" id="dlg-desc"></p>
+          <div class="dlg-btns">
+            <button type="button" id="dlg-go">▶ 들어가기 <kbd>Enter</kbd></button>
+            <button type="button" id="dlg-no">돌아가기 <kbd>Esc</kbd></button>
           </div>
-        </a>
-
-        <a class="card" href="/gg-highschool-students/" style="--c: var(--gg)">
-          <div class="thumb"><img src="/assets/gg-students.jpg" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></span>
-              <div class="tags"><span class="tag">통계</span><span class="tag plain">학생·선생님</span></div>
-            </div>
-            <h3>경기도 고등학교 학생수 추이</h3>
-            <p class="desc">학교알리미 공시자료로 경기도 31개 시·군 고등학교의 학년별 학생수 3개년 변화를 지도와 그래프로 봅니다.</p>
-            <span class="go">통계 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
+        </div>
       </div>
-    </section>
 
-    <section aria-labelledby="s2">
-      <div class="sec-h">
-        <h2 id="s2">읽고 탐구하기</h2>
-        <p>뉴스와 책, 교과 탐구로 관심 분야를 넓힐 때</p>
+      <div class="menu" id="menu" role="dialog" aria-labelledby="menu-title" hidden>
+        <p class="menu-kicker">PRESS START</p>
+        <h2 id="menu-title">함께 걸을 학생을 골라 주세요</h2>
+        <div class="kids" id="kids"></div>
+        <p class="menu-hint">방향키로 고르고 Enter · 클릭 · 터치 · 숫자키 1~6은 바로 입실</p>
       </div>
-      <div class="grid three">
-        <a class="card" href="/book/" style="--c: var(--book)">
-          <div class="thumb"><img src="/book/docs/board-desktop.png" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 6.5C10.5 5 8 4.5 4 4.5v13c4 0 6.5.5 8 2 1.5-1.5 4-2 8-2v-13c-4 0-6.5.5-8 2z"/><path d="M12 6.5v13"/></svg></span>
-              <div class="tags"><span class="tag">독서</span><span class="tag plain">학생·선생님</span></div>
-            </div>
-            <h3>독서나눔 릴레이</h3>
-            <p class="desc">지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p>
-            <span class="go">게시판 들어가기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
 
-        <a class="card" href="/news/" style="--c: var(--news)">
-          <div class="thumb"><img src="/news/assets/og.png" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h11a1 1 0 0 1 1 1v14a1 1 0 0 0 1 1H6a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1z"/><path d="M17 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2M8 8h5M8 12h5M8 16h3"/></svg></span>
-              <div class="tags"><span class="tag">매주 월요일</span><span class="tag plain">1학년</span></div>
-            </div>
-            <h3>뉴스 읽고 진로 확장하기</h3>
-            <p class="desc">계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p>
-            <span class="go">이번 주 뉴스 보기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
-        <a class="card" href="/matrix/" style="--c: var(--matrix)">
-          <div class="thumb"><img src="/assets/matrix.jpg" alt="" loading="lazy"></div>
-          <div class="body">
-            <div class="top">
-              <span class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.5" y="3.5" width="17" height="17" rx="2"/><path d="M3.5 9.5h17M3.5 15h17M9.5 3.5v17M15 3.5v17"/></svg></span>
-              <div class="tags"><span class="tag">교과 탐구</span><span class="tag plain">학생·선생님</span></div>
-            </div>
-            <h3>블룸 교과탐구활동 매트릭스</h3>
-            <p class="desc">블룸의 개정 교육목표 분류 24칸에 2022 개정 교육과정 155과목, 성취기준 2173개를 놓고, 과목이나 탐구 주제에 맞는 활동을 추천합니다.</p>
-            <span class="go">매트릭스 열기 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span>
-          </div>
-        </a>
+      <div class="fade" id="fade" hidden><span id="fade-text">이동 중…</span></div>
+    </div>
+
+    <div class="pad" id="pad" aria-hidden="true">
+      <div class="dpad">
+        <button type="button" data-dir="up" class="u">▲</button>
+        <button type="button" data-dir="left" class="l">◀</button>
+        <button type="button" data-dir="right" class="r">▶</button>
+        <button type="button" data-dir="down" class="d">▼</button>
       </div>
-    </section>
+      <button type="button" class="abtn" id="abtn">A<small>확인</small></button>
+    </div>
+
+    <p class="help" id="help">
+      <span><kbd>←</kbd><kbd>↑</kbd><kbd>↓</kbd><kbd>→</kbd> 또는 <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> 걷기</span>
+      <span><kbd>Enter</kbd> 들어가기 · <kbd>Esc</kbd> 돌아가기</span>
+      <span><kbd>1</kbd>~<kbd>6</kbd> 그 반으로 바로 · <kbd>M</kbd> 소리</span>
+      <span>교실이나 복도를 클릭하면 그곳까지 걸어가요</span>
+    </p>
+
+    <!-- 교실 목록: 게임 화면이 읽는 원본(주소·이름·설명·색·벽 그림)이자, 키보드·화면낭독기·스크립트 없는 환경의 바로가기.
+         scripts/site_status.py(주간 상태 점검)가 a.card 와 h3, 아래 UPD 목록을 읽어 점검 대상을 정한다. -->
+    <nav class="rooms" aria-label="교실 바로가기">
+      <h2>교실 바로가기 <small>숫자키로도 열려요</small></h2>
+      <ol id="rooms">
+        <li><a class="card" href="/2028plan/" data-short="2028 대입" data-color="#1d4ed8" data-icon="pennant"><kbd>1</kbd><h3>2028 대입전형 시행계획 요약</h3><p>95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p><span class="meta">대입 전형 · 전 학년</span></a></li>
+        <li><a class="card" href="/jinhak/" data-short="진로 자료" data-color="#6d28d9" data-icon="star"><kbd>2</kbd><h3>대입·진로 추천 자료</h3><p>과목 선택, 진로 탐색, 전공 안내, 대학 가이드북, 설명회 영상을 학년별로 쓰기 좋게 모으고 자료마다 해설을 붙였습니다.</p><span class="meta">자료 모음 · 전 학년</span></a></li>
+        <li><a class="card" href="/gg-highschool-students/" data-short="학생수 통계" data-color="#0e7490" data-icon="chart"><kbd>3</kbd><h3>경기도 고등학교 학생수 추이</h3><p>학교알리미 공시자료로 경기도 31개 시·군 고등학교의 학년별 학생수 3개년 변화를 지도와 그래프로 봅니다.</p><span class="meta">통계 · 학생·선생님</span></a></li>
+        <li><a class="card" href="/book/" data-short="독서나눔" data-color="#c2410c" data-icon="book"><kbd>4</kbd><h3>독서나눔 릴레이</h3><p>지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p><span class="meta">독서 · 학생·선생님</span></a></li>
+        <li><a class="card" href="/news/" data-short="뉴스 탐구" data-color="#15803d" data-icon="news"><kbd>5</kbd><h3>뉴스 읽고 진로 확장하기</h3><p>계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p><span class="meta">매주 월요일 · 1학년</span></a></li>
+        <li><a class="card" href="/matrix/" data-short="탐구 매트릭스" data-color="#be185d" data-icon="pyramid"><kbd>6</kbd><h3>블룸 교과탐구활동 매트릭스</h3><p>블룸의 개정 교육목표 분류 24칸에 2022 개정 교육과정 155과목, 성취기준 2173개를 놓고, 과목이나 탐구 주제에 맞는 활동을 추천합니다.</p><span class="meta">교과 탐구 · 학생·선생님</span></a></li>
+      </ol>
+    </nav>
   </main>
 
-  <footer class="bon-footer">
-    <p>© 봉일천고등학교 진로진학부</p>
-    <p>모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
+  <footer class="foot">
+    <p>© 봉일천고등학교 진로진학부 · 모든 사이트는 휴대폰에서도 쓸 수 있습니다.</p>
+    <p>학교 그림·캐릭터·효과음은 이 페이지를 위해 새로 만들었습니다 · 글꼴 <a href="https://github.com/quiple/galmuri">갈무리</a>(SIL OFL)</p>
   </footer>
 </div>
 <script>
   // 사이트별 최신 업데이트 날짜. 모두 같은 주소의 공개 파일이라 외부 서비스가 필요 없다.
-  // 어느 하나를 읽지 못해도 그 카드만 날짜 없이 둔다.
+  // 읽은 날짜는 교실 목록에 붙이고(data-upd), 픽셀 학교 대화창도 같은 값을 보여 준다. 어느 하나를 읽지 못해도 그 교실만 날짜 없이 둔다.
   const UPD = {
     '/2028plan/': ['/2028plan/sitemap.xml', /<lastmod>(\d{4})-(\d{2})-(\d{2})/, '데이터 버전 기준일'],
     '/jinhak/': ['/jinhak/resources.json', /"updated":\s*"(\d{4})-(\d{2})-(\d{2})/, '자료 목록을 마지막으로 정리한 날'],
@@ -218,13 +120,16 @@
       if (!dates.length) return;
       const d = new Date(Math.max(...dates));
       const days = Math.round((today - d) / 864e5);
+      const label = (days === 0 ? '오늘' : days === 1 ? '어제' : (d.getFullYear() === today.getFullYear() ? '' : d.getFullYear() + '년 ') + (d.getMonth() + 1) + '월 ' + d.getDate() + '일') + ' 업데이트';
       const el = document.createElement('span');
       el.className = 'upd' + (days <= 7 ? ' fresh' : '');
       el.title = src[2];
-      el.textContent = (days === 0 ? '오늘' : days === 1 ? '어제' : (d.getFullYear() === today.getFullYear() ? '' : d.getFullYear() + '년 ') + (d.getMonth() + 1) + '월 ' + d.getDate() + '일') + ' 업데이트';
-      card.querySelector('.top').appendChild(el);
+      el.textContent = label;
+      card.dataset.upd = label;
+      card.querySelector('.meta').appendChild(el);
     } catch (e) { /* 날짜 없이 둔다 */ }
   });
 </script>
+<script src="/assets/school/school.js?v=2"></script>
 </body>
 </html>

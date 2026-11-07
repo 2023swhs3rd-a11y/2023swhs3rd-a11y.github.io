@@ -1,4 +1,4 @@
-/* 픽셀 학교 (/school/) — 화면 틀과 겹쳐 놓는 글자(칠판 이름·대화창·캐릭터 고르기)
+/* 픽셀 학교(첫 화면 /) — 화면 틀과 겹쳐 놓는 글자(칠판 이름·대화창·캐릭터 고르기)와 교실 바로가기 목록
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
@@ -45,10 +45,11 @@ kbd {
 
 /* 머리 */
 .top { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 16px; padding: 18px 0 12px; }
-.top h1 { margin: 0; font-size: 22px; font-weight: 700; color: var(--gold); letter-spacing: .04em; text-shadow: 2px 2px 0 var(--ink); }
+.top .school { order: -1; flex-basis: 100%; margin: 0; color: var(--muted); font-size: 12px; }
+.top h1 { margin: 0; font-size: 22px; font-weight: 700; color: #fff; letter-spacing: .02em; text-shadow: 2px 2px 0 var(--ink); }
+.top h1 span { margin-left: 6px; color: var(--gold); font-size: .8em; }
 .top .lead { margin: 0; flex: 1 1 260px; color: var(--muted); }
-.home { order: -1; flex-basis: 100%; color: var(--muted); text-decoration: none; font-size: 12px; }
-.home:hover, .home:focus-visible { color: var(--gold); }
+.top .lead kbd { font-size: .85em; }
 
 main { display: flex; flex-direction: column; align-items: center; }
 
@@ -77,13 +78,14 @@ main { display: flex; flex-direction: column; align-items: center; }
   text-shadow: 0 0 1px #f4f1de88;
 }
 
+.hud-row { position: absolute; right: 6px; bottom: 6px; z-index: 2; display: flex; gap: 6px; }
 .hud {
-  position: absolute; right: 6px; bottom: 6px; z-index: 2;
   padding: 3px 8px; border: 2px solid var(--ink); border-radius: 0;
   background: var(--paper); color: var(--ink); font: inherit; font-size: 11px; cursor: pointer;
   box-shadow: 2px 2px 0 var(--ink);
 }
 .hud:hover, .hud:focus-visible { background: var(--gold); outline: none; }
+.hud.off { background: #c9c0dd; color: #5b4a63; }
 
 /* 대화창 */
 .dialog {
@@ -94,7 +96,12 @@ main { display: flex; flex-direction: column; align-items: center; }
   border: 3px solid #fff; border-radius: 4px;
   box-shadow: 0 0 0 3px var(--ink), 4px 4px 0 3px #00000066;
   font-size: 13px;
+  display: flex; gap: 12px; align-items: flex-start;
 }
+.dlg-face { flex: none; width: 56px; height: 52px; padding: 2px; background: #fff8e6; border: 2px solid #fff; box-shadow: 0 0 0 2px var(--ink); }
+.dlg-face canvas { display: block; width: 100%; height: 100%; image-rendering: pixelated; }
+.dlg-body { flex: 1; min-width: 0; }
+.dlg-room small { color: #b9c3ff; font-size: 11px; }
 .dialog[hidden], .menu[hidden], .fade[hidden], .hud[hidden] { display: none; }
 .dialog p { margin: 0; }
 .dlg-say { color: var(--gold); min-height: 1.6em; }
@@ -130,7 +137,7 @@ main { display: flex; flex-direction: column; align-items: center; }
   border: 3px solid var(--ink); border-radius: 0; box-shadow: 3px 3px 0 #00000066;
   font: inherit; cursor: pointer;
 }
-.kid canvas { width: 48px; height: 66px; image-rendering: pixelated; }
+.kid canvas { width: 60px; height: 95px; image-rendering: pixelated; }
 .kid b { font-size: 14px; }
 .kid small { font-size: 11px; color: #5b4a63; line-height: 1.35; }
 .kid:hover, .kid:focus-visible, .kid.on { outline: none; background: var(--gold); transform: translate(-1px, -2px); }
@@ -173,18 +180,20 @@ body.touch .help { display: none; }
 /* 교실 바로가기 */
 .rooms { width: 100%; max-width: 980px; margin-top: 26px; }
 .rooms h2 { margin: 0 0 8px; font-size: 14px; color: var(--gold); }
-.rooms ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; counter-reset: room; }
-.rooms li { counter-increment: room; }
+.rooms ol { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.rooms h2 small { margin-left: 6px; color: var(--muted); font-size: 11px; font-weight: 400; }
 .rooms a {
-  display: flex; flex-direction: column; height: 100%; padding: 8px 12px 9px 44px; position: relative;
+  display: flex; flex-direction: column; gap: 2px; height: 100%; padding: 9px 12px 10px 48px; position: relative;
   background: var(--night2); color: var(--cream); text-decoration: none;
   border: 2px solid #ffffff22; border-left: 6px solid var(--c, #fff);
 }
-.rooms a::before {
-  content: counter(room) "반"; position: absolute; left: 8px; top: 9px; color: var(--muted); font-size: 11px;
-}
-.rooms a b { font-size: 13px; }
-.rooms a span { color: var(--muted); font-size: 11px; }
+.rooms a kbd { position: absolute; left: 10px; top: 10px; background: var(--c); border-color: #ffffff88; color: #fff; }
+.rooms a h3 { margin: 0; font-size: 13px; }
+.rooms a p { margin: 0; color: #d7cfee; font-size: 11px; line-height: 1.5; }
+.rooms .meta { display: flex; flex-wrap: wrap; gap: 4px 10px; color: var(--muted); font-size: 11px; }
+.rooms .upd { color: #b9add8; }
+.rooms .upd.fresh { color: var(--gold); }
+.rooms .upd.fresh::before { content: "● "; color: var(--c); }
 .rooms a:hover, .rooms a:focus-visible { border-color: var(--gold); border-left-color: var(--c, #fff); outline: none; }
 
 .foot { margin-top: 28px; color: #8f84b3; font-size: 11px; text-align: center; }
@@ -197,11 +206,13 @@ body.touch .help { display: none; }
   .top .lead { font-size: 12px; }
   .kids { grid-template-columns: repeat(2, minmax(0, 140px)); gap: 8px; }
   .kid { padding: 6px 4px; }
-  .kid canvas { width: 32px; height: 44px; }
+  .kid canvas { width: 36px; height: 57px; }
+  .dlg-face { width: 40px; height: 37px; }
   .kid small { display: none; }
   .menu h2 { font-size: 14px; margin-bottom: 8px; }
   .dialog { font-size: 12px; padding: 8px 10px 10px; }
   .dlg-room { font-size: 13px; }
+  .dlg-desc { display: none; }
   .dlg-btns button kbd { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
