@@ -17,6 +17,14 @@ function doPost(e) {
     if (d.website) return out_('ok'); // 사람 눈에 안 보이는 칸을 채운 것은 스팸 봇
     const msg = String(d.msg || '').trim();
     if (msg.length < 2) return out_('empty');
+    // 주소는 페이지 소스에 공개되어 있어서 누구나 보낼 수 있다. 시트가 넘치지 않게 막는다.
+    const cache = CacheService.getScriptCache();
+    const sig = Utilities.base64Encode(Utilities.computeDigest(Utilities.DigestAlgorithm.MD5, msg, Utilities.Charset.UTF_8));
+    if (cache.get('m:' + sig)) return out_('dup');            // 같은 글을 10분 안에 또 보냄
+    const n = Number(cache.get('count') || 0);
+    if (n >= 60) return out_('busy');                          // 10분에 60개까지만
+    cache.put('m:' + sig, '1', 600);
+    cache.put('count', String(n + 1), 600);
     const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     if (sh.getLastRow() === 0) sh.appendRow(HEADER);
     sh.appendRow([new Date(), clean_(d.who, 30), clean_(msg, 500), clean_(d.kid, 10), false]);
