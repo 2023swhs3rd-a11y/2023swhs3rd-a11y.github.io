@@ -1004,6 +1004,7 @@
       const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
       if (!OAC) return;
       for (const name of Object.keys(FX)) {
+        await new Promise((r) => setTimeout(r, 0)); // 한 번에 몰아서 만들지 않아 화면이 멈추지 않게
         try {
           const oc = new OAC(1, 22050, 22050);
           target = oc; tmaster = oc.createGain(); tmaster.gain.value = 0.3; tmaster.connect(oc.destination);
@@ -1019,9 +1020,10 @@
     }
     // 처음 누를 때 모든 audio 태그를 소리 없이 한 번 재생해 두면, 그다음부터는 언제든 바로 소리가 난다
     function prime(el) {
-      el.muted = true;
+      el.muted = true; el.__want = false;
       const p = el.play();
-      const done = () => { el.pause(); el.currentTime = 0; el.muted = false; };
+      // 그사이 진짜로 울리라고 한 태그(첫 선택음 등)는 멈추지 않는다
+      const done = () => { if (!el.__want) { el.pause(); el.currentTime = 0; } el.muted = false; };
       if (p && p.then) p.then(done, () => { el.muted = false; }); else done();
     }
     function playMedia(name) {
@@ -1029,6 +1031,7 @@
       if (!on || !pool) return false;
       const el = pool[pool.i = (pool.i + 1) % pool.length];
       try {
+        el.__want = true; el.muted = false;
         el.currentTime = 0;
         const p = el.play();
         // audio 태그가 거절되면(보안 설정·권한) 그 소리만은 Web Audio로 낸다
