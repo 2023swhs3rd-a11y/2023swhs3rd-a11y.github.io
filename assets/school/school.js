@@ -410,6 +410,8 @@
       // 복도 오른쪽 끝 벽의 창문(가까이 가면 한마디)
       hallWindow(L.W - 6, h.y, 6, h.h, true);
       L.window = { x: L.W - 6, y: h.y, w: 6, h: h.h };
+      // 1반 앞 복도 자판기(가까이 가면 탐구 한마디)
+      vending(40, h.y + 1, L);
       // 복도 깔개
       rug(Math.round(L.W / 2 - 52), h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
     } else {
@@ -417,6 +419,7 @@
       R(h.x, 24, h.w, 2, '#8f7a58');
       hallWindow(h.x, L.H - 6, h.w, 6, false);
       L.window = { x: h.x, y: L.H - 6, w: h.w, h: 6 };
+      vending(h.x + 1, 40, L);
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
       sign(h.x + 3, 5, 42, 12, '정숙');
       standSign(h.x + 1, 232, 34, 12, '뛰지 맙시다', L);
@@ -464,6 +467,28 @@
       R(gx, y - 1, gw, 1, C.frameHi);
       for (let i = 0; i < 5; i++) R(gx + 2 + i, y - 4 - i * 3, gw - 4 - i * 2, 3, 'rgba(255,248,214,0.16)');
     }
+  }
+  // 음료 자판기: 14×24(통째로 부딪힘)
+  function vending(x, y, L) {
+    R(x + 1, y + 23, 13, 1, C.shadow);
+    R(x - 1, y - 1, 16, 25, C.out);
+    R(x, y, 14, 23, '#d8323f'); R(x, y, 14, 1, '#f0606a'); R(x + 12, y + 1, 2, 22, '#a8222d');
+    // 진열창과 음료들
+    R(x + 1.5, y + 2, 9, 11, '#2b1d2e'); R(x + 2, y + 2.5, 8, 10, '#bfe6f5');
+    const cans = ['#ffd36b', '#5bb36b', '#e0475a', '#7d9cc0', '#ffffff', '#f08fb0', '#cf8240', '#8a6ad8', '#a8dcef'];
+    for (let row = 0; row < 3; row++) for (let col = 0; col < 3; col++) {
+      const cx = x + 2.5 + col * 2.6, cy = y + 3 + row * 3.3;
+      R(cx, cy, 1.6, 2.4, cans[row * 3 + col]); R(cx, cy, 1.6, 0.5, '#ffffff');
+      R(x + 2, cy + 2.6, 8, 0.4, '#8f7a58');
+    }
+    R(x + 2.5, y + 3, 1, 9, 'rgba(255,255,255,0.35)');
+    // 버튼·동전 넣는 곳·꺼내는 곳
+    R(x + 11, y + 3, 1, 1, '#ffd36b'); R(x + 11, y + 5, 1, 1, '#5bb36b'); R(x + 11, y + 7, 1, 1, '#ffffff');
+    R(x + 10.5, y + 10, 2, 2, '#2b1d2e'); R(x + 11, y + 10.5, 1, 1, '#c8c8c8');
+    R(x + 2, y + 16, 10, 4, '#2b1d2e'); R(x + 2.5, y + 16.5, 9, 3, '#5a5060');
+    R(x + 3, y + 14, 8, 1, '#ffffff'); R(x + 3, y + 14, 3, 1, '#ffd36b');
+    L.obst.push({ x: x, y: y, w: 14, h: 24 });
+    L.vend = { x, y, spot: { x: x + 7, y: y + 30 } };
   }
   function plant(x, y) {
     R(x + 3, y + 15.5, 9, 1, C.shadow);
@@ -876,17 +901,22 @@
     }
     // 브라우저는 사용자가 누르거나 터치한 순간에만 소리를 켜 준다. 켜질 때까지 매번 다시 시도하고,
     // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
-    function unlock() {
-      // 맥 사파리는 켜 둔 오디오를 나중에 스스로 멈출 때가 있어서, 누를 때마다 확인한다(켜져 있으면 아무것도 안 함)
-      if (ac && ac.state === 'running') return;
-      // 지난번 누름에서 깨워 봤는데도 멈춘 채(suspended·interrupted)라면 버리고, 이번 누름 안에서 새로 만든다.
-      // 처음엔 잘 켜졌다가 나중에(탭 전환·잠자기·다른 소리) 멈춘 오디오도 여기서 다시 살아난다.
-      if (ac && ac.__stale) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
-      const a = ctx(true); if (!a) return;
+    // 사파리용: 누를 때마다 소리 없는 아주 짧은 버퍼를 재생해 오디오 출력을 깨워 둔다
+    function poke(a) {
       try {
         const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource();
         s.buffer = b; s.connect(a.destination); s.start(0);
       } catch (e) { /* 무시 */ }
+    }
+    function unlock() {
+      // 맥 사파리는 켜 둔 오디오를 나중에 스스로 멈출 때가 있어서, 누를 때마다 확인한다(켜져 있으면 아무것도 안 함)
+      if (ac && ac.state === 'running') { poke(ac); return; }
+      if (ac && ac.state === 'closed') ac.__stale = true;
+      // 지난번 누름에서 깨워 봤는데도 멈춘 채(suspended·interrupted)라면 버리고, 이번 누름 안에서 새로 만든다.
+      // 처음엔 잘 켜졌다가 나중에(탭 전환·잠자기·다른 소리) 멈춘 오디오도 여기서 다시 살아난다.
+      if (ac && ac.__stale) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
+      const a = ctx(true); if (!a) return;
+      poke(a);
       // 잠깐 기다려도 켜지지 않으면 다음 누름 때 새로 만들도록 표시해 둔다
       setTimeout(() => { if (a === ac && a.state !== 'running') a.__stale = true; }, 250);
     }
@@ -924,6 +954,9 @@
       get on() { return on; },
       set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlock(); },
       unlock,
+      // 뒤로 가기로 돌아온 페이지(bfcache)는 오디오가 멈춰 있을 수 있어 다음 누름 때 새로 만든다
+      stale() { if (ac && ac.state !== 'running') ac.__stale = true; },
+      get info() { return ac ? `${ac.state} · ${ac.sampleRate}Hz · t=${ac.currentTime.toFixed(2)}` : 'none'; },
       get state() { return ac ? ac.state : 'none'; },
       step(alt) { noise(0, 0.045, 0.28, alt ? 1400 : 1000, 2.5); tone(alt ? 150 : 130, 0, 0.035, 'triangle', 0.25); },
       bump() { tone(110, 0, 0.09, 'square', 0.25, 0.6); },
@@ -965,11 +998,7 @@
   // 심부름: 선생님이 맡긴 물건을 다른 반 선생님께 전하면서 사이트를 하나씩 알게 된다(방 번호 i: 0~5 교실, 6 진로카페)
   const QUESTS = [
     { from: 0, to: 3, item: '대입 가이드북', thanks: '마침 읽고 싶던 책이에요. 여기 4반에서는 읽은 책과 문장을 친구들과 나눠요.' },
-    { from: 3, to: 4, item: '독서 감상문 묶음', thanks: '좋은 글이 많네요. 5반에서는 매주 뉴스를 읽고 진로를 넓혀요.' },
-    { from: 4, to: 2, item: '신문 스크랩', thanks: '기사 속 숫자를 그래프로 그려 볼게요. 3반은 경기도 학생수 변화를 보는 교실이에요.' },
-    { from: 2, to: 5, item: '학생수 그래프', thanks: '탐구 주제로 딱이에요. 6반에서는 교과 성취기준으로 탐구 활동을 찾아요.' },
-    { from: 5, to: 1, item: '탐구 활동 보고서', thanks: '훌륭한데요? 2반에는 학년별 진로 자료가 모여 있어요.' },
-    { from: 1, to: 6, item: '진로 상담 신청서', thanks: '…흠, 상담 신청서군요. 수고했어요. 커피는 못 주지만 코코아는 줄 수 있어요.' },
+    { from: 3, to: 6, item: '독서 감상문', thanks: '…흠, 감상문이군요. 잘 썼네요. 수고했으니 코코아 한 잔 줄게요.' },
   ];
   const quest = Object.assign({ q: 0, active: false }, load('pixelSchoolQuest', localStorage) || {});
   const saveQuest = () => save('pixelSchoolQuest', quest, localStorage);
@@ -984,6 +1013,9 @@
     if (h >= 17) return { top: '#ff9a62', low: '#ffd08a' };
     return null; // 낮: 그려 둔 파란 하늘 그대로
   }
+  const VEND_LINES = ['흠… 자판기 제품들의 영양성분을 비교해 볼까?', '당류가 가장 적은 음료는 뭘까? 표로 정리해 보자', '이온음료와 탄산음료, 나트륨은 얼마나 다를까?',
+    '가격 대비 용량을 계산하면 어떤 게 제일 이득일까?', '캔과 페트병, 어느 쪽이 재활용하기 쉬울까?', '음료마다 카페인 양을 그래프로 그려 보면 재밌겠다'];
+  let vendN = Math.floor(Math.random() * 6);
   function timeLine(r) {
     const d = new Date(), h = d.getHours(), wd = d.getDay();
     if (wd === 1 && r.i === 4) return '월요일! 새 뉴스가 왔어요';
@@ -1292,6 +1324,12 @@
     const stairGap = !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? P.y - L.walkHall.y : P.x - L.walkHall.x;
     if (stairGap < 8 && !said.has('stairs')) { said.add('stairs'); SFX.bump(); toast(kid ? kid.name : '나', '아아, 계단으로는 갈 수 없는 모양이다…'); }
     else if (stairGap > 24) said.delete('stairs');
+    // 자판기 가까이 가면 탐구 한마디(멀어졌다 다시 오면 다른 말)
+    if (L.vend) {
+      const dv = Math.hypot(P.x - L.vend.spot.x, P.y - L.vend.spot.y);
+      if (dv < 14 && !said.has('vend')) { said.add('vend'); SFX.chime(); toast(kid ? kid.name : '나', VEND_LINES[vendN++ % VEND_LINES.length]); }
+      else if (dv > 30) said.delete('vend');
+    }
     // 복도 끝 창문 가까이 가면 한마디
     const winGap = !L.window || !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? L.walkHall.y + L.walkHall.h - P.y : L.walkHall.x + L.walkHall.w - P.x;
     if (winGap < 8 && !said.has('window')) { said.add('window'); SFX.bump(); toast(kid ? kid.name : '나', '창문에 기대면 안 되겠지…'); }
@@ -1501,9 +1539,16 @@
     const questEl = $('#quest');
     if (!questEl || !L) return;
     const Q = QUESTS[quest.q];
-    questEl.hidden = false;
+    questEl.hidden = !Q;
+    if (!Q) return;
     questEl.textContent = !Q ? '심부름 모두 끝! 고마워요'
       : quest.active ? `심부름: ${Q.item} → ${roomName(Q.to)}` : `심부름: ${roomName(Q.from)}께 말 걸기`;
+  }
+  // 다른 탭이나 뒤로 가기로 돌아왔을 때 저장된 도장·심부름을 다시 읽어 화면에 반영
+  function syncGame() {
+    (load('pixelSchoolStamps', localStorage) || []).forEach((i) => stamps.add(i));
+    Object.assign(quest, load('pixelSchoolQuest', localStorage) || {});
+    paintStars();
   }
   function addStamp(r) {
     if (!r || r.room.special || stamps.has(r.i)) return;
@@ -1592,7 +1637,7 @@
     if (leaving) return;
     if (r.room.special) { openDialog(r, 'teacher'); return; } // 사이트가 없는 칸: Enter를 누르면 다음 이야기
     leaving = true;
-    if (!stamps.has(r.i)) { stamps.add(r.i); save('pixelSchoolStamps', [...stamps], localStorage); }
+    if (!stamps.has(r.i)) { stamps.add(r.i); save('pixelSchoolStamps', [...stamps], localStorage); paintStars(); }
     SFX.enter();
     save('pixelSchool', { kid: kid ? kid.id : null, room: r.i }, sessionStorage);
     $('#fade-text').textContent = `${r.room.n}반 ${r.room.short} 교실로 가는 중…`;
@@ -1714,7 +1759,7 @@
   const soundDebug = /[?&]sound\b/.test(location.search);
   const unlockAudio = (e) => {
     SFX.unlock();
-    if (soundDebug) setTimeout(() => toast('소리 점검', `${e.type} → ${SFX.state} · ${SFX.on ? '켬' : '끔'} · ${navigator.userAgent.match(/Version\/[\d.]+/) || ''}`), 150);
+    if (soundDebug) setTimeout(() => toast('소리 점검', `${e.type} → ${SFX.info} · ${SFX.on ? '켬' : '끔'} · ${navigator.userAgent.match(/Version\/[\d.]+/) || ''}`), 150);
   };
   unlockEvents.forEach((t) => addEventListener(t, unlockAudio, true));
 
@@ -1765,7 +1810,7 @@
   });
   addEventListener('keyup', (e) => { const dir = KEYMAP[e.key]; if (dir) keys.delete(dir); if (e.key === 'Shift') keys.delete('run'); });
   addEventListener('blur', () => { keys.clear(); padDirs.clear(); });
-  document.addEventListener('visibilitychange', () => { keys.clear(); padDirs.clear(); });
+  document.addEventListener('visibilitychange', () => { keys.clear(); padDirs.clear(); if (!document.hidden) syncGame(); });
 
   // Enter·A: 대화창이 떠 있으면 사이트로, 아니면 가까운 문·선생님·학생에게 말을 건다
   function interact() {
@@ -1868,6 +1913,7 @@
   addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     leaving = false;
+    syncGame(); SFX.stale();
     $('#fade').hidden = true;
     closeDialog();
     const st = load('pixelSchool', sessionStorage);
