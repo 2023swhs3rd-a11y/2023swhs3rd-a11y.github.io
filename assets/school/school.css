@@ -91,7 +91,11 @@ main { display: flex; flex-direction: column; align-items: center; }
 }
 .toast b { color: #c2283c; margin-right: 4px; }
 .stars { position: absolute; left: 6px; bottom: 6px; z-index: 2; padding: 2px 8px; background: var(--ink); color: var(--gold); border: 2px solid var(--gold); font-size: 11px; }
-.stars[hidden], .toast[hidden] { display: none; }
+.stars[hidden], .toast[hidden], .quest[hidden], .newmark[hidden] { display: none; }
+.quest { position: absolute; left: 6px; bottom: 34px; z-index: 2; max-width: 46%; padding: 2px 8px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 11px; line-height: 1.4; word-break: keep-all; }
+.newmark { position: absolute; transform: translate(-50%, -100%); z-index: 1; padding: 0 3px; background: #e0475a; color: #fff; border: 2px solid #2b1d2e; font-size: max(9px, calc(var(--sign, 9px) * .8)); line-height: 1.2; letter-spacing: .5px; }
+@media (prefers-reduced-motion: no-preference) { .newmark { animation: blinknew 1s steps(2) infinite; } }
+@keyframes blinknew { 50% { background: #ffd36b; color: #2b1d2e; } }
 .hud-row { position: absolute; right: 6px; bottom: 6px; z-index: 2; display: flex; gap: 6px; }
 .hud {
   padding: 3px 8px; border: 2px solid var(--ink); border-radius: 0;

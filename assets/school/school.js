@@ -376,7 +376,7 @@
   }
 
   /* ───────── 배경(교실·복도는 한 번만 그려 둔다) ───────── */
-  let R = null, gctx = null, L_signs = [];
+  let R = null, gctx = null, L_signs = [], L_glass = [];
   // 16비트 느낌을 지키려고 모든 칠하기를 정수 픽셀에 맞춘다
   function useCtx(g) {
     gctx = g;
@@ -394,6 +394,7 @@
     const g = cv.getContext('2d');
     useCtx(g);
     L_signs = L.signs;
+    L_glass = L.hallGlass = [];
     const h = L.hall;
     // 복도 바닥: 반질반질한 타일
     for (let y = h.y; y < h.y + h.h; y += 8) for (let x = h.x; x < h.x + h.w; x += 8) {
@@ -447,6 +448,7 @@
       R(x, y, 0.5, h, C.wallHi);
       const gy = y + 5, gh = h - 10;
       R(x + 1, gy - 1, 4, gh + 2, C.frame); R(x + 1.5, gy, 3, gh, C.glass);
+      L_glass.push({ x: x + 1.5, y: gy, w: 3, h: gh / 2 - 0.5, v: true }, { x: x + 1.5, y: gy + gh / 2 + 0.5, w: 3, h: gh / 2 - 0.5, v: true });
       R(x + 1.5, gy + gh / 2 - 0.5, 3, 1, C.frame);
       R(x + 2, gy + 2, 1, 5, C.glassHi); R(x + 2, gy + gh / 2 + 3, 1, 4, C.glassHi);
       R(x - 1, gy, 1, gh, C.frameHi);
@@ -456,6 +458,7 @@
       R(x, y, w, 0.5, C.wallHi);
       const gx = x + 6, gw = w - 12;
       R(gx - 1, y + 1, gw + 2, 4, C.frame); R(gx, y + 1.5, gw, 3, C.glass);
+      L_glass.push({ x: gx, y: y + 1.5, w: gw / 2 - 0.5, h: 3 }, { x: gx + gw / 2 + 0.5, y: y + 1.5, w: gw / 2 - 0.5, h: 3 });
       R(gx + gw / 2 - 0.5, y + 1.5, 1, 3, C.frame);
       R(gx + 2, y + 2, 5, 1, C.glassHi); R(gx + gw / 2 + 3, y + 2, 4, 1, C.glassHi);
       R(gx, y - 1, gw, 1, C.frameHi);
@@ -876,14 +879,16 @@
     function unlock() {
       // 맥 사파리는 켜 둔 오디오를 나중에 스스로 멈출 때가 있어서, 누를 때마다 확인한다(켜져 있으면 아무것도 안 함)
       if (ac && ac.state === 'running') return;
-      // 눌렀는데도 켜지지 않은 채 남은 오디오는 버리고, 이번 누름 안에서 새로 만든다
-      if (ac && ac.state !== 'running' && ac.__tried && performance.now() - ac.__tried > 1000) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
+      // 지난번 누름에서 깨워 봤는데도 멈춘 채(suspended·interrupted)라면 버리고, 이번 누름 안에서 새로 만든다.
+      // 처음엔 잘 켜졌다가 나중에(탭 전환·잠자기·다른 소리) 멈춘 오디오도 여기서 다시 살아난다.
+      if (ac && ac.__stale) { try { ac.close(); } catch (e) { /* 무시 */ } ac = null; noiseBuf = null; }
       const a = ctx(true); if (!a) return;
-      if (a.state !== 'running' && !a.__tried) a.__tried = performance.now();
       try {
         const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource();
         s.buffer = b; s.connect(a.destination); s.start(0);
       } catch (e) { /* 무시 */ }
+      // 잠깐 기다려도 켜지지 않으면 다음 누름 때 새로 만들도록 표시해 둔다
+      setTimeout(() => { if (a === ac && a.state !== 'running') a.__stale = true; }, 250);
     }
     function tone(freq, t0, dur, type, vol, slide) {
       const a = ctx(); if (!a) return;
@@ -930,6 +935,7 @@
       exit() { seq([784, 659, 523, 392], 0.065, 0.1, 'square', 0.28); noise(0.27, 0.14, 0.28, 1800, 0.8); },
       toggle() { tone(660, 0, 0.06, 'square', 0.3); tone(880, 0.06, 0.08, 'square', 0.3); },
       door() { noise(0, 0.12, 0.25, 2600, 0.9); tone(523, 0.05, 0.07, 'triangle', 0.3); tone(659, 0.11, 0.09, 'triangle', 0.3); },
+      stamp() { noise(0, 0.07, 0.45, 500, 1.2); tone(196, 0, 0.08, 'square', 0.3); tone(784, 0.09, 0.12, 'triangle', 0.4); },
       pickup() { seq([1047, 1319, 1568, 2093], 0.045, 0.08, 'square', 0.3); },
       warn() { tone(880, 0, 0.12, 'square', 0.3); tone(698, 0.14, 0.18, 'square', 0.3); },
       party() { seq([523, 659, 784, 1047, 784, 1047, 1319, 1568], 0.08, 0.12, 'square', 0.3); seq([262, 0, 392, 0, 262, 0, 392, 523], 0.08, 0.14, 'triangle', 0.35); },
@@ -950,6 +956,43 @@
   const padDirs = new Set();
   let dlg = null, armed = null, hoverRoom = null, scale = 2, k = 1, leaving = false, bumpAt = 0, party = 0, clock = 0;
   const found = new Set(load('pixelSchoolStars', localStorage) || []);
+
+  /* ───────── 게임 요소: 출석 도장·심부름·시간대 ───────── */
+  // 출석 도장: 1~6반 교실에 한 번씩 들어가면 도장. 6개를 모으면 진로카페에서 오늘의 음료
+  const stamps = new Set(load('pixelSchoolStamps', localStorage) || []);
+  const DRINKS = ['느긋한 일요일 코코아', '월요병 퇴치 아메리카노', '힘내라 화요 녹차라떼', '수요일의 꿀 유자차', '목요일의 딸기 우유', '불금 바닐라 라떼', '토요일의 초코 프라페'];
+  const dayKey = () => { const d = new Date(); return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate(); };
+  // 심부름: 선생님이 맡긴 물건을 다른 반 선생님께 전하면서 사이트를 하나씩 알게 된다(방 번호 i: 0~5 교실, 6 진로카페)
+  const QUESTS = [
+    { from: 0, to: 3, item: '대입 가이드북', thanks: '마침 읽고 싶던 책이에요. 여기 4반에서는 읽은 책과 문장을 친구들과 나눠요.' },
+    { from: 3, to: 4, item: '독서 감상문 묶음', thanks: '좋은 글이 많네요. 5반에서는 매주 뉴스를 읽고 진로를 넓혀요.' },
+    { from: 4, to: 2, item: '신문 스크랩', thanks: '기사 속 숫자를 그래프로 그려 볼게요. 3반은 경기도 학생수 변화를 보는 교실이에요.' },
+    { from: 2, to: 5, item: '학생수 그래프', thanks: '탐구 주제로 딱이에요. 6반에서는 교과 성취기준으로 탐구 활동을 찾아요.' },
+    { from: 5, to: 1, item: '탐구 활동 보고서', thanks: '훌륭한데요? 2반에는 학년별 진로 자료가 모여 있어요.' },
+    { from: 1, to: 6, item: '진로 상담 신청서', thanks: '…흠, 상담 신청서군요. 수고했어요. 커피는 못 주지만 코코아는 줄 수 있어요.' },
+  ];
+  const quest = Object.assign({ q: 0, active: false }, load('pixelSchoolQuest', localStorage) || {});
+  const saveQuest = () => save('pixelSchoolQuest', quest, localStorage);
+  const roomName = (i) => (i < 6 ? (i + 1) + '반 ' : '진로카페 ') + (L ? L.rooms[i].teacher.name : '');
+  // 받침 있으면 a(을), 없으면 b(를)
+  const josa = (w, a, b) => { const c = w.charCodeAt(w.length - 1) - 0xac00; return w + (c >= 0 && c < 11172 && c % 28 ? a : b); };
+  // 시간대와 요일: 창밖 하늘 색과 선생님 한마디가 바뀐다
+  function skyNow() {
+    const h = new Date().getHours();
+    if (h >= 20 || h < 5) return { top: '#1f2a5a', low: '#33407c', night: true };
+    if (h < 7) return { top: '#f4b8a0', low: '#ffe1bf' };
+    if (h >= 17) return { top: '#ff9a62', low: '#ffd08a' };
+    return null; // 낮: 그려 둔 파란 하늘 그대로
+  }
+  function timeLine(r) {
+    const d = new Date(), h = d.getHours(), wd = d.getDay();
+    if (wd === 1 && r.i === 4) return '월요일! 새 뉴스가 왔어요';
+    if (h >= 19 || h < 6) return r.i === 6 ? '이 시간까지? …얼른 집에 가요' : '늦었네요, 오늘은 여기까지!';
+    if (wd === 0 || wd === 6) return '주말에도 들렀네요? 대단해요!';
+    if (wd === 5) return '금요일이에요, 조금만 더 힘내요!';
+    if (h < 9) return '좋은 아침이에요!';
+    return null;
+  }
   const said = new Set();
 
   function choosePortrait() { return innerWidth < 700 && innerHeight > innerWidth * 1.05; }
@@ -978,9 +1021,20 @@
       labels.appendChild(el);
       r.bubbleEl = el;
     }
+    // 일주일 안에 업데이트된 교실 문 위에 NEW!
+    for (const r of L.rooms) {
+      if (!r.room.el) continue;
+      const gp = r.door.gap, el = document.createElement('div');
+      el.className = 'newmark'; el.textContent = 'NEW!'; el.hidden = true;
+      const x = gp.x + gp.w / 2, y = r.door.side === 'N' ? gp.y + 4 : gp.y - 1;
+      Object.assign(el.style, { left: (x / L.W) * 100 + '%', top: (y / L.H) * 100 + '%' });
+      labels.appendChild(el);
+      r.newEl = el;
+    }
     for (const sg of L.signs) put('sign' + (sg.dark ? ' dark' : ''), sg.text, sg.x, sg.y, sg.w, sg.h - 1);
     if (prevRoom != null) placeAtDoor(prevRoom);
     else placeCenter();
+    paintQuest();
   }
   function placeCenter() {
     const h = L.walkHall;
@@ -1164,7 +1218,12 @@
   function updateBubbles() {
     for (const r of L.rooms) {
       if (!r.bubbleEl) continue;
-      const list = r.room.special ? specialOf(r).bubble : r.teacher.bubble;
+      let list = r.room.special ? specialOf(r).bubble : r.teacher.bubble;
+      const tl = timeLine(r), Q = QUESTS[quest.q];
+      if (Q && quest.active && Q.to === r.i) list = ['혹시 ' + Q.item + ' 가져왔어요?'];
+      else if (Q && !quest.active && Q.from === r.i) list = ['부탁할 게 있어요!'];
+      else if (r.room.key === 'cafe' && stamps.size >= 6 && load('pixelSchoolDrink', localStorage) !== dayKey()) list = ['도장 6개? …이리 와 봐요'];
+      else if (tl) list = [tl, ...list];
       const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
       if (near && list) {
         const text = list[Math.floor(clock / 4) % list.length];
@@ -1173,8 +1232,13 @@
       if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
     }
   }
+  function updateNew() {
+    for (const r of L.rooms) if (r.newEl) { const f = !!r.room.el.querySelector('.upd.fresh'); if (r.newEl.hidden === f) r.newEl.hidden = !f; }
+  }
+  let newTick = 0;
   function update(dt) {
     updateBubbles();
+    if ((newTick += dt) > 1) { newTick = 0; updateNew(); }
     if (party > 0) party -= dt;
     if (mode !== 'play' || leaving || memoOpen) { P.moving = false; return; }
     let dx = 0, dy = 0;
@@ -1221,6 +1285,7 @@
       if (nowRoom && !P.room) SFX.door();
       if (!nowRoom && P.room && inHall) SFX.exit();
       if (!nowRoom && !inHall) { /* 문턱 */ } else P.room = nowRoom;
+      if (nowRoom) addStamp(nowRoom);
     }
     // 계단 끝
     // 계단 가까이 가면 한마디(멀어졌다 다시 오면 또)
@@ -1332,6 +1397,25 @@
       } });
     }
     list.sort((a, b) => a.y - b.y).forEach((it) => it.fn());
+    // 시간대에 맞춘 창밖 하늘(저녁 노을, 밤하늘)
+    const sky = skyNow();
+    if (sky) {
+      if (sky.night) { g.fillStyle = 'rgba(16,20,60,0.3)'; g.fillRect(0, 0, L.W, L.H); }
+      const paint = (x, y, w, h, vertical) => {
+        R(x, y, w, h, sky.top);
+        if (vertical) R(x + w - 1, y, 1, h, sky.low); else R(x, y + h - Math.min(4, h / 3), w, Math.min(4, h / 3), sky.low);
+        if (sky.night) for (let k = 0; k < Math.max(1, (w * h) / 40); k++) {
+          const sx = x + Math.floor(hash(x + k, y) * w), sy = y + Math.floor(hash(y, x + k * 7) * h * 0.7);
+          if ((Math.floor(clock * 1.5) + k) % 5) R(sx, sy, 1, 1, '#fff6c0');
+        }
+      };
+      for (const r of L.rooms) if (r.window) {
+        const w = r.window;
+        paint(w.x, w.y, w.w, w.h, false);
+        R(w.x + w.w / 2 - 0.5, w.y, 1, w.h, '#ffffff'); R(w.x, w.y + w.h / 2 - 0.5, w.w, 1, '#ffffff');
+      }
+      for (const gl of L.hallGlass || []) paint(gl.x, gl.y, gl.w, gl.h, gl.v);
+    }
     // 커피 머신 김
     for (const r of L.rooms) {
       if (!r.machine || reduceMotion) continue;
@@ -1408,9 +1492,25 @@
   }
   const starsEl = $('#stars');
   function paintStars() {
-    starsEl.hidden = found.size === 0;
-    starsEl.textContent = '★ ' + found.size + '/3';
-    starsEl.title = '찾은 별 스티커';
+    starsEl.hidden = found.size === 0 && stamps.size === 0;
+    starsEl.textContent = [found.size ? '★ ' + found.size + '/3' : '', stamps.size ? '도장 ' + stamps.size + '/6' : ''].filter(Boolean).join(' · ');
+    starsEl.title = '찾은 별 스티커 · 출석 도장';
+    paintQuest();
+  }
+  function paintQuest() {
+    const questEl = $('#quest');
+    if (!questEl || !L) return;
+    const Q = QUESTS[quest.q];
+    questEl.hidden = false;
+    questEl.textContent = !Q ? '심부름 모두 끝! 고마워요'
+      : quest.active ? `심부름: ${Q.item} → ${roomName(Q.to)}` : `심부름: ${roomName(Q.from)}께 말 걸기`;
+  }
+  function addStamp(r) {
+    if (!r || r.room.special || stamps.has(r.i)) return;
+    stamps.add(r.i); save('pixelSchoolStamps', [...stamps], localStorage);
+    SFX.stamp();
+    toast('출석 도장 쾅!', stamps.size < 6 ? `${r.room.n}반 ${r.room.short} 교실 (${stamps.size}/6)` : '6개 완성! 진로카페 쿠리만쥬 쌤에게 가 보세요');
+    paintStars();
   }
 
   /* ───────── 대화창 ───────── */
@@ -1429,10 +1529,28 @@
     $('#dlg-upd').textContent = room.el && room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
     const me = kid ? kid.name : '친구';
     let face = t, say;
-    if (sp) say = `${t.name}: ${who === 'door' ? `어서 와요, ${me}! ` : ''}${specialTalk(sp)}`;
+    const tl = timeLine(r), Q = QUESTS[quest.q];
+    if (who !== 'student' && Q && quest.active && Q.to === r.i) {
+      // 심부름 완료
+      say = `${t.name}: 아, ${Q.item}! 고마워요, ${me}. ${Q.thanks}`;
+      quest.q++; quest.active = false; saveQuest(); SFX.pickup();
+      setTimeout(() => toast('심부름 완료!', QUESTS[quest.q] ? `다음 심부름은 ${roomName(QUESTS[quest.q].from)}께` : '모든 심부름을 끝냈어요. 최고!'), 400);
+      paintQuest();
+    } else if (who !== 'student' && Q && !quest.active && Q.from === r.i) {
+      // 심부름 받기
+      say = `${t.name}: ${me}, 부탁 하나 해도 될까요? 이 ${josa(Q.item, '을', '를')} ${roomName(Q.to)}께 전해 주세요.`;
+      quest.active = true; saveQuest(); paintQuest();
+    } else if (sp && room.key === 'cafe' && stamps.size >= 6 && load('pixelSchoolDrink', localStorage) !== dayKey()) {
+      // 출석 도장 6개 보상: 오늘의 음료
+      const drink = DRINKS[new Date().getDay()];
+      say = `${t.name}: …도장 6개를 다 모았네요. 흥, 대단하진 않지만. 자, 오늘의 음료 "${drink}". 식기 전에 마셔요.`;
+      save('pixelSchoolDrink', dayKey(), localStorage); SFX.party();
+      setTimeout(() => toast('오늘의 음료', `${josa(drink, '을', '를')} 받았어요!`), 400);
+    }
+    else if (sp) say = `${t.name}: ${who === 'door' ? `어서 와요, ${me}! ` : ''}${specialTalk(sp)}`;
     else if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`; }
-    else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${t.say}`;
-    else say = `${t.name}: 어서 와요, ${me}! 여기는 ${room.n}반 ${room.short} 교실이에요.`;
+    else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${tl ? tl + ' ' : ''}${t.say}`;
+    else say = `${t.name}: 어서 와요, ${me}! ${tl ? tl + ' ' : ''}여기는 ${room.n}반 ${room.short} 교실이에요.`;
     $('#dlg-face').replaceChildren(faceCanvas(face));
     $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
     const el = $('#dlg-say');
@@ -1474,6 +1592,7 @@
     if (leaving) return;
     if (r.room.special) { openDialog(r, 'teacher'); return; } // 사이트가 없는 칸: Enter를 누르면 다음 이야기
     leaving = true;
+    if (!stamps.has(r.i)) { stamps.add(r.i); save('pixelSchoolStamps', [...stamps], localStorage); }
     SFX.enter();
     save('pixelSchool', { kid: kid ? kid.id : null, room: r.i }, sessionStorage);
     $('#fade-text').textContent = `${r.room.n}반 ${r.room.short} 교실로 가는 중…`;
@@ -1770,5 +1889,6 @@
     walk: (x, y) => walkTo(x, y),
     state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, audio: SFX.state, stars: found.size, room: P.room && P.room.i }),
     layout: () => L,
+    game: () => ({ stamps: [...stamps], quest: { ...quest }, sky: skyNow() }),
   };
 })();
