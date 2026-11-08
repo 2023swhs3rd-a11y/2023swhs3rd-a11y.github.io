@@ -763,9 +763,53 @@
       } });
       // 상담 선생님은 소파 옆에 선다
       r.tpos = { x: sx - 7, y: sy + 14 };
+      // 위클래스 강아지: 깔개 위, 문·탁자에서 먼 자리에 앉아 있다
+      const spots = [{ x: f.x + 24, y: f.y + f.h - 16 }, { x: f.x + Math.round(f.w / 2), y: f.y + f.h - 14 }, { x: f.x + 18, y: f.y + 34 }, { x: f.x + f.w - 26, y: f.y + f.h - 16 }]
+        .filter((q) => Math.hypot(q.x - e.x, q.y - e.y) > 22 && !cs.some((c) => Math.abs(q.x - (c.x + 6)) < 14 && Math.abs(q.y - (c.y + 6)) < 10));
+      if (spots.length) {
+        const dg = r.dog = spots[0];
+        L.obst.push({ x: dg.x - 6, y: dg.y - 4, w: 12, h: 4 });
+        L.things.push({ y: dg.y, fn: () => drawDog(dg) });
+      }
     }
     L.obst.push({ x: r.tpos.x - 4, y: r.tpos.y - 4, w: 8, h: 5 });
   }
+
+  // 강아지 '콩이'(12×11): o 테두리, E 귀·꼬리, W 털, P 얼룩, e 눈, n 코, m 혀
+  const DOG = ['.oo......oo.', 'oEEooooooEEo', 'oEEWWWWWWEEo', '.oWWWWWWWWo.', '.oWeWWWWeWo.', '.oWWWnnWWWo.',
+    '..oWWmmWWo..', '..oPWWWWWo..', '..oPWWWWWo..', '..oWoWWoWo..', '..oooooooo..'];
+  const DOGPAL = { o: '#2b1d2e', E: '#b5835a', W: '#fff4e0', P: '#e8c49a', e: '#2b1d2e', n: '#2b1d2e', m: '#ff8fa3' };
+  const dogCache = new Map();
+  function dogSprite(happy, wag, blink) {
+    const key = `${happy}${wag}${blink}`;
+    if (dogCache.has(key)) return dogCache.get(key);
+    const c = document.createElement('canvas'); c.width = 12; c.height = 11;
+    const x = c.getContext('2d');
+    DOG.forEach((row, j) => [...row].forEach((ch, i) => {
+      let col = DOGPAL[ch];
+      if (ch === 'm' && !happy) col = DOGPAL.W;
+      if (ch === 'e' && blink) col = j === 4 ? '#b5835a' : col;
+      if (!col) return;
+      x.fillStyle = col; x.fillRect(i, j, 1, 1);
+    }));
+    // 꼬리: 신나면 위아래로 흔든다
+    x.fillStyle = DOGPAL.E; x.fillRect(10, 8, 1, 1); x.fillRect(11, wag ? 6 : 8, 1, 2);
+    dogCache.set(key, c);
+    return c;
+  }
+  function drawDog(dg) {
+    const near = mode === 'play' && Math.hypot(P.x - dg.x, P.y - dg.y) < 34;
+    const wag = !reduceMotion && Math.floor(clock * (near ? 8 : 1.5)) % 2 === 0;
+    const bob = near && !reduceMotion && Math.floor(clock * 4) % 2 ? -1 : 0;
+    shadowAt(dg.x, dg.y, 10);
+    g.drawImage(dogSprite(near, wag, blinking(5)), rnd(dg.x - 6), rnd(dg.y - 11 + bob + hop(4)));
+    if (near && !reduceMotion && Math.floor(clock * 2) % 2) { // 작은 하트
+      const hx = rnd(dg.x + 4), hy = rnd(dg.y - 16);
+      R(hx, hy, 1, 1, '#ff6f91'); R(hx + 2, hy, 1, 1, '#ff6f91'); R(hx - 0, hy + 1, 3, 1, '#ff6f91'); R(hx + 1, hy + 2, 1, 1, '#ff6f91');
+    }
+  }
+  const DOG_LINES = ['멍! 위클래스 강아지 콩이가 꼬리를 흔든다', '콩이가 손바닥에 코를 콕 댄다. 마음이 조금 말랑해졌다', '콩이가 "멍멍!" 하고 반겨 준다. 오늘도 수고했다는 뜻 같다', '콩이가 배를 보이며 벌러덩 눕는다'];
+  let dogN = 0;
 
   function roomWalls(r, L) {
     const room = r.room, d = r.door;
@@ -978,6 +1022,7 @@
       party: () => { seq([523, 659, 784, 1047, 784, 1047, 1319, 1568], 0.08, 0.12, 'square', 0.3); seq([262, 0, 392, 0, 262, 0, 392, 523], 0.08, 0.14, 'triangle', 0.35); },
       ok: () => seq([659, 880, 1319], 0.07, 0.12, 'square', 0.3),
       no: () => { tone(330, 0, 0.14, 'square', 0.28, 0.7); tone(262, 0.15, 0.2, 'square', 0.28, 0.7); },
+      bark: () => { tone(700, 0, 0.07, 'square', 0.3, 0.6); tone(640, 0.11, 0.09, 'square', 0.28, 0.55); },
     };
 
     // 맥 사파리: 시험해 보니 Web Audio로 직접 내는 소리는 들리지 않고 audio 태그 소리만 들렸다(2026-11 Safari 27).
@@ -988,9 +1033,9 @@
       /Macintosh/.test(ua) && /Version\/[\d.]+.*Safari/.test(ua) && !/Chrome|Chromium|Edg|Firefox/.test(ua) && !(navigator.maxTouchPoints > 1));
     const pools = {};
     let primed = false, played = 0, failed = 0;
-    function wavURL(buf) {
+    function wavURL(buf, full) {
       const d = buf.getChannelData(0), sr = buf.sampleRate;
-      let end = d.length; while (end > 1 && Math.abs(d[end - 1]) < 1e-4) end--;
+      let end = d.length; while (!full && end > 1 && Math.abs(d[end - 1]) < 1e-4) end--;
       const n = Math.min(d.length, end + Math.floor(sr * 0.02));
       const bytes = new Uint8Array(44 + n * 2), v = new DataView(bytes.buffer);
       const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
@@ -1041,13 +1086,80 @@
     }
     if (MEDIA) renderAll();
     const fx = (name) => () => { if (!(MEDIA && playMedia(name))) FX[name](); };
+
+    // 배경 음악: 16초짜리 8마디 칩튠(직접 지은 곡, C–Am–F–G)을 한 번 소리 파일로 만들어 반복 재생한다.
+    // 기본은 꺼 두고, 켜면 이 창(탭)에서는 켜 둔 채로 기억한다.
+    const BEAT = 0.25, BARS = 8, BGM_LEN = BARS * 8 * BEAT;
+    const NOTE = (n) => 440 * Math.pow(2, ({ C: -9, D: -7, E: -5, F: -4, G: -2, A: 0, B: 2 }[n[0]] + (+n[1] - 4) * 12) / 12);
+    const MELODY = [
+      [['E5', 1], ['G5', 1], ['C6', 2], ['B5', 1], ['A5', 1], ['G5', 2]],
+      [['A5', 2], ['E5', 1], ['G5', 1], ['A5', 2], ['C6', 2]],
+      [['C6', 1], ['A5', 1], ['F5', 2], ['G5', 1], ['A5', 1], ['F5', 2]],
+      [['D5', 2], ['G5', 2], ['B5', 3], [null, 1]],
+      [['E5', 1], ['G5', 1], ['C6', 2], ['D6', 1], ['C6', 1], ['B5', 2]],
+      [['A5', 1], ['B5', 1], ['C6', 2], ['E5', 2], ['A5', 2]],
+      [['F5', 1], ['A5', 1], ['C6', 1], ['A5', 1], ['G5', 1], ['B5', 1], ['D6', 2]],
+      [['C6', 4], ['G5', 2], ['E5', 2]],
+    ];
+    const BASS = [['C3', 'G3'], ['A2', 'E3'], ['F2', 'C3'], ['G2', 'D3'], ['C3', 'G3'], ['A2', 'E3'], ['F2', 'G2'], ['C3', 'G3']];
+    function song() {
+      MELODY.forEach((bar, b) => {
+        let t = b * 8 * BEAT;
+        for (const [n, len] of bar) { if (n) tone(NOTE(n), t, len * BEAT * 0.9, 'square', 0.09); t += len * BEAT; }
+        for (let q = 0; q < 4; q++) tone(NOTE(BASS[b][q % 2]), b * 8 * BEAT + q * 2 * BEAT, BEAT * 1.6, 'triangle', 0.28);
+        for (let h = 0; h < 8; h++) noise(b * 8 * BEAT + h * BEAT, 0.03, h % 2 ? 0.08 : 0.04, 7000, 1);
+      });
+    }
+    let bgmBuf = null, bgmEl = null, bgmSrc = null, bgmBusy = false;
+    let bgmWant = load('pixelSchoolBgm', sessionStorage) === true;
+    async function renderBgm() {
+      const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (!OAC || bgmBuf || bgmBusy) return;
+      bgmBusy = true;
+      try {
+        const oc = new OAC(1, Math.floor(22050 * BGM_LEN), 22050);
+        target = oc; tmaster = oc.createGain(); tmaster.gain.value = 0.3; tmaster.connect(oc.destination);
+        noiseBuf = null; song();
+        target = null; tmaster = null; noiseBuf = null;
+        bgmBuf = await oc.startRendering();
+        if (MEDIA) { bgmEl = new Audio(wavURL(bgmBuf, true)); bgmEl.loop = true; bgmEl.preload = 'auto'; }
+      } catch (e) { target = null; tmaster = null; noiseBuf = null; }
+      bgmBusy = false;
+      if (bgmWant) bgmStart();
+    }
+    function bgmStart() {
+      if (!on || !bgmWant) return;
+      if (!bgmBuf) { renderBgm(); return; }
+      if (MEDIA && bgmEl && !bgmEl.__bad) {
+        if (!bgmEl.paused) return;
+        const p = bgmEl.play();
+        // 누르기 전이라 거절된 것(NotAllowedError)은 다음 누름 때 다시, 그 밖의 거절은 Web Audio로
+        if (p && p.catch) p.catch((e) => { if (e && e.name === 'NotAllowedError') return; bgmEl.__bad = true; bgmStart(); });
+        return;
+      }
+      const a = ctx(); if (!a || (bgmSrc && bgmSrc.__ac === a)) return;
+      bgmStop();
+      const s = a.createBufferSource(); s.buffer = bgmBuf; s.loop = true;
+      s.connect(a.destination); s.__ac = a; s.start(); bgmSrc = s;
+    }
+    function bgmStop() {
+      if (bgmEl) bgmEl.pause();
+      if (bgmSrc) { try { bgmSrc.stop(); } catch (e) { /* 무시 */ } bgmSrc = null; }
+    }
+    // 곡은 페이지가 뜨고 조금 뒤에 미리 만들어 둔다(켜는 순간 바로 나오게)
+    setTimeout(renderBgm, 1500);
     function unlockAll() {
       if (MEDIA && !primed) { primed = true; Object.values(pools).forEach((pl) => pl.forEach(prime)); }
       unlock();
+      if (bgmWant) bgmStart();
     }
     return {
       get on() { return on; },
-      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlockAll(); },
+      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlockAll(); else bgmStop(); },
+      get bgm() { return bgmWant; },
+      setBgm(v) { bgmWant = v; save('pixelSchoolBgm', v, sessionStorage); if (v) { if (!on) this.set(true); unlockAll(); } else bgmStop(); },
+      pauseBgm() { bgmStop(); },
+      get bgmPlaying() { return MEDIA && bgmEl && !bgmEl.__bad ? !bgmEl.paused : !!(bgmSrc && ac && bgmSrc.__ac === ac && ac.state === 'running'); },
       unlock: unlockAll,
       // 뒤로 가기로 돌아온 페이지(bfcache)는 오디오가 멈춰 있을 수 있어 다음 누름 때 새로 만든다
       stale() { if (ac && ac.state !== 'running') ac.__stale = true; },
@@ -1056,7 +1168,7 @@
       get played() { return played; },
       step(alt) { fx(alt ? 'step1' : 'step0')(); },
       bump: fx('bump'), move: fx('move'), select: fx('select'), chime: fx('chime'), type: fx('type'), enter: fx('enter'), exit: fx('exit'),
-      toggle: fx('toggle'), door: fx('door'), stamp: fx('stamp'), pickup: fx('pickup'), warn: fx('warn'), party: fx('party'), ok: fx('ok'), no: fx('no'),
+      toggle: fx('toggle'), door: fx('door'), stamp: fx('stamp'), pickup: fx('pickup'), warn: fx('warn'), party: fx('party'), ok: fx('ok'), no: fx('no'), bark: fx('bark'),
     };
   })();
 
@@ -1220,6 +1332,13 @@
     const cssW = Math.floor(L.W * scale), cssH = Math.floor(L.H * scale);
     stage.style.width = cssW + 8 + 'px';
     stage.style.height = cssH + 8 + 'px';
+    // 화면이 좁으면(세로 휴대폰) 버튼 줄과 별 개수를 게임 화면 바로 아래로 뺀다: 화면 안에서는 버튼이 넘치거나 교실을 가린다
+    const out = cssW < 460;
+    if (out !== document.body.classList.contains('hud-out')) {
+      document.body.classList.toggle('hud-out', out);
+      if (out) hudbar.append(starsEl, hudRow); else stage.insertBefore(hudRow, menu), stage.insertBefore(starsEl, hudRow);
+    }
+    hudbar.style.width = cssW + 8 + 'px';
     k = Math.max(1, Math.ceil(scale * (devicePixelRatio || 1)));
     screen.width = L.W * k; screen.height = L.H * k;
     stage.style.setProperty('--chalk', Math.max(9, Math.min(22, Math.round(scale * 5.4))) + 'px');
@@ -1451,6 +1570,13 @@
       if (dv < 14 && !said.has('vend')) { said.add('vend'); SFX.chime(); toast(kid ? kid.name : '나', VEND_LINES[vendN++ % VEND_LINES.length]); }
       else if (dv > 30) said.delete('vend');
     }
+    // 위클래스 강아지
+    const dogR = L.rooms.find((r) => r.dog);
+    if (dogR) {
+      const dd = Math.hypot(P.x - dogR.dog.x, P.y - dogR.dog.y);
+      if (dd < 16 && !said.has('dog')) { said.add('dog'); SFX.bark(); toast(kid ? kid.name : '나', DOG_LINES[dogN++ % DOG_LINES.length]); }
+      else if (dd > 34) said.delete('dog');
+    }
     // 복도 끝 창문 가까이 가면 한마디
     const winGap = !L.window || !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? L.walkHall.y + L.walkHall.h - P.y : L.walkHall.x + L.walkHall.w - P.x;
     if (winGap < 8 && !said.has('window')) { said.add('window'); SFX.bump(); toast(kid ? kid.name : '나', '창문에 기대면 안 되겠지…'); }
@@ -1657,11 +1783,13 @@
     toastEl.replaceChildren();
     const b = document.createElement('b'); b.textContent = who;
     toastEl.append(b, document.createTextNode(' ' + text));
+    // 대화창이 떠 있으면 그 위(화면 가운데)에, 아니면 화면 아래에 띄운다
+    toastEl.classList.toggle('up', [...document.querySelectorAll('.dialog')].some((d) => !d.hidden));
     toastEl.hidden = false;
     clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => { toastEl.hidden = true; }, 3200);
+    toastTimer = setTimeout(() => { toastEl.hidden = true; }, Math.max(3200, (who.length + text.length) * 110));
   }
-  const starsEl = $('#stars');
+  const starsEl = $('#stars'), hudbar = $('#hudbar'), hudRow = $('#hud-row');
   function paintStars() {
     starsEl.hidden = found.size === 0 && stamps.size === 0;
     starsEl.textContent = [found.size ? '★ ' + found.size + '/3' : '', stamps.size ? '도장 ' + stamps.size + '/6' : ''].filter(Boolean).join(' · ');
@@ -1958,6 +2086,14 @@
     soundBtn.classList.toggle('off', !SFX.on);
   }
   soundBtn.addEventListener('click', (e) => { e.stopPropagation(); SFX.set(!SFX.on); paintSound(); SFX.toggle(); });
+  const bgmBtn = $('#bgm');
+  function paintBgm() {
+    bgmBtn.textContent = SFX.bgm ? '♫ 음악 켬' : '♫ 음악 끔';
+    bgmBtn.setAttribute('aria-pressed', SFX.bgm ? 'true' : 'false');
+    bgmBtn.classList.toggle('off', !SFX.bgm);
+  }
+  bgmBtn.addEventListener('click', (e) => { e.stopPropagation(); SFX.setBgm(!SFX.bgm); paintBgm(); paintSound(); SFX.toggle(); });
+  paintBgm();
   paintSound();
   const unlockEvents = ['pointerdown', 'pointerup', 'touchend', 'click', 'keydown'];
   // 주소 끝에 ?sound 를 붙이면 누를 때마다 오디오 상태를 보여 준다(소리 문제 확인용)
@@ -1975,7 +2111,7 @@
   let konami = 0;
   function gameHasFocus() {
     const a = document.activeElement;
-    return a === document.body || a === stage || (stage.contains(a) && !menu.contains(a));
+    return a === document.body || a === stage || hudbar.contains(a) || (stage.contains(a) && !menu.contains(a));
   }
   function openByNumber(n) {
     const r = L.rooms[n - 1];
@@ -2019,7 +2155,8 @@
   });
   addEventListener('keyup', (e) => { const dir = KEYMAP[e.key]; if (dir) keys.delete(dir); if (e.key === 'Shift') keys.delete('run'); });
   addEventListener('blur', () => { keys.clear(); padDirs.clear(); });
-  document.addEventListener('visibilitychange', () => { keys.clear(); padDirs.clear(); if (!document.hidden) syncGame(); });
+  document.addEventListener('visibilitychange', () => { keys.clear(); padDirs.clear(); if (document.hidden) SFX.pauseBgm(); else syncGame(); });
+  addEventListener('pagehide', () => SFX.pauseBgm());
 
   // Enter·A: 대화창이 떠 있으면 사이트로, 아니면 가까운 문·선생님·학생에게 말을 건다
   function interact() {
@@ -2143,7 +2280,7 @@
   window.pixelSchool = {
     go: (n) => { const r = L.rooms[n - 1]; walkTo(r.door.entry.x, r.door.entry.y); },
     walk: (x, y) => walkTo(x, y),
-    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, audio: SFX.state, played: SFX.played, info: SFX.info, stars: found.size, room: P.room && P.room.i }),
+    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, bgm: SFX.bgm, bgmPlaying: SFX.bgmPlaying, audio: SFX.state, played: SFX.played, info: SFX.info, stars: found.size, room: P.room && P.room.i }),
     layout: () => L,
     game: () => ({ stamps: [...stamps], quest: { ...quest }, sky: skyNow() }),
   };

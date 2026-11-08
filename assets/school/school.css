@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=17") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=18") format("woff2");
   font-display: swap;
 }
 
@@ -63,6 +63,15 @@ main { display: flex; flex-direction: column; align-items: center; }
   touch-action: none;
   user-select: none; -webkit-user-select: none; -webkit-tap-highlight-color: transparent;
 }
+.stage { --hud-h: 40px; }
+body.touch .stage { --hud-h: 48px; }
+/* 좁은 화면: 버튼 줄은 게임 화면 바로 아래 */
+.hudbar { display: none; }
+body.hud-out .stage { --hud-h: 8px; }
+body.hud-out .hudbar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 6px; max-width: 100%; margin-top: 12px; }
+body.hud-out .hudbar .stars, body.hud-out .hudbar .hud-row { position: static; }
+body.hud-out .hudbar .hud-row { flex-wrap: wrap; justify-content: flex-end; margin-left: auto; }
+body.hud-out .quest { bottom: 6px; }
 .stage:focus-visible { border-color: var(--gold); }
 .stage canvas {
   display: block; width: 100%; height: 100%;
@@ -83,17 +92,19 @@ main { display: flex; flex-direction: column; align-items: center; }
   color: #c2283c; font-size: var(--sign, 9px); font-weight: 700; line-height: 1; white-space: nowrap; overflow: hidden; letter-spacing: .02em;
 }
 .sign.dark { color: #4a2a10; }
+/* 메시지창: 화면 아래(대화창과 같은 너비). 대화창이 떠 있을 때는 화면 가운데 */
 .toast {
-  position: absolute; left: 50%; top: 4%; z-index: 3; transform: translateX(-50%);
-  max-width: 88%; padding: 6px 12px;
+  position: absolute; left: 50%; bottom: var(--hud-h); z-index: 4; transform: translateX(-50%);
+  width: min(92%, 560px); box-sizing: border-box; padding: 8px 14px; word-break: keep-all;
   background: var(--paper); color: var(--ink); border: 3px solid var(--ink); border-radius: 4px;
   box-shadow: 3px 3px 0 #00000066; font-size: 12px; line-height: 1.5;
 }
 .toast b { color: #c2283c; margin-right: 4px; }
+.toast.up { bottom: auto; top: 50%; transform: translate(-50%, -50%); }
 .stars { position: absolute; left: 6px; bottom: 6px; z-index: 2; padding: 2px 8px; background: var(--ink); color: var(--gold); border: 2px solid var(--gold); font-size: 11px; }
 .stars[hidden], .toast[hidden], .quest[hidden], .newmark[hidden], .nametag[hidden] { display: none; }
 .nametag { position: absolute; transform: translate(-50%, -100%); z-index: 1; pointer-events: none; padding: 0 4px; background: #2b1d2ecc; color: var(--gold); border: 1px solid var(--gold); font-size: max(9px, calc(var(--sign, 9px) * .75)); line-height: 1.3; white-space: nowrap; }
-.notebook { max-height: 92%; overflow: auto; }
+.notebook { max-height: calc(100% - var(--hud-h) - 8px); overflow: auto; }
 .notebook .note-h { margin: 8px 0 2px; color: var(--gold); }
 .notebook .note-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12px; }
 .notebook .note-list li { display: flex; align-items: center; gap: 6px; }
@@ -104,9 +115,10 @@ main { display: flex; flex-direction: column; align-items: center; }
 .newmark { position: absolute; transform: translate(-50%, -100%); z-index: 1; padding: 0 3px; background: #e0475a; color: #fff; border: 2px solid #2b1d2e; font-size: max(9px, calc(var(--sign, 9px) * .8)); line-height: 1.2; letter-spacing: .5px; }
 @media (prefers-reduced-motion: no-preference) { .newmark { animation: blinknew 1s steps(2) infinite; } }
 @keyframes blinknew { 50% { background: #ffd36b; color: #2b1d2e; } }
-.hud-row { position: absolute; right: 6px; bottom: 6px; z-index: 2; display: flex; gap: 6px; }
+/* 버튼 줄은 맨 아래 오른쪽. 대화창·메시지창은 그 위에 띄워서 버튼을 가리지 않는다(휴대폰에서 학생 바꾸기가 안 눌리던 문제) */
+.hud-row { position: absolute; right: 6px; bottom: 6px; z-index: 5; display: flex; gap: 6px; }
 .hud {
-  padding: 3px 8px; border: 2px solid var(--ink); border-radius: 0;
+  white-space: nowrap; padding: 3px 8px; border: 2px solid var(--ink); border-radius: 0;
   background: var(--paper); color: var(--ink); font: inherit; font-size: 11px; cursor: pointer;
   box-shadow: 2px 2px 0 var(--ink);
 }
@@ -115,8 +127,8 @@ main { display: flex; flex-direction: column; align-items: center; }
 
 /* 대화창 */
 .dialog {
-  position: absolute; left: 50%; bottom: 4%; z-index: 3; transform: translateX(-50%);
-  width: min(92%, 560px);
+  position: absolute; left: 50%; bottom: var(--hud-h); z-index: 3; transform: translateX(-50%);
+  width: min(92%, 560px); max-height: calc(100% - var(--hud-h) - 8px); box-sizing: border-box;
   padding: 10px 14px 12px;
   background: #1f2a5a; color: #fff;
   border: 3px solid #fff; border-radius: 4px;
@@ -236,7 +248,7 @@ body.touch.overlay-pad .top, body.touch.overlay-pad .help { display: none; }
 
 .help { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 16px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 body.touch .help { display: none; }
-body.touch .hud { min-height: 36px; padding: 6px 12px; font-size: 12px; }
+body.touch .hud { min-height: 36px; padding: 6px 9px; font-size: 12px; white-space: nowrap; }
 
 /* 교실 바로가기 */
 .rooms { width: 100%; max-width: 980px; margin-top: 26px; }
