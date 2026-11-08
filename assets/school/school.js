@@ -220,12 +220,27 @@
   ];
   const specialOf = (r) => r && r.room.special ? SPECIAL.find((x) => x.room === r.room) : null;
   const BASEPAL = { e: '#2b1d2e', W: '#ffffff', b: '#ff9fa8', m: '#d0505a', w: '#ffffff', k: '#3b2a24', g: '#8a9cc8', r: '#e0475a', H: '#3a2a20' };
-  [...KIDS, ...TEACHERS, ...SPECIAL.map((x) => x.staff)].forEach((p) => {
+  function finishPal(p) {
     p.pal = { ...BASEPAL, ...p.pal };
     p.pal.l = mix(p.pal.h, '#ffffff', 0.38);
     p.pal.S = mix(p.pal.s, '#a0603a', 0.3);
     p.pal.C = mix(p.pal.c, C.ink, 0.25);
-  });
+    return p;
+  }
+  [...KIDS, ...TEACHERS, ...SPECIAL.map((x) => x.staff)].forEach(finishPal);
+  // 내 캐릭터: 처음 한 번 적은 이름·성별로 만든다(교복 차림, 머리 모양·색은 이름에 따라)
+  const HAIRS = ['#2a2440', '#40322c', '#6a3a26', '#8a5232', '#1f1b2e', '#5a3428'];
+  const SKINS = ['#ffd9b8', '#ffe0c4', '#f7caa0', '#ffd4ae'];
+  function makeMe(name, g) {
+    let h = 7; for (const ch of name) h = (h * 31 + ch.codePointAt(0)) >>> 0;
+    const female = g === 'f';
+    const look = female ? [['long', 'ribbon'], ['pony'], ['bob'], ['buns']][h % 4] : [['spiky'], ['ahoge'], [], ['spiky', 'glasses']][h % 4];
+    return finishPal({ id: `me-${g}-${h % 997}`, me: true, name, gender: g, line: '나', look, skirt: female,
+      pal: { h: HAIRS[h % HAIRS.length], s: SKINS[(h >> 3) % SKINS.length], c: '#2b3a66', w: '#ffffff', t: female ? '#e2475a' : '#c2283c', p: female ? '#4b4f7a' : '#3b4252', r: '#ff6f91' } });
+  }
+  // 이름은 화면 글자로만 쓰지만, 혹시 몰라 꺾쇠·따옴표 같은 기호는 빼고 6자로 자른다
+  function cleanName(v) { return [...String(v || '').replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim()].slice(0, 6).join(''); }
+  let ME = (() => { const m = load('pixelSchoolMe', localStorage); return m && cleanName(m.name) && /^[mf]$/.test(m.g) ? makeMe(cleanName(m.name), m.g) : null; })();
 
   const SPR_W = 18, OX = 2, OY = 3;
   const spriteCache = new Map();
@@ -1225,7 +1240,7 @@
   const quizToday = () => { const d = new Date(), start = new Date(d.getFullYear(), 0, 0); return QUIZ[Math.floor((d - start) / 864e5) % QUIZ.length]; };
   // 친구 도감과 칭호
   const met = new Set(load('pixelSchoolFriends', localStorage) || []);
-  const metCount = () => new Set([...met, kid && kid.id].filter(Boolean)).size;
+  const metCount = () => new Set([...met, kid && kid.id].filter((id) => KIDS.some((k) => k.id === id))).size;
   const TITLES = [
     { id: 'star', name: '별 사냥꾼', how: '별 스티커 3개', ok: () => found.size >= 3 },
     { id: 'tour', name: '진로 탐험가', how: '출석 도장 6개', ok: () => stamps.size >= 6 },
@@ -1325,19 +1340,16 @@
     const overlayPad = isTouch && !portrait && innerHeight < 560;
     document.body.classList.toggle('overlay-pad', overlayPad);
     const availW = Math.min(document.documentElement.clientWidth - 32 - 16, 1200);
-    const reserve = overlayPad ? 24 : isTouch ? 230 : 190;
+    // 화면 아래 상태 줄(메시지창·버튼) 높이만큼 교실 화면을 줄인다
+    hudbar.style.width = Math.min(availW + 8, L.W * 4 + 8) + 'px';
+    const barH = hudbar.offsetHeight + 12;
+    const reserve = (overlayPad ? 24 : isTouch ? 230 : 190) + barH;
     const byW = availW / L.W;
     const byH = (innerHeight - reserve) / L.H;
     scale = Math.max(0.6, Math.min(byW, Math.max(byH, portrait ? byW * 0.8 : 0.6), 4));
     const cssW = Math.floor(L.W * scale), cssH = Math.floor(L.H * scale);
     stage.style.width = cssW + 8 + 'px';
     stage.style.height = cssH + 8 + 'px';
-    // 화면이 좁으면(세로 휴대폰) 버튼 줄과 별 개수를 게임 화면 바로 아래로 뺀다: 화면 안에서는 버튼이 넘치거나 교실을 가린다
-    const out = cssW < 460;
-    if (out !== document.body.classList.contains('hud-out')) {
-      document.body.classList.toggle('hud-out', out);
-      if (out) hudbar.append(starsEl, hudRow); else stage.insertBefore(hudRow, menu), stage.insertBefore(starsEl, hudRow);
-    }
     hudbar.style.width = cssW + 8 + 'px';
     k = Math.max(1, Math.ceil(scale * (devicePixelRatio || 1)));
     screen.width = L.W * k; screen.height = L.H * k;
@@ -1783,8 +1795,6 @@
     toastEl.replaceChildren();
     const b = document.createElement('b'); b.textContent = who;
     toastEl.append(b, document.createTextNode(' ' + text));
-    // 대화창이 떠 있으면 그 위(화면 가운데)에, 아니면 화면 아래에 띄운다
-    toastEl.classList.toggle('up', [...document.querySelectorAll('.dialog')].some((d) => !d.hidden));
     toastEl.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toastEl.hidden = true; }, Math.max(3200, (who.length + text.length) * 110));
@@ -1908,6 +1918,8 @@
     $('#dlg-no kbd').textContent = 'Esc';
     if (dlg.quiz) { $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
     typeSay(say);
+    // 위쪽 교실이면 대화창을 화면 아래에, 아래쪽 교실이면 위에 띄운다
+    dlgEl.classList.toggle('top', r.y + r.h / 2 > L.H / 2);
     dlgEl.hidden = false;
   }
   function typeSay(say) {
@@ -2044,13 +2056,38 @@
     b.addEventListener('focus', () => { if (menu.dataset.ready) SFX.move(); });
     kidsEl.appendChild(b);
   });
+  // 내 캐릭터 만들기: 이름·성별을 고르면 미리보기가 바로 바뀐다
+  const meForm = $('#me-form'), meName = $('#me-name'), meMsg = $('#me-msg'), mePrev = $('#me-preview');
+  const gBtns = [...document.querySelectorAll('.gbtn')];
+  let meG = ME ? ME.gender : null;
+  function paintMe() {
+    gBtns.forEach((b) => b.setAttribute('aria-checked', b.dataset.g === meG ? 'true' : 'false'));
+    const src = personSprite(makeMe(cleanName(meName.value) || '나', meG || 'm'), 'down', 'idle', false);
+    mePrev.width = src.width; mePrev.height = src.height;
+    mePrev.getContext('2d').drawImage(src, 0, 0);
+    mePrev.style.opacity = meG ? 1 : 0.35;
+  }
+  gBtns.forEach((b) => b.addEventListener('click', () => { meG = b.dataset.g; SFX.move(); paintMe(); }));
+  meName.addEventListener('input', paintMe);
+  meForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nm = cleanName(meName.value);
+    if (!nm) { meMsg.textContent = '이름을 한 글자 이상 적어 주세요.'; meMsg.classList.add('err'); SFX.bump(); meName.focus(); return; }
+    if (!meG) { meMsg.textContent = '남학생·여학생 가운데 하나를 골라 주세요.'; meMsg.classList.add('err'); SFX.bump(); return; }
+    meMsg.classList.remove('err');
+    save('pixelSchoolMe', { name: nm, g: meG }, localStorage);
+    ME = makeMe(nm, meG);
+    start(ME);
+  });
   function openMenu() {
     mode = 'menu';
     closeDialog();
     menu.hidden = false;
     $('#change').hidden = true;
+    if (ME) { meName.value = ME.name; meG = ME.gender; }
+    paintMe();
     const saved = load('pixelSchoolKid', localStorage);
-    const btn = kidsEl.querySelector(`[data-id="${saved}"]`) || kidsEl.firstElementChild;
+    const btn = (saved && kidsEl.querySelector(`[data-id="${saved}"]`)) || (ME ? $('#me-go') : meName);
     delete menu.dataset.ready;
     btn.focus({ preventScroll: true });
     menu.dataset.ready = '1';
@@ -2271,8 +2308,10 @@
   fit();
   paintStars();
   const st = load('pixelSchool', sessionStorage);
-  const back = st && KIDS.find((x) => x.id === st.kid);
+  const back = st && (KIDS.find((x) => x.id === st.kid) || (ME && st.kid === ME.id ? ME : null));
   if (back) start(back, st.room, true);
+  // 이름·성별을 한 번 적어 두었으면 다음부터는 메뉴 없이 내 캐릭터로 바로 시작
+  else if (ME && load('pixelSchoolKid', localStorage) === ME.id) start(ME, null, true);
   else openMenu();
   requestAnimationFrame((t) => { last = t; loop(t); });
 
