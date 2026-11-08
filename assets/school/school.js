@@ -790,7 +790,7 @@
     L.obst.push({ x: r.tpos.x - 4, y: r.tpos.y - 4, w: 8, h: 5 });
   }
 
-  // 강아지 '콩이'(12×11): o 테두리, E 귀·꼬리, W 털, P 얼룩, e 눈, n 코, m 혀
+  // 강아지 '뭉치'(12×11): o 테두리, E 귀·꼬리, W 털, P 얼룩, e 눈, n 코, m 혀
   const DOG = ['.oo......oo.', 'oEEooooooEEo', 'oEEWWWWWWEEo', '.oWWWWWWWWo.', '.oWeWWWWeWo.', '.oWWWnnWWWo.',
     '..oWWmmWWo..', '..oPWWWWWo..', '..oPWWWWWo..', '..oWoWWoWo..', '..oooooooo..'];
   const DOGPAL = { o: '#2b1d2e', E: '#b5835a', W: '#fff4e0', P: '#e8c49a', e: '#2b1d2e', n: '#2b1d2e', m: '#ff8fa3' };
@@ -823,7 +823,7 @@
       R(hx, hy, 1, 1, '#ff6f91'); R(hx + 2, hy, 1, 1, '#ff6f91'); R(hx - 0, hy + 1, 3, 1, '#ff6f91'); R(hx + 1, hy + 2, 1, 1, '#ff6f91');
     }
   }
-  const DOG_LINES = ['멍! 위클래스 강아지 콩이가 꼬리를 흔든다', '콩이가 손바닥에 코를 콕 댄다. 마음이 조금 말랑해졌다', '콩이가 "멍멍!" 하고 반겨 준다. 오늘도 수고했다는 뜻 같다', '콩이가 배를 보이며 벌러덩 눕는다'];
+  const DOG_LINES = ['멍! 위클래스 강아지 뭉치가 꼬리를 흔든다', '뭉치가 손바닥에 코를 콕 댄다. 마음이 조금 말랑해졌다', '뭉치가 "멍멍!" 하고 반겨 준다. 오늘도 수고했다는 뜻 같다', '뭉치가 배를 보이며 벌러덩 눕는다'];
   let dogN = 0;
 
   function roomWalls(r, L) {
