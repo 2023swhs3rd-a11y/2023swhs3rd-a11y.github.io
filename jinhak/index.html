@@ -220,6 +220,8 @@
 (async () => {
   const $ = (s) => document.querySelector(s);
   const esc = (s) => String(s ?? '').replace(/[&<>"']/g, (c) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  // 자료 링크는 https 주소만 연결한다(scripts/jinhak_data.py 검사와 같은 기준).
+  const href = (u) => (/^https:\/\//i.test(String(u ?? '')) ? esc(u) : '#');
   const svg = (d) => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
   const ICON = {
     '웹사이트': svg('<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/>'),
@@ -340,15 +342,15 @@
       it.who === 't' ? '<span class="badge t">선생님용</span>' : '',
     ].join('');
     return `<article class="item" style="${cvar(it.cat)}">
-      <a class="thumb tint ${isVideo ? 'video' : ''}" href="${esc(it.url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
+      <a class="thumb tint ${isVideo ? 'video' : ''}" href="${href(it.url)}" target="_blank" rel="noopener" tabindex="-1" aria-hidden="true">
         ${pic}<span class="kindtag">${ICON[kind] || ''}${esc(kind)}</span>${isNew(it) ? '<span class="newtag">NEW</span>' : ''}
       </a>
       <div class="ib">
-        <h3><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
+        <h3><a href="${href(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
         <p class="src">${esc(it.src)}</p>
         <p class="d">${esc(it.desc)}</p>
         ${meta ? `<div class="meta">${meta}</div>` : ''}
-        <a class="open" href="${esc(it.url)}" target="_blank" rel="noopener">${verb}${OUT}</a>
+        <a class="open" href="${href(it.url)}" target="_blank" rel="noopener">${verb}${OUT}</a>
       </div>
     </article>`;
   }
