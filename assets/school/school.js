@@ -197,7 +197,7 @@
   const SPECIAL = [
     { room: mkRoom({ key: 'cafe', short: '진로카페', title: '진로카페', badge: '카페', color: '#9a6240', icon: 'cup',
         desc: '진로 선생님과 따뜻한 차 한 잔 하며 진로 고민을 편하게 나누는 쉼터예요.' }),
-      staff: { id: 'barista', name: '쿠리만쥬 쌤', adult: true, look: ['pony'], say: '',
+      staff: { id: 'barista', name: '쿠리만쥬 쌤', adult: true, look: ['ahoge', 'mustache'], say: '',
         pal: { h: '#4a2c20', s: '#f7caa0', c: '#6b4228', w: '#fff6e0', t: '#e0a93a', p: '#3b3030' } },
       talk: ['진로카페에서는 커피 향을 맡으며 진로 이야기를 나눠요.', '원두를 고르듯 진로도 천천히 맛보며 골라 봐요.',
         '따뜻한 코코아도 있어요. 고민 하나 내려놓고 가요.', '오늘의 추천 메뉴는 "꿈 한 스푼 라떼"예요.', '쉬는 시간에 잠깐 들러도 좋아요. 자리는 늘 비워 둘게요.'],
