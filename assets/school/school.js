@@ -190,8 +190,29 @@
     { id: 't6', name: '한 선생님', adult: true, look: ['bob'], skirt: true, say: '생각을 한 단계씩 키워 봐요.',
       pal: { h: '#1f1b2e', s: '#ffd4ae', c: '#b55094', w: '#ffffff', t: '#ffd36b', p: '#b55094' } },
   ];
+
+  /* ───────── 오른쪽 끝 교무실 칸: 진로카페·위클래스(사이트로 가지 않고 이야기만 나눈다) ───────── */
+  const mkRoom = (o) => Object.assign({ n: null, special: true, el: null, url: null,
+    light: mix(o.color, '#ffffff', 0.55), pale: mix(o.color, '#ffffff', 0.8), dark: mix(o.color, '#000000', 0.3) }, o);
+  const SPECIAL = [
+    { room: mkRoom({ key: 'cafe', short: '진로카페', title: '진로카페', badge: '카페', color: '#9a6240', icon: 'cup',
+        desc: '진로 선생님과 따뜻한 차 한 잔 하며 진로 고민을 편하게 나누는 쉼터예요.' }),
+      staff: { id: 'barista', name: '윤 선생님', adult: true, look: ['pony'], say: '',
+        pal: { h: '#4a2c20', s: '#f7caa0', c: '#6b4228', w: '#fff6e0', t: '#e0a93a', p: '#3b3030' } },
+      talk: ['진로카페에서는 커피 향을 맡으며 진로 이야기를 나눠요.', '원두를 고르듯 진로도 천천히 맛보며 골라 봐요.',
+        '따뜻한 코코아도 있어요. 고민 하나 내려놓고 가요.', '오늘의 추천 메뉴는 "꿈 한 스푼 라떼"예요.', '쉬는 시간에 잠깐 들러도 좋아요. 자리는 늘 비워 둘게요.'],
+      bubble: ['커피 내리는 중…', '꿈 한 스푼 라떼 어때요?', '쉬어 가요, 천천히!', '진로 고민도 한 잔!'] },
+    { room: mkRoom({ key: 'wee', short: '위클래스', title: '위클래스(Wee 클래스)', badge: '상담', color: '#d96a8e', icon: 'heart',
+        desc: '마음이 힘들거나 이야기를 나누고 싶을 때 찾아오는 상담실이에요. 상담이 필요한 학생은 4층 위클래스로 오세요.' }),
+      staff: { id: 'counselor', name: '서 선생님', adult: true, look: ['long'], skirt: true, say: '',
+        pal: { h: '#5a3428', s: '#ffe0c4', c: '#f4a7b9', w: '#fff6e0', t: '#ffffff', p: '#8a6ad8' } },
+      talk: ['상담이 필요한 학생은 4층 위클래스로 오세요.', '오늘 마음 날씨는 어때요? 흐린 날도 괜찮아요.',
+        '말하기 어려운 고민도 여기서는 비밀이 지켜져요.', '힘들 때는 혼자 참지 말고 언제든 찾아와요.', '잘하고 있어요. 오늘도 수고 많았어요.'],
+      bubble: ['상담이 필요한 학생은 4층 위클래스로 오세요', '오늘 기분은 어때요?', '언제든 문 열려 있어요', '천천히 숨 한 번!'] },
+  ];
+  const specialOf = (r) => r && r.room.special ? SPECIAL.find((x) => x.room === r.room) : null;
   const BASEPAL = { e: '#2b1d2e', W: '#ffffff', b: '#ff9fa8', m: '#d0505a', w: '#ffffff', k: '#3b2a24', g: '#8a9cc8', r: '#e0475a', H: '#3a2a20' };
-  [...KIDS, ...TEACHERS].forEach((p) => {
+  [...KIDS, ...TEACHERS, ...SPECIAL.map((x) => x.staff)].forEach((p) => {
     p.pal = { ...BASEPAL, ...p.pal };
     p.pal.l = mix(p.pal.h, '#ffffff', 0.38);
     p.pal.S = mix(p.pal.s, '#a0603a', 0.3);
@@ -272,23 +293,27 @@
     book: ['........', '.AA..AA.', 'AwwAAwwA', 'AwkAAkwA', 'AwwAAwwA', 'AwkAAkwA', '.AAAAAA.', '...AA...'],
     news: ['AAAAAAAA', '........', 'kkk.kkkk', 'kkk.....', 'kkk.kkkk', '....kkkk', 'kkk.kkkk', 'kkk.....'],
     pyramid: ['...AA...', '...AA...', '..aaaa..', '..aaaa..', '.AAAAAA.', '.AAAAAA.', 'aaaaaaaa', 'aaaaaaaa'],
+    cup: ['..w.w...', '.w.w....', '........', 'AAAAAA..', 'AwwwwAkk', 'AwwwwA.k', 'AAAAAAkk', '.aaaa...'],
+    heart: ['........', '.AA..AA.', 'AwAAAAAA', 'AAAAAAAA', 'AAAAAAAA', '.AAAAAA.', '..AAAA..', '...AA...'],
   };
   const DIGITS = { 1: ['.#.', '##.', '.#.', '.#.', '###'], 2: ['##.', '..#', '.#.', '#..', '###'], 3: ['##.', '..#', '.#.', '..#', '##.'], 4: ['#.#', '#.#', '###', '..#', '..#'], 5: ['###', '#..', '##.', '..#', '##.'], 6: ['.##', '#..', '###', '#.#', '###'] };
-  const PROPS = { pennant: ['trophy', 'plant', 'trash'], star: ['globe', 'shelf', 'plant'], chart: ['easel', 'globe', 'plant'], book: ['shelf', 'beanbag', 'plant'], news: ['tv', 'plant', 'trash'], pyramid: ['blocks', 'plant', 'trash'] };
+  const PROPS = { cup: ['plant', 'shelf'], heart: ['plant', 'beanbag', 'plant'], pennant: ['trophy', 'plant', 'trash'], star: ['globe', 'shelf', 'plant'], chart: ['easel', 'globe', 'plant'], book: ['shelf', 'beanbag', 'plant'], news: ['tv', 'plant', 'trash'], pyramid: ['blocks', 'plant', 'trash'] };
 
   /* ───────── 지도 ───────── */
   function buildLayout(portrait) {
     const L = { portrait, rooms: [] };
     if (!portrait) {
-      L.W = 384; L.H = 256;
-      L.hall = { x: 0, y: 104, w: 384, h: 46 };
-      L.walkHall = { x: 28, y: 107, w: 384 - 28 - 24, h: 42 };
-      for (let i = 0; i < 6; i++) {
-        const top = i < 3, col = i % 3;
-        const r = { i, room: ROOMS[i], teacher: TEACHERS[i], x: col * 128, y: top ? 0 : 150, w: 128, h: top ? 104 : 106,
-          F: 24, S: top ? 12 : 4, Wt: col === 0 ? 4 : 2, Et: col === 2 ? 4 : 2 };
+      // 교실 3칸 + 오른쪽 끝 교무실 칸(위: 진로카페, 아래: 위클래스)
+      L.W = 480; L.H = 256;
+      L.hall = { x: 0, y: 104, w: 480, h: 46 };
+      L.walkHall = { x: 28, y: 107, w: 480 - 28 - 24, h: 42 };
+      for (let i = 0; i < 8; i++) {
+        const top = i < 3 || i === 6, col = i < 6 ? i % 3 : 3;
+        const r = { i, room: i < 6 ? ROOMS[i] : SPECIAL[i - 6].room, teacher: i < 6 ? TEACHERS[i] : SPECIAL[i - 6].staff,
+          x: col * 128, y: top ? 0 : 150, w: col === 3 ? 96 : 128, h: top ? 104 : 106,
+          F: 24, S: top ? 12 : 4, Wt: col === 0 ? 4 : 2, Et: col === 3 ? 4 : 2 };
         if (top) {
-          const cx = r.x + 92;
+          const cx = r.x + r.w - 36;
           r.door = { side: 'S', cx, gap: { x: cx - 10, y: r.y + r.h - 12, w: 20, h: 12 },
             walk: { x: cx - 9, y: r.y + r.h - 14, w: 18, h: 20 },
             entry: { x: cx, y: r.y + r.h - 17 }, front: { x: cx, y: L.hall.y + 16 },
@@ -303,13 +328,15 @@
         L.rooms.push(r);
       }
     } else {
-      L.W = 240; L.H = 336;
-      L.hall = { x: 96, y: 0, w: 48, h: 336 };
-      L.walkHall = { x: 101, y: 28, w: 38, h: 336 - 28 - 10 };
-      for (let i = 0; i < 6; i++) {
+      // 교실 3줄 + 맨 아래 교무실 줄(왼쪽: 진로카페, 오른쪽: 위클래스)
+      L.W = 240; L.H = 448;
+      L.hall = { x: 96, y: 0, w: 48, h: 448 };
+      L.walkHall = { x: 101, y: 28, w: 38, h: 448 - 28 - 10 };
+      for (let i = 0; i < 8; i++) {
         const left = i % 2 === 0, row = Math.floor(i / 2);
-        const r = { i, room: ROOMS[i], teacher: TEACHERS[i], x: left ? 0 : 144, y: row * 112, w: 96, h: 112,
-          F: 24, S: row === 2 ? 4 : 2, Wt: left ? 4 : 6, Et: left ? 6 : 4 };
+        const r = { i, room: i < 6 ? ROOMS[i] : SPECIAL[i - 6].room, teacher: i < 6 ? TEACHERS[i] : SPECIAL[i - 6].staff,
+          x: left ? 0 : 144, y: row * 112, w: 96, h: 112,
+          F: 24, S: row === 3 ? 4 : 2, Wt: left ? 4 : 6, Et: left ? 6 : 4 };
         const cy = r.y + r.h - 26;
         if (left) {
           r.door = { side: 'E', cy, gap: { x: r.x + r.w - 6, y: cy - 10, w: 6, h: 20 },
@@ -331,7 +358,7 @@
       const bw = Math.min(58, Math.floor((fx1 - fx0) * 0.54));
       let bx = Math.round((fx0 + fx1) / 2 - bw / 2);
       if (r.door.side === 'N') bx = Math.max(bx, r.door.gap.x + r.door.gap.w + 20);
-      r.board = { x: bx, y: r.y + 8, w: bw, h: 12 };
+      r.board = { x: bx, y: r.y + 8, w: Math.min(bw, fx1 - 4 - bx), h: 12 };
       // 칠판 왼쪽: 창문(자리가 넉넉할 때), 오른쪽: 벽 그림과 시계
       r.window = r.door.side !== 'N' && bx - fx0 >= 26 ? { x: fx0 + 5, y: r.y + 7, w: bx - fx0 - 13, h: 12 } : null;
       const right = fx1 - (bx + bw);
@@ -376,9 +403,9 @@
     if (!L.portrait) {
       for (let i = 0; i < 6; i++) { R(0, h.y + i * 8, 24 - i * 2, 8, i % 2 ? '#c2ab82' : '#d4bd92'); R(0, h.y + i * 8, 24 - i * 2, 0.5, '#e6d2aa'); R(0, h.y + i * 8 + 7, 24 - i * 2, 1, '#8f7a58'); }
       R(24, h.y, 2, h.h, '#8f7a58'); R(24.5, h.y, 0.5, h.h, '#b39a70');
-      plant(364, h.y + 3); plant(364, h.y + h.h - 19);
+      plant(L.W - 20, h.y + 3); plant(L.W - 20, h.y + h.h - 19);
       // 복도 깔개
-      rug(140, h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
+      rug(Math.round(L.W / 2 - 52), h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
     } else {
       for (let i = 0; i < 6; i++) { R(h.x, i * 4, h.w, 4, i % 2 ? '#c2ab82' : '#d4bd92'); R(h.x, i * 4, h.w, 0.5, '#e6d2aa'); R(h.x, i * 4 + 3.5, h.w, 0.5, '#8f7a58'); }
       R(h.x, 24, h.w, 2, '#8f7a58');
@@ -505,7 +532,8 @@
   }
   function plate(x, y, room) {
     R(x - 1, y - 1, 7, 9, C.out); R(x, y, 5, 7, room.color); R(x, y, 5, 0.5, room.light);
-    DIGITS[room.n].forEach((row, j) => [...row].forEach((c, i) => { if (c === '#') R(x + 1 + i, y + 1 + j, 1, 1, '#ffffff'); }));
+    const glyph = room.special ? (room.icon === 'cup' ? ['...', '###', '#.#', '###', '.#.'] : ['#.#', '###', '###', '.#.', '...']) : DIGITS[room.n];
+    glyph.forEach((row, j) => [...row].forEach((c, i) => { if (c === '#') R(x + 1 + i, y + 1 + j, 1, 1, '#ffffff'); }));
   }
 
   // 표지판: 판은 캔버스에, 글자는 겹쳐 놓은 HTML(칠판 이름과 같은 방식)로 쓴다
@@ -530,6 +558,13 @@
       for (let x = f.x + (k % 2 ? 10 : 24); x < f.x + f.w; x += 28) { R(x, y, 0.5, 6, C.woodLine); R(x + 0.5, y, 0.5, 6, C.woodHi); }
       for (let x = f.x + 4 + (k * 7) % 13; x < f.x + f.w - 3; x += 17) R(x, y + 2.5, 3, 0.5, C.woodB);
     }
+    // 진로카페는 바둑판 타일, 위클래스는 넓고 폭신한 깔개
+    if (room.key === 'cafe') {
+      for (let y = f.y; y < f.y + f.h; y += 6) for (let x = f.x; x < f.x + f.w; x += 6) {
+        R(x, y, 6, 6, ((x - f.x) / 6 + (y - f.y) / 6) % 2 ? '#e9dcc4' : '#b98a62');
+        R(x, y, 6, 0.5, 'rgba(255,255,255,.25)');
+      }
+    } else if (room.key === 'wee') rug(f.x + 6, f.y + 32, f.w - 12, f.h - 40, room.pale, '#ffffff');
     R(f.x, f.y, f.w, 3, C.shadow); R(f.x, f.y + 3, f.w, 1, C.shadow2);
 
     // 문 안쪽 깔개
@@ -539,6 +574,30 @@
     else if (d.side === 'E') rug(e.x - 18, e.y - 7, 10, 14, room.light, '#ffffff');
     else rug(e.x + 8, e.y - 7, 10, 14, room.light, '#ffffff');
 
+    if (room.special) specialFurniture(r, L, e);
+    else classFurniture(r, L, e);
+    // 구석 소품(문과 가까운 구석은 비운다)
+    const corners = [
+      { x: f.x + 2, y: f.y + 3 }, { x: f.x + f.w - 16, y: f.y + 3 },
+      { x: f.x + 2, y: f.y + f.h - 21 }, { x: f.x + f.w - 16, y: f.y + f.h - 21 },
+    ].filter((c) => Math.hypot(c.x + 7 - e.x, c.y + 10 - e.y) > 24 && !(r.keepClear || []).some((k) => hits(c.x, c.y, 14, 20, k)));
+    corners.sort((a, b) => Math.hypot(b.x - e.x, b.y - e.y) - Math.hypot(a.x - e.x, a.y - e.y));
+    (PROPS[room.icon] || ['plant']).slice(0, corners.length).forEach((kind, i) => {
+      const c = corners[i];
+      L.things.push({ y: c.y + 20, fn: () => drawProp(kind, c.x, c.y, room) });
+      L.obst.push({ x: c.x + 1, y: c.y + 11, w: 12, h: 9 });
+    });
+    r.corners = corners;
+    // 다른 학생 자리(문에서 먼 자리)
+    if (r.seats.length) {
+      const s = r.seats[(r.i * 2 + 1) % r.seats.length];
+      r.npcSeat = s;
+      L.obst.push({ x: s.x - 4, y: s.y - 4, w: 8, h: 5 });
+    }
+    roomWalls(r, L);
+  }
+  function classFurniture(r, L, e) {
+    const room = r.room, f = r.floor;
     // 교탁: 꽃병·책·사과
     const tdx = Math.round(r.board.x + r.board.w / 2 - 11);
     r.tdesk = { x: tdx, y: f.y + 6, w: 22 };
@@ -567,25 +626,88 @@
       L.obst.push({ x, y: y + 1, w: 14, h: 15 });
       r.seats.push({ x: x + 7, y: y + 18 });
     }
-    // 구석 소품(문과 가까운 구석은 비운다)
-    const corners = [
-      { x: f.x + 2, y: f.y + 3 }, { x: f.x + f.w - 16, y: f.y + 3 },
-      { x: f.x + 2, y: f.y + f.h - 21 }, { x: f.x + f.w - 16, y: f.y + f.h - 21 },
-    ].filter((c) => Math.hypot(c.x + 7 - e.x, c.y + 10 - e.y) > 24);
-    corners.sort((a, b) => Math.hypot(b.x - e.x, b.y - e.y) - Math.hypot(a.x - e.x, a.y - e.y));
-    (PROPS[room.icon] || ['plant']).slice(0, corners.length).forEach((kind, i) => {
-      const c = corners[i];
-      L.things.push({ y: c.y + 20, fn: () => drawProp(kind, c.x, c.y, room) });
-      L.obst.push({ x: c.x + 1, y: c.y + 11, w: 12, h: 9 });
-    });
-    r.corners = corners;
-    // 다른 학생 자리(문에서 먼 자리)
-    if (r.seats.length) {
-      const s = r.seats[(r.i * 2 + 1) % r.seats.length];
-      r.npcSeat = s;
-      L.obst.push({ x: s.x - 4, y: s.y - 4, w: 8, h: 5 });
-    }
+  }
 
+  // 진로카페: 카운터와 커피 머신, 작은 탁자 / 위클래스: 소파·낮은 탁자·쿠션
+  function specialFurniture(r, L, e) {
+    const room = r.room, f = r.floor;
+    r.seats = [];
+    if (room.key === 'cafe') {
+      const cw = 40, cx = Math.round(f.x + f.w / 2 - cw / 2), cy = f.y + 20;
+      r.counter = { x: cx, y: cy, w: cw };
+      r.machine = { x: cx + 4, y: cy - 7 };
+      r.keepClear = [{ x: cx - 4, y: cy - 22, w: cw + 8, h: 34 }];
+      L.obst.push({ x: cx, y: cy, w: cw, h: 10 });
+      L.things.push({ y: cy + 11, fn: () => {
+        // 카운터
+        R(cx, cy + 8, cw, 1, C.shadow);
+        R(cx, cy, cw, 8, '#8d5a33'); R(cx, cy, cw, 1.5, '#c98d5a'); R(cx, cy + 1.5, cw, 0.5, '#6b4228');
+        for (let x = cx + 3; x < cx + cw - 2; x += 6) R(x, cy + 3, 0.5, 4.5, '#6b4228');
+        // 커피 머신
+        const mx = cx + 4, my = cy - 7;
+        R(mx - 0.5, my - 0.5, 11, 8, C.out); R(mx, my, 10, 7, '#c9ccd6'); R(mx, my, 10, 1, '#ffffff');
+        R(mx + 1, my + 2, 3, 2, '#3a3346'); R(mx + 2, my + 2.5, 1, 1, '#ff6f91');
+        R(mx + 6, my + 3, 2, 2, '#7a7f8e'); R(mx + 6.5, my + 5, 1, 1.5, '#3a3346');
+        R(mx + 5.5, my + 6.5, 3, 0.5, '#ffffff');
+        // 잔과 시럽, 쿠키
+        R(cx + 17, cy - 3, 4, 3, '#ffffff'); R(cx + 17, cy - 3, 4, 0.5, '#6b4228'); R(cx + 21, cy - 2, 1, 1.5, '#ffffff');
+        R(cx + 24, cy - 3, 4, 3, room.light); R(cx + 24, cy - 3, 4, 0.5, '#6b4228');
+        R(cx + 31, cy - 5, 2, 5, '#e0a93a'); R(cx + 31, cy - 6, 2, 1, '#e0475a'); R(cx + 34, cy - 5, 2, 5, '#9b6bd3'); R(cx + 34, cy - 6, 2, 1, '#ffffff');
+        R(cx + 13, cy - 1.5, 2.5, 1.5, '#c98d5a'); R(cx + 13.5, cy - 1, 0.5, 0.5, '#6b4228');
+      } });
+      // 바리스타는 카운터 안쪽(머신 옆)에 선다
+      r.tpos = { x: cx + 18, y: cy - 1 };
+      // 작은 탁자 두 개와 의자
+      const tables = [{ x: f.x + 10, y: f.y + f.h - 26 }, { x: f.x + f.w - 26, y: f.y + 34 }]
+        .filter((t) => Math.hypot(t.x + 8 - e.x, t.y + 6 - e.y) > 22);
+      for (const t of tables) {
+        L.obst.push({ x: t.x, y: t.y + 2, w: 16, h: 9 });
+        L.things.push({ y: t.y + 11, fn: () => {
+          R(t.x + 1, t.y + 11, 14, 1, C.shadow);
+          R(t.x + 7, t.y + 5, 2, 6, C.leg); R(t.x + 4, t.y + 10, 8, 1, C.leg);
+          R(t.x, t.y + 2, 16, 4, '#ffffff'); R(t.x + 1, t.y + 1, 14, 1, '#ffffff'); R(t.x, t.y + 5, 16, 1, '#d8d2c4');
+          R(t.x + 3, t.y + 1.5, 3, 2, room.light); R(t.x + 3, t.y + 1.5, 3, 0.5, '#6b4228');
+          R(t.x - 4, t.y + 6, 3, 3, room.color); R(t.x - 3.5, t.y + 9, 0.5, 2, C.leg); R(t.x + 17, t.y + 6, 3, 3, room.color); R(t.x + 19, t.y + 9, 0.5, 2, C.leg);
+        } });
+      }
+    } else {
+      // 소파(벽 쪽)와 낮은 탁자, 쿠션
+      const sw = 34, sx = Math.round(f.x + f.w - sw - 8), sy = f.y + 6;
+      r.keepClear = [{ x: sx - 14, y: sy - 4, w: sw + 18, h: 40 }];
+      L.obst.push({ x: sx, y: sy + 2, w: sw, h: 10 });
+      L.things.push({ y: sy + 12, fn: () => {
+        R(sx + 1, sy + 12, sw - 2, 1, C.shadow);
+        R(sx, sy, sw, 6, room.color); R(sx, sy, sw, 1, room.light);
+        R(sx - 1, sy + 4, 4, 8, room.dark); R(sx + sw - 3, sy + 4, 4, 8, room.dark);
+        R(sx + 3, sy + 6, sw - 6, 5, room.light); R(sx + sw / 2, sy + 6, 0.5, 5, room.color);
+        R(sx + 5, sy + 2, 5, 4, '#ffd36b'); R(sx + 6, sy + 3, 1, 1, '#ffffff'); R(sx + sw - 10, sy + 2, 5, 4, '#a8dcef');
+        R(sx + 1, sy + 11, 1, 1.5, C.leg); R(sx + sw - 2, sy + 11, 1, 1.5, C.leg);
+      } });
+      const tx = sx + 8, ty = sy + 20;
+      L.obst.push({ x: tx, y: ty, w: 18, h: 6 });
+      L.things.push({ y: ty + 6, fn: () => {
+        R(tx + 1, ty + 6, 16, 1, C.shadow);
+        R(tx, ty, 18, 4, '#c98d5a'); R(tx, ty, 18, 0.5, '#e8b98a'); R(tx + 1, ty + 4, 1, 2, C.leg); R(tx + 16, ty + 4, 1, 2, C.leg);
+        // 휴지·화분·차
+        R(tx + 2, ty - 2, 4, 2.5, '#ffffff'); R(tx + 3.5, ty - 3, 1, 1, '#ffffff');
+        R(tx + 8, ty - 2, 3, 2.5, '#ffffff'); R(tx + 8, ty - 2, 3, 0.5, '#c98d5a');
+        R(tx + 13, ty - 1, 3, 2, C.pot); R(tx + 13, ty - 3, 3, 2, C.leaf); R(tx + 14, ty - 4, 1, 1, '#ff8fa3');
+      } });
+      // 마음 날씨 게시판(벽 쪽 아래) 대신 바닥 쿠션 두 개
+      const cs = [{ x: f.x + 8, y: f.y + f.h - 14, c: '#b9a5f0' }, { x: f.x + f.w - 20, y: f.y + f.h - 14, c: '#ffd36b' }]
+        .filter((q) => Math.hypot(q.x + 6 - e.x, q.y + 4 - e.y) > 18);
+      for (const q of cs) L.things.push({ y: q.y + 6, fn: () => {
+        R(q.x + 1, q.y + 6, 10, 1, C.shadow); R(q.x, q.y + 1, 12, 5, q.c); R(q.x + 1, q.y, 10, 1, q.c);
+        R(q.x + 2, q.y + 1, 3, 1, mix(q.c, '#ffffff', 0.5)); R(q.x + 5.5, q.y + 3, 1, 1, mix(q.c, '#000000', 0.25));
+      } });
+      // 상담 선생님은 소파 옆에 선다
+      r.tpos = { x: sx - 7, y: sy + 14 };
+    }
+    L.obst.push({ x: r.tpos.x - 4, y: r.tpos.y - 4, w: 8, h: 5 });
+  }
+
+  function roomWalls(r, L) {
+    const room = r.room, d = r.door;
     // 북쪽 벽(윗면 + 정면)
     R(r.x, r.y, r.w, 4, C.wallTop); R(r.x, r.y, r.w, 0.5, C.wallHi);
     R(r.x, r.y + 4, r.w, r.F - 4, C.face);
@@ -819,6 +941,16 @@
       labels.appendChild(el);
     };
     for (const r of L.rooms) put('chalk', r.room.short, r.board.x, r.board.y, r.board.w, r.board.h - 1);
+    // 진로카페·위클래스 선생님 머리 위 말풍선
+    for (const r of L.rooms) {
+      if (!r.room.special) continue;
+      const el = document.createElement('div');
+      el.className = 'bubble ' + r.room.key;
+      el.hidden = true;
+      Object.assign(el.style, { left: (r.tpos.x / L.W) * 100 + '%', top: ((r.tpos.y - 19) / L.H) * 100 + '%' });
+      labels.appendChild(el);
+      r.bubbleEl = el;
+    }
     for (const sg of L.signs) put('sign' + (sg.dark ? ' dark' : ''), sg.text, sg.x, sg.y, sg.w, sg.h - 1);
     if (prevRoom != null) placeAtDoor(prevRoom);
     else placeCenter();
@@ -982,25 +1114,40 @@
     // 화분·책장 같은 구석 소품 그림에 가려지지 않는 자리만 쓴다
     const covered = (x, y) => L.rooms.some((r) => r.corners.slice(0, (PROPS[r.room.icon] || ['plant']).length)
       .some((c) => x > c.x - 4 && x < c.x + 18 && y > c.y - 2 && y < c.y + 24));
-    const spot = (x, y) => {
+    // area 안(그 교실·복도)에서만 고른다
+    const spot = (x, y, area) => {
       for (let k = 0; k < 40; k++) {
         const tx = x + (k % 2 ? 1 : -1) * Math.ceil(k / 2) * 3 * (x < L.W / 2 ? -1 : 1);
         const c = nearestOpen(tx, y);
-        if (c && !covered(c[0] * CELL + 2, c[1] * CELL + 2)) return { x: c[0] * CELL + 2, y: c[1] * CELL + 2 };
+        const px = c && c[0] * CELL + 2, py = c && c[1] * CELL + 2;
+        if (c && (!area || inRect(px, py, area)) && !covered(px, py)) return { x: px, y: py };
       }
       const c = nearestOpen(x, y); return c ? { x: c[0] * CELL + 2, y: c[1] * CELL + 2 } : { x, y };
     };
     const r4 = L.rooms[3], r6 = L.rooms[5];
     L.stickers = [
-      { id: 'hall', ...(L.portrait ? spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + 6) : spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + L.walkHall.h - 2)) },
-      { id: 'book', ...spot(r4.walkFloor.x + 2, r4.walkFloor.y + r4.walkFloor.h - 1) },
-      { id: 'matrix', ...spot(r6.walkFloor.x + r6.walkFloor.w - 2, r6.walkFloor.y + 2) },
+      { id: 'hall', ...(L.portrait ? spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + 6, L.walkHall) : spot(L.walkHall.x + L.walkHall.w - 3, L.walkHall.y + L.walkHall.h - 2, L.walkHall)) },
+      { id: 'book', ...spot(r4.walkFloor.x + 2, r4.walkFloor.y + r4.walkFloor.h - 1, r4.walkFloor) },
+      { id: 'matrix', ...spot(r6.walkFloor.x + r6.walkFloor.w - 2, r6.walkFloor.y + 2, r6.walkFloor) },
     ];
   }
 
   /* ───────── 움직임 ───────── */
   const SPEED = 62;
+  function updateBubbles() {
+    for (const r of L.rooms) {
+      if (!r.bubbleEl) continue;
+      const sp = specialOf(r);
+      const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70);
+      if (near) {
+        const text = sp.bubble[Math.floor(clock / 4) % sp.bubble.length];
+        if (r.bubbleEl.textContent !== text) r.bubbleEl.textContent = text;
+      }
+      if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
+    }
+  }
   function update(dt) {
+    updateBubbles();
     if (party > 0) party -= dt;
     if (mode !== 'play' || leaving || memoOpen) { P.moving = false; return; }
     let dx = 0, dy = 0;
@@ -1154,6 +1301,15 @@
       } });
     }
     list.sort((a, b) => a.y - b.y).forEach((it) => it.fn());
+    // 커피 머신 김
+    for (const r of L.rooms) {
+      if (!r.machine || reduceMotion) continue;
+      for (let i = 0; i < 3; i++) {
+        const t = (clock * 0.8 + i / 3) % 1;
+        g.fillStyle = `rgba(255,255,255,${(0.85 - t * 0.8).toFixed(2)})`;
+        g.fillRect(Math.round(r.machine.x + 6.5 + Math.sin((clock + i) * 3) * 1.2), Math.round(r.machine.y - 1 - t * 9), 1, 1);
+      }
+    }
 
     const hi = hoverRoom != null ? L.rooms[hoverRoom] : dlg && dlg.r;
     if (hi) {
@@ -1232,20 +1388,22 @@
   function openDialog(r, who) {
     who = who || 'door';
     dlg = { r, who };
-    const room = r.room, t = r.teacher;
+    const room = r.room, t = r.teacher, sp = specialOf(r);
     SFX.chime();
     dlgEl.style.setProperty('--room', room.color);
-    $('#dlg-num').textContent = room.n + '반';
+    $('#dlg-go').firstChild.textContent = sp ? '▶ 이야기 더 듣기 ' : '▶ 들어가기 ';
+    $('#dlg-num').textContent = sp ? room.badge : room.n + '반';
     $('#dlg-title').textContent = room.title;
     $('#dlg-desc').textContent = room.desc;
-    $('#dlg-upd').textContent = room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
+    $('#dlg-upd').textContent = room.el && room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
     const me = kid ? kid.name : '친구';
     let face = t, say;
-    if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`; }
+    if (sp) say = `${t.name}: ${who === 'door' ? `어서 와요, ${me}! ` : ''}${specialTalk(sp)}`;
+    else if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`; }
     else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${t.say}`;
     else say = `${t.name}: 어서 와요, ${me}! 여기는 ${room.n}반 ${room.short} 교실이에요.`;
     $('#dlg-face').replaceChildren(faceCanvas(face));
-    $('#dlg-no').firstChild.textContent = '교실 둘러보기 ';
+    $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
     const el = $('#dlg-say');
     clearInterval(typer);
     if (reduceMotion) el.textContent = say;
@@ -1258,6 +1416,14 @@
       }, 28);
     }
     dlgEl.hidden = false;
+  }
+  // 진로카페·위클래스 선생님 말: 처음엔 첫 줄(위클래스는 4층 안내), 그다음은 무작위
+  function specialTalk(sp) {
+    const said = sp.said || (sp.said = []);
+    let line = said.length === 0 ? sp.talk[0] : sp.talk[Math.floor(Math.random() * sp.talk.length)];
+    if (said.length && line === said[said.length - 1]) line = sp.talk[(sp.talk.indexOf(line) + 1) % sp.talk.length];
+    said.push(line);
+    return line;
   }
   function faceCanvas(sp) {
     const src = personSprite(sp, 'down', 'idle', false);
@@ -1275,6 +1441,7 @@
   }
   function enter(r) {
     if (leaving) return;
+    if (r.room.special) { openDialog(r, 'teacher'); return; } // 사이트가 없는 칸: Enter를 누르면 다음 이야기
     leaving = true;
     SFX.enter();
     save('pixelSchool', { kid: kid ? kid.id : null, room: r.i }, sessionStorage);
