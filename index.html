@@ -31,7 +31,7 @@
 <!-- 이 페이지가 불러올 수 있는 곳을 같은 주소와 게시판 메시지(구글 Apps Script)로만 묶어 둔다 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
 <link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/school/school.css?v=9">
+<link rel="stylesheet" href="/assets/school/school.css?v=10">
 </head>
 <body>
 <div class="page">
@@ -109,6 +109,7 @@
       <span><kbd>Enter</kbd> 말 걸기·들어가기 · <kbd>Esc</kbd> 둘러보기</span>
       <span><kbd>1</kbd>~<kbd>6</kbd> 그 반으로 바로 · <kbd>M</kbd> 소리 (휴대폰은 무음 모드에서는 소리가 나지 않아요)</span>
       <span>교실 안도 걸어 다닐 수 있고, 클릭한 곳까지 길을 찾아가요 · 복도 게시판에서 진로 선생님께 메시지를 남길 수 있어요</span>
+      <span>복도 오른쪽 끝에는 진로카페와 위클래스가 있어요</span>
     </p>
 
     <!-- 교실 목록: 게임 화면이 읽는 원본(주소·이름·설명·색·벽 그림)이자, 키보드·화면낭독기·스크립트 없는 환경의 바로가기.
@@ -163,6 +164,6 @@
     } catch (e) { /* 날짜 없이 둔다 */ }
   });
 </script>
-<script src="/assets/school/school.js?v=9"></script>
+<script src="/assets/school/school.js?v=10"></script>
 </body>
 </html>
