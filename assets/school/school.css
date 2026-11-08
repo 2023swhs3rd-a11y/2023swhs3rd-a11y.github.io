@@ -91,7 +91,15 @@ main { display: flex; flex-direction: column; align-items: center; }
 }
 .toast b { color: #c2283c; margin-right: 4px; }
 .stars { position: absolute; left: 6px; bottom: 6px; z-index: 2; padding: 2px 8px; background: var(--ink); color: var(--gold); border: 2px solid var(--gold); font-size: 11px; }
-.stars[hidden], .toast[hidden], .quest[hidden], .newmark[hidden] { display: none; }
+.stars[hidden], .toast[hidden], .quest[hidden], .newmark[hidden], .nametag[hidden] { display: none; }
+.nametag { position: absolute; transform: translate(-50%, -100%); z-index: 1; pointer-events: none; padding: 0 4px; background: #2b1d2ecc; color: var(--gold); border: 1px solid var(--gold); font-size: max(9px, calc(var(--sign, 9px) * .75)); line-height: 1.3; white-space: nowrap; }
+.notebook { max-height: 92%; overflow: auto; }
+.notebook .note-h { margin: 8px 0 2px; color: var(--gold); }
+.notebook .note-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 3px; font-size: 12px; }
+.notebook .note-list li { display: flex; align-items: center; gap: 6px; }
+.notebook .note-list canvas { width: 24px; height: 21px; image-rendering: pixelated; flex: none; background: #fffdf4; border: 1px solid #2b1d2e; }
+.notebook .note-list li.unknown canvas { filter: brightness(0); opacity: .6; }
+.notebook .note-foot { margin-top: 8px; font-size: 11px; color: #d6dcff; }
 .quest { position: absolute; left: 6px; bottom: 34px; z-index: 2; max-width: 46%; padding: 2px 8px; background: var(--paper); color: var(--ink); border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); font-size: 11px; line-height: 1.4; word-break: keep-all; }
 .newmark { position: absolute; transform: translate(-50%, -100%); z-index: 1; padding: 0 3px; background: #e0475a; color: #fff; border: 2px solid #2b1d2e; font-size: max(9px, calc(var(--sign, 9px) * .8)); line-height: 1.2; letter-spacing: .5px; }
 @media (prefers-reduced-motion: no-preference) { .newmark { animation: blinknew 1s steps(2) infinite; } }

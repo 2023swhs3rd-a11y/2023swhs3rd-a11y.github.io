@@ -166,6 +166,11 @@
     jimin: ['오늘 스크랩한 기사, 생각보다 재밌더라.', '뉴스 하나로 탐구 주제가 세 개나 나왔어.'],
     yuchan: ['어제 그린 그래프가 꽤 예쁘게 나왔어.', '숫자로 보면 우리 동네가 달라 보여.'],
   };
+  // 친구 도감: 학생마다 꿈과 관심 전공
+  const DREAMS = {
+    haneul: ['아침 라디오 PD', '미디어커뮤니케이션학'], bora: ['소설가', '국어국문학·문예창작'], doyun: ['데이터 과학자', '컴퓨터공학·통계학'],
+    seoa: ['스포츠 재활 트레이너', '스포츠의학·물리치료'], jimin: ['기자', '언론정보학'], yuchan: ['도시계획가', '도시공학·지리학'],
+  };
   const COMMON_TALK = [
     '쉬는 시간 10분은 왜 이렇게 짧을까?', '급식 메뉴 봤어? 오늘 디저트 있대!', '수행평가 주제 아직 못 정했어…',
     '선생님이 이 사이트 꼭 보래.', '어디 숨은 별 스티커 본 적 있어?', '창밖 하늘이 참 맑다.',
@@ -878,6 +883,8 @@
   /* ───────── 효과음(Web Audio로 합성) ───────── */
   const SFX = (() => {
     let ac = null, master = null, noiseBuf = null;
+    // 소리 파일로 미리 만들 때(맥 사파리)는 tone·noise가 이 오프라인 오디오에 그린다
+    let target = null, tmaster = null;
     let on = load('pixelSchoolSound', localStorage) !== false;
     // 오디오는 누르거나 키를 친 순간(unlock)에만 만든다. 맥 사파리는 그 밖에서 만든 오디오를
     // 나중에 다시 켜 주지 않을 때가 있어서다. 그 전에 나는 효과음은 그냥 건너뛴다.
@@ -902,6 +909,7 @@
     // 브라우저는 사용자가 누르거나 터치한 순간에만 소리를 켜 준다. 켜질 때까지 매번 다시 시도하고,
     // 사파리용으로 소리 없는 아주 짧은 버퍼를 한 번 재생한다.
     // 사파리용: 누를 때마다 소리 없는 아주 짧은 버퍼를 재생해 오디오 출력을 깨워 둔다
+    const out = () => master;
     function poke(a) {
       try {
         const b = a.createBuffer(1, 1, 22050), s = a.createBufferSource();
@@ -921,7 +929,8 @@
       setTimeout(() => { if (a === ac && a.state !== 'running') a.__stale = true; }, 250);
     }
     function tone(freq, t0, dur, type, vol, slide) {
-      const a = ctx(); if (!a) return;
+      const a = target || ctx(); if (!a) return;
+      const master = target ? tmaster : out();
       const t = a.currentTime + t0;
       const o = a.createOscillator(), gn = a.createGain();
       o.type = type || 'square';
@@ -934,9 +943,10 @@
       o.start(t); o.stop(t + dur + 0.03);
     }
     function noise(t0, dur, vol, freq, q) {
-      const a = ctx(); if (!a) return;
+      const a = target || ctx(); if (!a) return;
+      const master = target ? tmaster : out();
       if (!noiseBuf) {
-        noiseBuf = a.createBuffer(1, a.sampleRate * 0.5, a.sampleRate);
+        noiseBuf = a.createBuffer(1, Math.floor(a.sampleRate * 0.5), a.sampleRate);
         const d = noiseBuf.getChannelData(0);
         for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
       }
@@ -950,28 +960,100 @@
       s.start(t); s.stop(t + dur + 0.02);
     }
     const seq = (notes, step, dur, type, vol, start) => notes.forEach((f, i) => f && tone(f, (start || 0) + i * step, dur, type, vol));
+    const FX = {
+      step0: () => { noise(0, 0.045, 0.28, 1000, 2.5); tone(130, 0, 0.035, 'triangle', 0.25); },
+      step1: () => { noise(0, 0.045, 0.28, 1400, 2.5); tone(150, 0, 0.035, 'triangle', 0.25); },
+      bump: () => tone(110, 0, 0.09, 'square', 0.25, 0.6),
+      move: () => tone(988, 0, 0.045, 'square', 0.28),
+      select: () => seq([523, 659, 784, 1047], 0.055, 0.09, 'square', 0.32),
+      chime: () => { tone(784, 0, 0.08, 'triangle', 0.5); tone(1175, 0.08, 0.16, 'triangle', 0.45); },
+      type: () => tone(1320 + Math.random() * 120, 0, 0.018, 'square', 0.08),
+      enter: () => { noise(0, 0.16, 0.35, 2200, 0.8); seq([392, 523, 659, 784, 1047], 0.06, 0.1, 'square', 0.32, 0.1); tone(1568, 0.42, 0.25, 'triangle', 0.3); },
+      exit: () => { seq([784, 659, 523, 392], 0.065, 0.1, 'square', 0.28); noise(0.27, 0.14, 0.28, 1800, 0.8); },
+      toggle: () => { tone(660, 0, 0.06, 'square', 0.3); tone(880, 0.06, 0.08, 'square', 0.3); },
+      door: () => { noise(0, 0.12, 0.25, 2600, 0.9); tone(523, 0.05, 0.07, 'triangle', 0.3); tone(659, 0.11, 0.09, 'triangle', 0.3); },
+      stamp: () => { noise(0, 0.07, 0.45, 500, 1.2); tone(196, 0, 0.08, 'square', 0.3); tone(784, 0.09, 0.12, 'triangle', 0.4); },
+      pickup: () => seq([1047, 1319, 1568, 2093], 0.045, 0.08, 'square', 0.3),
+      warn: () => { tone(880, 0, 0.12, 'square', 0.3); tone(698, 0.14, 0.18, 'square', 0.3); },
+      party: () => { seq([523, 659, 784, 1047, 784, 1047, 1319, 1568], 0.08, 0.12, 'square', 0.3); seq([262, 0, 392, 0, 262, 0, 392, 523], 0.08, 0.14, 'triangle', 0.35); },
+      ok: () => seq([659, 880, 1319], 0.07, 0.12, 'square', 0.3),
+      no: () => { tone(330, 0, 0.14, 'square', 0.28, 0.7); tone(262, 0.15, 0.2, 'square', 0.28, 0.7); },
+    };
+
+    // 맥 사파리: 시험해 보니 Web Audio로 직접 내는 소리는 들리지 않고 audio 태그 소리만 들렸다(2026-11 Safari 27).
+    // 그래서 효과음을 처음에 소리 파일(WAV)로 한 번 만들어 두고 audio 태그로 재생한다.
+    // 아이폰은 Web Audio가 잘 되고 무음 모드도 지켜 주므로 그대로 둔다. 주소에 ?media / ?webaudio 를 붙이면 강제로 고를 수 있다.
+    const ua = navigator.userAgent;
+    const MEDIA = /[?&]media\b/.test(location.search) || (!/[?&]webaudio\b/.test(location.search) &&
+      /Macintosh/.test(ua) && /Version\/[\d.]+.*Safari/.test(ua) && !/Chrome|Chromium|Edg|Firefox/.test(ua) && !(navigator.maxTouchPoints > 1));
+    const pools = {};
+    let primed = false, played = 0, failed = 0;
+    function wavURL(buf) {
+      const d = buf.getChannelData(0), sr = buf.sampleRate;
+      let end = d.length; while (end > 1 && Math.abs(d[end - 1]) < 1e-4) end--;
+      const n = Math.min(d.length, end + Math.floor(sr * 0.02));
+      const bytes = new Uint8Array(44 + n * 2), v = new DataView(bytes.buffer);
+      const w = (o, str) => { for (let i = 0; i < str.length; i++) v.setUint8(o + i, str.charCodeAt(i)); };
+      w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+      v.setUint32(24, sr, true); v.setUint32(28, sr * 2, true); v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+      for (let i = 0; i < n; i++) v.setInt16(44 + i * 2, Math.max(-1, Math.min(1, d[i])) * 32767, true);
+      let bin = ''; for (let i = 0; i < bytes.length; i += 8192) bin += String.fromCharCode.apply(null, bytes.subarray(i, i + 8192));
+      return 'data:audio/wav;base64,' + btoa(bin);
+    }
+    async function renderAll() {
+      const OAC = window.OfflineAudioContext || window.webkitOfflineAudioContext;
+      if (!OAC) return;
+      for (const name of Object.keys(FX)) {
+        try {
+          const oc = new OAC(1, 22050, 22050);
+          target = oc; tmaster = oc.createGain(); tmaster.gain.value = 0.3; tmaster.connect(oc.destination);
+          noiseBuf = null; FX[name]();
+          target = null; tmaster = null; noiseBuf = null;
+          const buf = await oc.startRendering();
+          const url = wavURL(buf), n = name === 'type' || name.startsWith('step') ? 4 : 2;
+          pools[name] = Array.from({ length: n }, () => { const el = new Audio(url); el.preload = 'auto'; return el; });
+          pools[name].i = 0;
+          if (primed) pools[name].forEach(prime);
+        } catch (e) { target = null; tmaster = null; }
+      }
+    }
+    // 처음 누를 때 모든 audio 태그를 소리 없이 한 번 재생해 두면, 그다음부터는 언제든 바로 소리가 난다
+    function prime(el) {
+      el.muted = true;
+      const p = el.play();
+      const done = () => { el.pause(); el.currentTime = 0; el.muted = false; };
+      if (p && p.then) p.then(done, () => { el.muted = false; }); else done();
+    }
+    function playMedia(name) {
+      const pool = pools[name];
+      if (!on || !pool) return false;
+      const el = pool[pool.i = (pool.i + 1) % pool.length];
+      try {
+        el.currentTime = 0;
+        const p = el.play();
+        // audio 태그가 거절되면(보안 설정·권한) 그 소리만은 Web Audio로 낸다
+        if (p && p.then) p.then(() => { played++; }, () => { failed++; FX[name](); }); else played++;
+      } catch (e) { failed++; return false; }
+      return true;
+    }
+    if (MEDIA) renderAll();
+    const fx = (name) => () => { if (!(MEDIA && playMedia(name))) FX[name](); };
+    function unlockAll() {
+      if (MEDIA && !primed) { primed = true; Object.values(pools).forEach((pl) => pl.forEach(prime)); }
+      unlock();
+    }
     return {
       get on() { return on; },
-      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlock(); },
-      unlock,
+      set(v) { on = v; save('pixelSchoolSound', v, localStorage); if (v) unlockAll(); },
+      unlock: unlockAll,
       // 뒤로 가기로 돌아온 페이지(bfcache)는 오디오가 멈춰 있을 수 있어 다음 누름 때 새로 만든다
       stale() { if (ac && ac.state !== 'running') ac.__stale = true; },
-      get info() { return ac ? `${ac.state} · ${ac.sampleRate}Hz · t=${ac.currentTime.toFixed(2)}` : 'none'; },
-      get state() { return ac ? ac.state : 'none'; },
-      step(alt) { noise(0, 0.045, 0.28, alt ? 1400 : 1000, 2.5); tone(alt ? 150 : 130, 0, 0.035, 'triangle', 0.25); },
-      bump() { tone(110, 0, 0.09, 'square', 0.25, 0.6); },
-      move() { tone(988, 0, 0.045, 'square', 0.28); },
-      select() { seq([523, 659, 784, 1047], 0.055, 0.09, 'square', 0.32); },
-      chime() { tone(784, 0, 0.08, 'triangle', 0.5); tone(1175, 0.08, 0.16, 'triangle', 0.45); },
-      type() { tone(1320 + Math.random() * 120, 0, 0.018, 'square', 0.08); },
-      enter() { noise(0, 0.16, 0.35, 2200, 0.8); seq([392, 523, 659, 784, 1047], 0.06, 0.1, 'square', 0.32, 0.1); tone(1568, 0.42, 0.25, 'triangle', 0.3); },
-      exit() { seq([784, 659, 523, 392], 0.065, 0.1, 'square', 0.28); noise(0.27, 0.14, 0.28, 1800, 0.8); },
-      toggle() { tone(660, 0, 0.06, 'square', 0.3); tone(880, 0.06, 0.08, 'square', 0.3); },
-      door() { noise(0, 0.12, 0.25, 2600, 0.9); tone(523, 0.05, 0.07, 'triangle', 0.3); tone(659, 0.11, 0.09, 'triangle', 0.3); },
-      stamp() { noise(0, 0.07, 0.45, 500, 1.2); tone(196, 0, 0.08, 'square', 0.3); tone(784, 0.09, 0.12, 'triangle', 0.4); },
-      pickup() { seq([1047, 1319, 1568, 2093], 0.045, 0.08, 'square', 0.3); },
-      warn() { tone(880, 0, 0.12, 'square', 0.3); tone(698, 0.14, 0.18, 'square', 0.3); },
-      party() { seq([523, 659, 784, 1047, 784, 1047, 1319, 1568], 0.08, 0.12, 'square', 0.3); seq([262, 0, 392, 0, 262, 0, 392, 523], 0.08, 0.14, 'triangle', 0.35); },
+      get info() { return MEDIA ? `audio 태그 · 준비 ${Object.keys(pools).length}/${Object.keys(FX).length} · 재생 ${played} · 실패 ${failed}` : ac ? `${ac.state} · ${ac.sampleRate}Hz · t=${ac.currentTime.toFixed(2)}` : 'none'; },
+      get state() { return MEDIA ? (primed ? 'media' : 'media-locked') : ac ? ac.state : 'none'; },
+      get played() { return played; },
+      step(alt) { fx(alt ? 'step1' : 'step0')(); },
+      bump: fx('bump'), move: fx('move'), select: fx('select'), chime: fx('chime'), type: fx('type'), enter: fx('enter'), exit: fx('exit'),
+      toggle: fx('toggle'), door: fx('door'), stamp: fx('stamp'), pickup: fx('pickup'), warn: fx('warn'), party: fx('party'), ok: fx('ok'), no: fx('no'),
     };
   })();
 
@@ -1013,12 +1095,47 @@
     if (h >= 17) return { top: '#ff9a62', low: '#ffd08a' };
     return null; // 낮: 그려 둔 파란 하늘 그대로
   }
+  // 진로 O/X 퀴즈: 진로카페(게시판 옆) 쿠리만쥬 쌤이 하루 한 문제
+  const QUIZ = [
+    { q: '일반대 수시 모집에는 최대 6번까지 지원할 수 있다.', a: true, why: '일반대 수시는 6회까지예요. 산업대·전문대와 KAIST 같은 특별법 대학은 횟수에 들어가지 않아요.' },
+    { q: '정시 모집은 가·나·다 군마다 한 번씩 지원할 수 있다.', a: true, why: '군마다 한 곳씩, 모두 세 번 지원할 수 있어요.' },
+    { q: '학생부종합전형은 내신 등급만 보고 뽑는다.', a: false, why: '교과 성적뿐 아니라 세부능력 특기사항, 창의적 체험활동 같은 학생부 전체를 함께 봐요.' },
+    { q: '수시에 합격하면 등록하지 않아도 정시에 지원할 수 없다.', a: true, why: '수시 합격자는 등록 여부와 상관없이 그해 정시·추가모집에 지원할 수 없어요.' },
+    { q: '수능 최저학력기준은 모든 전형에 있다.', a: false, why: '전형마다 달라요. 최저가 없는 전형도 많으니 모집요강을 꼭 확인해요.' },
+    { q: '2028학년도 수능부터 국어·수학은 선택과목 없이 모두 같은 시험을 본다.', a: true, why: '2028 수능은 국어·수학·탐구 모두 선택과목 없이 공통으로 봐요.' },
+    { q: '고교학점제에서는 진로에 맞춰 듣고 싶은 과목을 고를 수 있다.', a: true, why: '공통 과목 말고는 진로와 흥미에 맞춰 과목을 골라 들어요.' },
+    { q: '지금도 대부분 대학 수시에서 자기소개서를 내야 한다.', a: false, why: '2024학년도 대입부터 자기소개서는 없어졌어요.' },
+  ];
+  const quiz = Object.assign({ day: '', right: 0 }, load('pixelSchoolQuiz', localStorage) || {});
+  const quizToday = () => { const d = new Date(), start = new Date(d.getFullYear(), 0, 0); return QUIZ[Math.floor((d - start) / 864e5) % QUIZ.length]; };
+  // 친구 도감과 칭호
+  const met = new Set(load('pixelSchoolFriends', localStorage) || []);
+  const metCount = () => new Set([...met, kid && kid.id].filter(Boolean)).size;
+  const TITLES = [
+    { id: 'star', name: '별 사냥꾼', how: '별 스티커 3개', ok: () => found.size >= 3 },
+    { id: 'tour', name: '진로 탐험가', how: '출석 도장 6개', ok: () => stamps.size >= 6 },
+    { id: 'errand', name: '심부름 달인', how: '심부름 끝내기', ok: () => quest.q >= QUESTS.length },
+    { id: 'book', name: '독서왕', how: '4반 도장 + 책 심부름', ok: () => stamps.has(3) && quest.q >= 1 },
+    { id: 'friend', name: '친구 부자', how: '친구 도감 채우기', ok: () => metCount() >= KIDS.length },
+    { id: 'quiz', name: '퀴즈 박사', how: 'O/X 퀴즈 3번 맞히기', ok: () => quiz.right >= 3 },
+  ];
+  const earned = load('pixelSchoolTitles', localStorage) || [];
+  function checkTitles(quiet) {
+    for (const t of TITLES) if (!earned.includes(t.id) && t.ok()) {
+      earned.push(t.id); save('pixelSchoolTitles', earned, localStorage);
+      if (!quiet) setTimeout(() => { SFX.party(); toast('칭호 획득!', `[${t.name}] 이제 이름 옆에 붙어요`); }, 1400);
+    }
+    paintTag();
+  }
+  const titleName = () => { const t = TITLES.find((x) => x.id === earned[earned.length - 1]); return t ? t.name : ''; };
+  const isLunch = () => new Date().getHours() === 12;
   const VEND_LINES = ['흠… 자판기 제품들의 영양성분을 비교해 볼까?', '당류가 가장 적은 음료는 뭘까? 표로 정리해 보자', '이온음료와 탄산음료, 나트륨은 얼마나 다를까?',
     '가격 대비 용량을 계산하면 어떤 게 제일 이득일까?', '캔과 페트병, 어느 쪽이 재활용하기 쉬울까?', '음료마다 카페인 양을 그래프로 그려 보면 재밌겠다'];
   let vendN = Math.floor(Math.random() * 6);
   function timeLine(r) {
     const d = new Date(), h = d.getHours(), wd = d.getDay();
     if (wd === 1 && r.i === 4) return '월요일! 새 뉴스가 왔어요';
+    if (h === 12) return r.i === 6 ? '점심은 먹고 커피 마셔요' : '점심 맛있게 먹어요!';
     if (h >= 19 || h < 6) return r.i === 6 ? '이 시간까지? …얼른 집에 가요' : '늦었네요, 오늘은 여기까지!';
     if (wd === 0 || wd === 6) return '주말에도 들렀네요? 대단해요!';
     if (wd === 5) return '금요일이에요, 조금만 더 힘내요!';
@@ -1324,6 +1441,7 @@
     const stairGap = !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? P.y - L.walkHall.y : P.x - L.walkHall.x;
     if (stairGap < 8 && !said.has('stairs')) { said.add('stairs'); SFX.bump(); toast(kid ? kid.name : '나', '아아, 계단으로는 갈 수 없는 모양이다…'); }
     else if (stairGap > 24) said.delete('stairs');
+    if (isLunch() && inHall && !said.has('lunch')) { said.add('lunch'); toast(kid ? kid.name : '나', '어디선가 급식 냄새가 난다… 오늘 메뉴는 뭘까?'); }
     // 자판기 가까이 가면 탐구 한마디(멀어졌다 다시 오면 다른 말)
     if (L.vend) {
       const dv = Math.hypot(P.x - L.vend.spot.x, P.y - L.vend.spot.y);
@@ -1408,6 +1526,17 @@
       } });
     }
     const others = KIDS.filter((x) => x !== kid);
+    const lunch = isLunch();
+    if (lunch && mode === 'play') {
+      // 점심시간: 친구들이 줄지어 계단(급식실) 쪽으로 걸어간다
+      const h = L.walkHall, len = L.portrait ? h.h : h.w;
+      others.forEach((o, k) => {
+        const d = (clock * 16 + k * (len / others.length)) % len;
+        const x = L.portrait ? h.x + 10 + (k % 2) * 18 : h.x + h.w - d, y = L.portrait ? h.y + h.h - d : h.y + 14 + (k % 2) * 16;
+        const fr = ['a', 'idle', 'b', 'idle'][Math.floor(clock * 6 + k) % 4];
+        list.push({ y, fn: () => { shadowAt(x, y, 10); drawSprite(personSprite(o, L.portrait ? 'up' : 'left', L.portrait ? fr : (fr === 'b' ? 'a' : fr), false), x, y); } });
+      });
+    }
     L.rooms.forEach((r, i) => {
       const t = r.teacher, tp = r.tpos;
       let tdir = 'down';
@@ -1417,7 +1546,7 @@
       }
       list.push({ y: tp.y, fn: () => { shadowAt(tp.x, tp.y, 10); drawSprite(personSprite(t, tdir, 'idle', blinking(i + 3)), tp.x, tp.y + hop(i)); } });
       const o = others[i];
-      r.npc = o || null;
+      r.npc = lunch ? null : o || null; // 점심시간엔 다들 급식 먹으러 갔다
       if (o && r.npcSeat) {
         const s = r.npcSeat;
         const near = Math.hypot(P.x - s.x, P.y - s.y) < 30;
@@ -1426,6 +1555,7 @@
         list.push({ y: s.y, fn: () => { shadowAt(s.x, s.y, 10); drawSprite(personSprite(o, sd, 'idle', near && blinking(i)), s.x, s.y + hop(i + 1)); } });
       }
     });
+    moveTag();
     if (kid && mode === 'play') {
       const frames = P.dir === 'left' || P.dir === 'right' ? ['a', 'idle'] : ['a', 'idle', 'b', 'idle'];
       const fr = P.moving ? frames[Math.floor(P.anim * 7) % frames.length] : 'idle';
@@ -1534,6 +1664,41 @@
     starsEl.textContent = [found.size ? '★ ' + found.size + '/3' : '', stamps.size ? '도장 ' + stamps.size + '/6' : ''].filter(Boolean).join(' · ');
     starsEl.title = '찾은 별 스티커 · 출석 도장';
     paintQuest();
+    paintNote();
+    checkTitles();
+  }
+  // 이름표(칭호 + 이름)는 주인공 머리 위에 따라다닌다
+  function paintTag() {
+    const el = $('#nametag'); if (!el) return;
+    const t = titleName();
+    el.textContent = t && kid ? `[${t}] ${kid.name}` : '';
+    el.hidden = !t || !kid;
+  }
+  function moveTag() {
+    const el = $('#nametag'); if (!el || !L) return;
+    const show = mode === 'play' && !!el.textContent;
+    if (el.hidden === show) el.hidden = !show;
+    if (show) { el.style.left = (P.x / L.W) * 100 + '%'; el.style.top = ((P.y - 19) / L.H) * 100 + '%'; }
+  }
+  // 수첩: 친구 도감과 칭호
+  function paintNote() {
+    const btn = $('#note'); if (btn) btn.textContent = `수첩 ${metCount()}/${KIDS.length}`;
+    const box = $('#note-body'); if (!box) return;
+    box.replaceChildren();
+    const h = (tag, text, cls) => { const e = document.createElement(tag); e.textContent = text; if (cls) e.className = cls; box.appendChild(e); return e; };
+    h('p', `친구 도감 ${metCount()}/${KIDS.length}`, 'note-h');
+    const ul = h('ul', '', 'note-list');
+    for (const k of KIDS) {
+      const li = document.createElement('li'), seen = met.has(k.id) || k === kid, dr = DREAMS[k.id];
+      li.appendChild(faceCanvas(k)); if (!seen) li.classList.add('unknown');
+      const t = document.createElement('span');
+      t.textContent = seen ? `${k.name}${k === kid ? ' (나)' : ''} · 꿈: ${dr[0]} · 관심 전공: ${dr[1]}` : '??? · 교실에서 이 친구를 찾아 말을 걸어 보세요';
+      li.appendChild(t); ul.appendChild(li);
+    }
+    h('p', `칭호 ${earned.length}/${TITLES.length}`, 'note-h');
+    const ul2 = h('ul', '', 'note-list titles');
+    for (const t of TITLES) { const li = document.createElement('li'); li.textContent = earned.includes(t.id) ? `★ ${t.name}` : `· ??? (${t.how})`; ul2.appendChild(li); }
+    h('p', `퀴즈 맞힌 수 ${quiz.right} · 진로카페에서 하루 한 문제`, 'note-foot');
   }
   function paintQuest() {
     const questEl = $('#quest');
@@ -1592,12 +1757,29 @@
       save('pixelSchoolDrink', dayKey(), localStorage); SFX.party();
       setTimeout(() => toast('오늘의 음료', `${josa(drink, '을', '를')} 받았어요!`), 400);
     }
+    else if (sp && room.key === 'cafe' && quiz.day !== dayKey()) {
+      // 오늘의 O/X 퀴즈
+      dlg.quiz = quizToday();
+      say = `${t.name}: …심심하면 퀴즈나 풀어요. "${dlg.quiz.q}" O일까요, X일까요?`;
+    }
     else if (sp) say = `${t.name}: ${who === 'door' ? `어서 와요, ${me}! ` : ''}${specialTalk(sp)}`;
-    else if (who === 'student' && r.npc) { face = r.npc; say = `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`; }
+    else if (who === 'student' && r.npc) {
+      face = r.npc;
+      const first = !met.has(r.npc.id), dr = DREAMS[r.npc.id];
+      if (first) { met.add(r.npc.id); save('pixelSchoolFriends', [...met], localStorage); setTimeout(() => { SFX.pickup(); toast('친구 도감', `${r.npc.name} 등록! (${metCount()}/${KIDS.length})`); paintStars(); }, 300); }
+      say = first && dr ? `${r.npc.name}: 안녕, ${me}! 나는 ${r.npc.name}. 꿈은 ${dr[0]}이고, ${dr[1]}에 관심 있어. 여기 ${room.short} 사이트 같이 볼래?`
+        : `${r.npc.name}: 안녕, ${me}! ${kidTalk(r.npc)} 여기 ${room.short} 사이트 같이 볼래?`;
+    }
     else if (who === 'teacher') say = `${t.name}: 반가워요, ${me}! ${tl ? tl + ' ' : ''}${t.say}`;
     else say = `${t.name}: 어서 와요, ${me}! ${tl ? tl + ' ' : ''}여기는 ${room.n}반 ${room.short} 교실이에요.`;
     $('#dlg-face').replaceChildren(faceCanvas(face));
     $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
+    $('#dlg-no kbd').textContent = 'Esc';
+    if (dlg.quiz) { $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
+    typeSay(say);
+    dlgEl.hidden = false;
+  }
+  function typeSay(say) {
     const el = $('#dlg-say');
     clearInterval(typer);
     if (reduceMotion) el.textContent = say;
@@ -1609,7 +1791,16 @@
         if (n >= say.length) clearInterval(typer);
       }, 28);
     }
-    dlgEl.hidden = false;
+  }
+  function answerQuiz(o) {
+    const qz = dlg && dlg.quiz; if (!qz) return;
+    dlg.quiz = null;
+    const right = o === qz.a, t = dlg.r.teacher;
+    quiz.day = dayKey(); if (right) quiz.right++; save('pixelSchoolQuiz', quiz, localStorage);
+    if (right) SFX.ok(); else SFX.no();
+    $('#dlg-go').firstChild.textContent = '▶ 이야기 더 듣기 '; $('#dlg-no').firstChild.textContent = '닫기 '; $('#dlg-no kbd').textContent = 'Esc';
+    typeSay(`${t.name}: ${right ? '…흥, 맞았네요.' : `땡, ${qz.a ? 'O' : 'X'}예요.`} ${qz.why} 내일 또 와요.`);
+    checkTitles();
   }
   // 진로카페·위클래스 선생님 말: 처음엔 첫 줄(위클래스는 4층 안내), 그다음은 무작위
   function specialTalk(sp) {
@@ -1644,8 +1835,19 @@
     $('#fade').hidden = false;
     setTimeout(() => { location.href = r.room.url; }, reduceMotion ? 120 : 560);
   }
-  $('#dlg-go').addEventListener('click', () => dlg && enter(dlg.r));
-  $('#dlg-no').addEventListener('click', () => closeDialog(true));
+  // 수첩 열고 닫기
+  const noteEl = $('#notebook');
+  function toggleNote(open) {
+    if (!noteEl) return;
+    open = open == null ? noteEl.hidden : open;
+    if (open) { closeDialog(); paintNote(); SFX.chime(); }
+    noteEl.hidden = !open;
+    if (!open) stage.focus({ preventScroll: true });
+  }
+  $('#note').addEventListener('click', (e) => { e.stopPropagation(); toggleNote(); });
+  $('#note-close').addEventListener('click', (e) => { e.stopPropagation(); toggleNote(false); });
+  $('#dlg-go').addEventListener('click', () => { if (dlg && dlg.quiz) answerQuiz(true); else if (dlg) enter(dlg.r); });
+  $('#dlg-no').addEventListener('click', () => { if (dlg && dlg.quiz) answerQuiz(false); else closeDialog(true); });
 
   /* ───────── 복도 게시판: 진로 선생님께 메시지 ───────── */
   const memoEl = $('#memo'), memoForm = $('#memo-form'), memoStatus = $('#memo-status'), memoSend = $('#memo-send');
@@ -1782,6 +1984,7 @@
   addEventListener('keydown', (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     if (memoOpen) { if (e.key === 'Escape') { e.preventDefault(); closeMemo(); } return; }
+    if (noteEl && !noteEl.hidden && (e.key === 'Escape' || KEYMAP[e.key])) { toggleNote(false); if (e.key === 'Escape') { e.preventDefault(); return; } }
     const tag = (document.activeElement && document.activeElement.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
     // ↑↑↓↓←→←→BA
@@ -1803,6 +2006,9 @@
     if ((e.key === 'Enter' || e.key === ' ') && !onButton) {
       e.preventDefault();
       interact();
+    } else if (dlg && dlg.quiz && /^[oOxX]$/.test(e.key)) {
+      e.preventDefault();
+      answerQuiz(/^[oO]$/.test(e.key));
     } else if (e.key === 'Escape' && dlg) {
       e.preventDefault();
       closeDialog(true);
@@ -1814,6 +2020,7 @@
 
   // Enter·A: 대화창이 떠 있으면 사이트로, 아니면 가까운 문·선생님·학생에게 말을 건다
   function interact() {
+    if (dlg && dlg.quiz) { answerQuiz(true); return; }
     if (dlg) { enter(dlg.r); return; }
     if (L.board && Math.hypot(P.x - L.board.spot.x, P.y - L.board.spot.y) < 20) { armed = 'board'; openMemo(); return; }
     let best = null, bd = 34;
@@ -1933,7 +2140,7 @@
   window.pixelSchool = {
     go: (n) => { const r = L.rooms[n - 1]; walkTo(r.door.entry.x, r.door.entry.y); },
     walk: (x, y) => walkTo(x, y),
-    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, audio: SFX.state, stars: found.size, room: P.room && P.room.i }),
+    state: () => ({ mode, x: P.x, y: P.y, dir: P.dir, dialog: dlg && dlg.r.room.n, who: dlg && dlg.who, portrait: L.portrait, sound: SFX.on, audio: SFX.state, played: SFX.played, info: SFX.info, stars: found.size, room: P.room && P.room.i }),
     layout: () => L,
     game: () => ({ stamps: [...stamps], quest: { ...quest }, sky: skyNow() }),
   };
