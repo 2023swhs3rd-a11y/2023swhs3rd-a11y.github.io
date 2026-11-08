@@ -136,6 +136,9 @@
     ahoge: ALL([['u', 'h', 7, -1, 1, 1], ['u', 'h', 8, -2, 1, 1], ['u', 'h', 9, -2, 1, 1]]),
     ribbon: { down: [['o', 'r', 10, 1, 3, 1], ['o', 'r', 11, 0, 1, 3]], up: [['o', 'r', 10, 1, 3, 1], ['o', 'r', 11, 0, 1, 3]], side: [['o', 'r', 9, 1, 3, 1], ['o', 'r', 10, 0, 1, 3]] },
     glasses: { down: [['o', 'g', 2, 7, 1, 2], ['o', 'g', 5, 7, 1, 2], ['o', 'g', 8, 7, 1, 2], ['o', 'g', 11, 7, 1, 2], ['o', 'g', 6, 7, 2, 1]], side: [['o', 'g', 1, 7, 1, 2], ['o', 'g', 4, 7, 1, 2], ['o', 'g', 5, 7, 2, 1]] },
+    // 인상 쓴 눈썹(안쪽이 내려간 八자 반대 모양)과 꾹 다문 입
+    frown: { down: [['o', 'H', 2, 6, 3, 1], ['o', 'H', 5, 7, 1, 1], ['o', 'H', 9, 6, 3, 1], ['o', 'H', 8, 7, 1, 1], ['o', 'e', 4, 7, 1, 1], ['o', 'e', 10, 7, 1, 1], ['o', 'e', 6, 9, 2, 1], ['o', 's', 2, 9, 1, 1], ['o', 's', 11, 9, 1, 1]],
+      side: [['o', 'H', 1, 6, 3, 1], ['o', 'H', 4, 7, 1, 1], ['o', 'e', 3, 7, 1, 1], ['o', 'e', 3, 9, 1, 1]] },
     mustache: { down: [['o', 'H', 5, 9, 4, 1]], side: [['o', 'H', 1, 9, 3, 1]] },
     hood: { down: [['u', 'w', 2, 11, 10, 2]], up: [['o', 'w', 3, 11, 8, 3]], side: [['u', 'w', 8, 10, 4, 3]] },
   };
@@ -177,17 +180,17 @@
     return line;
   }
   const TEACHERS = [
-    { id: 't1', name: '김 선생님', adult: true, look: ['glasses'], say: '대입 전형은 무엇이든 물어보세요.',
+    { id: 't1', bubble: ['전형 이름부터 알아 둬요!', '교과? 종합? 같이 봐요', '수시 6장 전략 세웠나요?', '2028 대입, 미리미리!'], name: '김 선생님', adult: true, look: ['glasses'], say: '대입 전형은 무엇이든 물어보세요.',
       pal: { h: '#5a596e', s: '#f7caa0', c: '#2b3a66', w: '#ffffff', t: '#e2475a', p: '#353b4a' } },
-    { id: 't2', name: '박 선생님', adult: true, look: ['bun'], skirt: true, say: '진로 고민, 같이 찾아봐요.',
+    { id: 't2', bubble: ['좋아하는 것부터 적어 봐요', '진로는 천천히 찾아도 돼요', '추천 자료 새로 올렸어요!', '전공 안내서 읽어 봤나요?'], name: '박 선생님', adult: true, look: ['bun'], skirt: true, say: '진로 고민, 같이 찾아봐요.',
       pal: { h: '#6a3a26', s: '#ffd9b8', c: '#f08fb0', w: '#ffffff', t: '#c2410c', p: '#4b4f7a' } },
-    { id: 't3', name: '이 선생님', adult: true, look: ['glasses'], say: '숫자 속에 우리 동네 이야기가 있어요.',
+    { id: 't3', bubble: ['그래프에 답이 숨어 있어요', '우리 시는 학생이 늘었을까?', '숫자는 거짓말을 안 해요', '지도에서 동네를 찾아봐요'], name: '이 선생님', adult: true, look: ['glasses'], say: '숫자 속에 우리 동네 이야기가 있어요.',
       pal: { h: '#2a2440', s: '#f2bf94', c: '#f4f4f4', w: '#7fb3e0', t: '#0e7490', p: '#3b4252' } },
-    { id: 't4', name: '최 선생님', adult: true, look: ['long'], skirt: true, say: '오늘은 어떤 책을 읽고 있나요?',
+    { id: 't4', bubble: ['오늘의 한 문장은?', '쉿, 책 읽는 중이에요', '친구 책에 공감 눌러 줘요', '한 쪽만 더 읽어 볼까요?'], name: '최 선생님', adult: true, look: ['long'], skirt: true, say: '오늘은 어떤 책을 읽고 있나요?',
       pal: { h: '#2e2030', s: '#ffe0c4', c: '#74b46e', w: '#fff6e0', t: '#c2410c', p: '#a35a3a' } },
-    { id: 't5', name: '정 선생님', adult: true, look: ['mustache'], say: '뉴스 한 줄이 진로가 되기도 해요.',
+    { id: 't5', bubble: ['오늘 아침 뉴스 봤나요?', '이 기사, 어떤 전공일까?', '질문 다섯 개로 깊게 읽기!', '월요일엔 새 뉴스가 와요'], name: '정 선생님', adult: true, look: ['mustache'], say: '뉴스 한 줄이 진로가 되기도 해요.',
       pal: { h: '#3a2a20', s: '#efb98e', c: '#cf8240', w: '#ffffff', t: '#15803d', p: '#4a3a30' } },
-    { id: 't6', name: '한 선생님', adult: true, look: ['bob'], skirt: true, say: '생각을 한 단계씩 키워 봐요.',
+    { id: 't6', bubble: ['기억하고, 이해하고, 적용!', '탐구 주제 정했나요?', '한 단계 위로 올라가 봐요', '성취기준에서 출발해요'], name: '한 선생님', adult: true, look: ['bob'], skirt: true, say: '생각을 한 단계씩 키워 봐요.',
       pal: { h: '#1f1b2e', s: '#ffd4ae', c: '#b55094', w: '#ffffff', t: '#ffd36b', p: '#b55094' } },
   ];
 
@@ -197,8 +200,8 @@
   const SPECIAL = [
     { room: mkRoom({ key: 'cafe', short: '진로카페', title: '진로카페', badge: '카페', color: '#9a6240', icon: 'cup',
         desc: '진로 선생님과 따뜻한 차 한 잔 하며 진로 고민을 편하게 나누는 쉼터예요.' }),
-      staff: { id: 'barista', name: '쿠리만쥬 쌤', adult: true, look: ['ahoge', 'mustache'], say: '',
-        pal: { h: '#4a2c20', s: '#f7caa0', c: '#6b4228', w: '#fff6e0', t: '#e0a93a', p: '#3b3030' } },
+      staff: { id: 'barista', name: '쿠리만쥬 쌤', adult: true, look: ['ahoge', 'frown'], say: '',
+        pal: { h: '#8a4b26', s: '#f7caa0', c: '#e9b48c', w: '#fff1e0', t: '#a8643c', p: '#5a3a2a', H: '#4a2410' } },
       talk: ['진로카페에서는 커피 향을 맡으며 진로 이야기를 나눠요.', '원두를 고르듯 진로도 천천히 맛보며 골라 봐요.',
         '따뜻한 코코아도 있어요. 고민 하나 내려놓고 가요.', '오늘의 추천 메뉴는 "꿈 한 스푼 라떼"예요.', '쉬는 시간에 잠깐 들러도 좋아요. 자리는 늘 비워 둘게요.'],
       bubble: ['커피 내리는 중…', '꿈 한 스푼 라떼 어때요?', '쉬어 가요, 천천히!', '진로 고민도 한 잔!'] },
@@ -403,18 +406,21 @@
     if (!L.portrait) {
       for (let i = 0; i < 6; i++) { R(0, h.y + i * 8, 24 - i * 2, 8, i % 2 ? '#c2ab82' : '#d4bd92'); R(0, h.y + i * 8, 24 - i * 2, 0.5, '#e6d2aa'); R(0, h.y + i * 8 + 7, 24 - i * 2, 1, '#8f7a58'); }
       R(24, h.y, 2, h.h, '#8f7a58'); R(24.5, h.y, 0.5, h.h, '#b39a70');
-      plant(L.W - 20, h.y + 3); plant(L.W - 20, h.y + h.h - 19);
+      // 복도 오른쪽 끝 벽의 창문(가까이 가면 한마디)
+      hallWindow(L.W - 6, h.y, 6, h.h, true);
+      L.window = { x: L.W - 6, y: h.y, w: 6, h: h.h };
       // 복도 깔개
       rug(Math.round(L.W / 2 - 52), h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
     } else {
       for (let i = 0; i < 6; i++) { R(h.x, i * 4, h.w, 4, i % 2 ? '#c2ab82' : '#d4bd92'); R(h.x, i * 4, h.w, 0.5, '#e6d2aa'); R(h.x, i * 4 + 3.5, h.w, 0.5, '#8f7a58'); }
       R(h.x, 24, h.w, 2, '#8f7a58');
-      R(h.x + 8, L.H - 8, h.w - 16, 8, '#7c9a6a'); R(h.x + 10, L.H - 6, h.w - 20, 0.5, '#5e7c50'); R(h.x + 10, L.H - 3, h.w - 20, 0.5, '#5e7c50');
+      hallWindow(h.x, L.H - 6, h.w, 6, false);
+      L.window = { x: h.x, y: L.H - 6, w: h.w, h: 6 };
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
       sign(h.x + 3, 5, 42, 12, '정숙');
-      standSign(h.x + 4, L.H - 36, 40, 12, '뛰지 맙시다', L);
-      // 세워 둔 게시판(가까이 가거나 누르면 진로 선생님께 메시지)
-      const bx = h.x + 6, by = 136;
+      standSign(h.x + 1, 232, 34, 12, '뛰지 맙시다', L);
+      // 진로카페 앞에 세워 둔 게시판(가까이 가거나 누르면 진로 선생님께 메시지)
+      const bx = h.x + 6, by = 344;
       R(bx + 3, by + 12, 2, 6, C.leg); R(bx + 13, by + 12, 2, 6, C.leg); R(bx + 1, by + 18, 16, 1, C.shadow);
       R(bx - 1, by - 1, 20, 14, C.out); R(bx, by, 18, 12, C.frame); R(bx + 1, by + 1, 16, 10, '#d9a86b');
       R(bx + 2, by + 2, 5, 4, '#ffffff'); R(bx + 8, by + 3, 4, 3, '#ffd36b'); R(bx + 3, by + 7, 4, 3, '#a8dcef');
@@ -433,6 +439,28 @@
     R(x + 1.5, y + 2, 0.5, h - 4, c2); R(x + w - 2, y + 2, 0.5, h - 4, c2);
     for (let i = x + 4; i < x + w - 4; i += 4) R(i, y + h / 2 - 0.5, 1.5, 1, c2);
     for (let i = x + 2; i < x + w - 2; i += 2) { R(i, y - 1, 0.5, 1, c2); R(i, y + h, 0.5, 1, c2); }
+  }
+  // 복도 끝 창문: vertical이면 오른쪽 벽(가로 화면), 아니면 아래 벽(세로 화면)
+  function hallWindow(x, y, w, h, vertical) {
+    R(x, y, w, h, C.wallTop);
+    if (vertical) {
+      R(x, y, 0.5, h, C.wallHi);
+      const gy = y + 5, gh = h - 10;
+      R(x + 1, gy - 1, 4, gh + 2, C.frame); R(x + 1.5, gy, 3, gh, C.glass);
+      R(x + 1.5, gy + gh / 2 - 0.5, 3, 1, C.frame);
+      R(x + 2, gy + 2, 1, 5, C.glassHi); R(x + 2, gy + gh / 2 + 3, 1, 4, C.glassHi);
+      R(x - 1, gy, 1, gh, C.frameHi);
+      // 창으로 들어오는 햇빛
+      for (let i = 0; i < 5; i++) R(x - 4 - i * 3, gy + 2 + i, 3, gh - 4 - i * 2, 'rgba(255,248,214,0.16)');
+    } else {
+      R(x, y, w, 0.5, C.wallHi);
+      const gx = x + 6, gw = w - 12;
+      R(gx - 1, y + 1, gw + 2, 4, C.frame); R(gx, y + 1.5, gw, 3, C.glass);
+      R(gx + gw / 2 - 0.5, y + 1.5, 1, 3, C.frame);
+      R(gx + 2, y + 2, 5, 1, C.glassHi); R(gx + gw / 2 + 3, y + 2, 4, 1, C.glassHi);
+      R(gx, y - 1, gw, 1, C.frameHi);
+      for (let i = 0; i < 5; i++) R(gx + 2 + i, y - 4 - i * 3, gw - 4 - i * 2, 3, 'rgba(255,248,214,0.16)');
+    }
   }
   function plant(x, y) {
     R(x + 3, y + 15.5, 9, 1, C.shadow);
@@ -771,19 +799,19 @@
       R(r.x, r.y + r.h - 5, r.w, 5, C.wains); R(r.x, r.y + r.h - 5, r.w, 0.5, C.wainsHi); R(r.x, r.y + r.h - 1, r.w, 1, C.wainsDk);
       for (let x = r.x + 3; x < r.x + r.w; x += 6) R(x, r.y + r.h - 4, 0.5, 3, C.wainsDk);
       // 복도 쪽 표지판과 게시판
-      // 표지판은 같은 크기로 한 번씩: 1반 앞 '뛰지 맙시다', 2반 앞 '정숙', 3반 앞은 게시판
+      // 표지판은 같은 크기로 한 번씩: 1반 앞 '뛰지 맙시다', 2반 앞 '정숙', 진로카페 앞은 게시판
       if (r.i === 0) sign(r.x + 8, r.y + r.h - 12, 48, 11, '뛰지 맙시다');
       if (r.i === 1) sign(r.x + 8, r.y + r.h - 12, 48, 11, '정숙');
-      if (r.i === 2) {
+      if (room.key === 'cafe') {
         // 복도 게시판: 가까이 가거나 누르면 진로 선생님께 메시지를 남긴다
-        const nb = r.x + 8, by = r.y + r.h - 11;
-        R(nb - 1, by - 1, 34, 10, C.out); R(nb, by, 32, 8, C.frame); R(nb + 1, by + 1, 30, 6, '#d9a86b');
-        [['#ffffff', 2], ['#ffd36b', 8], [room.light, 14], ['#a8dcef', 20]].forEach(([c, ox], i) => {
-          R(nb + ox, by + 2 + (i % 2), 5, 3, c); R(nb + ox + 2, by + 2 + (i % 2), 1, 1, '#e0475a');
+        const nb = r.x + 6, by = r.y + r.h - 11, bw = 24;
+        R(nb - 1, by - 1, bw + 2, 10, C.out); R(nb, by, bw, 8, C.frame); R(nb + 1, by + 1, bw - 2, 6, '#d9a86b');
+        [['#ffffff', 2], ['#ffd36b', 7], ['#a8dcef', 12]].forEach(([c, ox], i) => {
+          R(nb + ox, by + 2 + (i % 2), 4, 3, c); R(nb + ox + 1.5, by + 2 + (i % 2), 1, 1, '#e0475a');
         });
         // 편지 봉투
-        R(nb + 26, by + 2, 5, 4, '#ffffff'); R(nb + 27, by + 3, 1, 1, '#e0475a'); R(nb + 29, by + 3, 1, 1, '#e0475a'); R(nb + 28, by + 4, 1, 1, '#e0475a');
-        L.board = { x: nb - 1, y: by - 1, w: 34, h: 10, spot: { x: nb + 16, y: L.walkHall.y + 6 } };
+        R(nb + 17, by + 2, 5, 4, '#ffffff'); R(nb + 18, by + 3, 1, 1, '#e0475a'); R(nb + 20, by + 3, 1, 1, '#e0475a'); R(nb + 19, by + 4, 1, 1, '#e0475a');
+        L.board = { x: nb - 1, y: by - 1, w: bw + 2, h: 10, spot: { x: nb + 12, y: L.walkHall.y + 6 } };
       }
     } else {
       R(r.x, r.y + r.h - r.S, r.w, r.S, C.wallTop); R(r.x, r.y + r.h - r.S, r.w, 0.5, C.wallHi);
@@ -941,11 +969,10 @@
       labels.appendChild(el);
     };
     for (const r of L.rooms) put('chalk', r.room.short, r.board.x, r.board.y, r.board.w, r.board.h - 1);
-    // 진로카페·위클래스 선생님 머리 위 말풍선
+    // 선생님 머리 위 말풍선(교실마다 성격에 맞게)
     for (const r of L.rooms) {
-      if (!r.room.special) continue;
       const el = document.createElement('div');
-      el.className = 'bubble ' + r.room.key;
+      el.className = 'bubble ' + (r.room.special ? r.room.key : 'class');
       el.hidden = true;
       Object.assign(el.style, { left: (r.tpos.x / L.W) * 100 + '%', top: ((r.tpos.y - 19) / L.H) * 100 + '%' });
       labels.appendChild(el);
@@ -1137,10 +1164,10 @@
   function updateBubbles() {
     for (const r of L.rooms) {
       if (!r.bubbleEl) continue;
-      const sp = specialOf(r);
-      const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70);
-      if (near) {
-        const text = sp.bubble[Math.floor(clock / 4) % sp.bubble.length];
+      const list = r.room.special ? specialOf(r).bubble : r.teacher.bubble;
+      const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
+      if (near && list) {
+        const text = list[Math.floor(clock / 4) % list.length];
         if (r.bubbleEl.textContent !== text) r.bubbleEl.textContent = text;
       }
       if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
@@ -1200,6 +1227,10 @@
     const stairGap = !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? P.y - L.walkHall.y : P.x - L.walkHall.x;
     if (stairGap < 8 && !said.has('stairs')) { said.add('stairs'); SFX.bump(); toast(kid ? kid.name : '나', '아아, 계단으로는 갈 수 없는 모양이다…'); }
     else if (stairGap > 24) said.delete('stairs');
+    // 복도 끝 창문 가까이 가면 한마디
+    const winGap = !L.window || !inRect(P.x, P.y, L.hall) ? 99 : L.portrait ? L.walkHall.y + L.walkHall.h - P.y : L.walkHall.x + L.walkHall.w - P.x;
+    if (winGap < 8 && !said.has('window')) { said.add('window'); SFX.bump(); toast(kid ? kid.name : '나', '창문에 기대면 안 되겠지…'); }
+    else if (winGap > 24) said.delete('window');
 
     // 별 스티커 줍기
     for (const st of L.stickers) {
