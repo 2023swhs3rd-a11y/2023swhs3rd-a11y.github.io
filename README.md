@@ -47,7 +47,7 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 
 ## 픽셀 학교 글꼴
 
-`assets/school/fonts/galmuri11-subset.woff2`는 갈무리11(SIL OFL)에서 페이지에 쓰는 글자만 남긴 파일이다. 화면 글자를 바꾸면 다시 만든다(fonttools·brotli 필요, 원본은 npm `galmuri` 패키지의 `dist/Galmuri11.woff2`).
+`assets/school/fonts/galmuri11-subset.woff2`는 갈무리11(SIL OFL)에서 페이지에 쓰는 글자만 남긴 파일이다. 화면 글자를 바꾸면 다시 만들고, `school.css`의 `@font-face` 주소와 `index.html`의 preload 주소에 붙은 `?v=`를 함께 올린다(안 올리면 브라우저가 예전 글꼴 파일을 써서 새 글자만 다른 글꼴로 보인다)(fonttools·brotli 필요, 원본은 npm `galmuri` 패키지의 `dist/Galmuri11.woff2`).
 
 ```
 cat index.html assets/school/school.js > /tmp/text.txt
