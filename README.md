@@ -14,6 +14,7 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 | `assets/school/` | 첫 화면 픽셀 학교의 그림·움직임·효과음(`school.js`), 화면 틀(`school.css`), 갈무리 글꼴 일부(`fonts/`). 교실 주소·이름·설명·색은 `index.html`의 교실 바로가기 목록 하나만 고치면 된다 |
 | `school/` | 예전 픽셀 학교 주소. 첫 화면으로 보낸다 |
 | `scripts/` | 추천 자료 검사, 주간 상태 점검(사이트·링크), 미리보기 그림 만들기 |
+| `og.png` | 첫 화면 주소를 카톡·SNS로 보낼 때 뜨는 미리보기 그림(1200×630). 교실 이름이나 그림이 바뀌면 `node scripts/og_image.mjs`로 다시 만들고(`python3 -m http.server 8765`를 켜 둔 채), `index.html`의 `og:image` 주소 `?v=`를 올린다 |
 | `404.html`, `sitemap.xml`, `robots.txt` | 없는 주소 안내, 검색엔진용 목록 |
 
 ## 추천 자료 더하기
