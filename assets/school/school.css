@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=20") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=21") format("woff2");
   font-display: swap;
 }
 
@@ -94,6 +94,7 @@ main { display: flex; flex-direction: column; align-items: center; }
 /* 메시지창: 화면 아래(대화창과 같은 너비). 대화창이 떠 있을 때는 화면 가운데 */
 .toast b { color: #c2283c; margin-right: 4px; }
 .stars { padding: 2px 8px; background: var(--ink); color: var(--gold); border: 2px solid var(--gold); font-size: 11px; }
+.quest .mtag { display: inline-block; padding: 0 6px; margin-right: 2px; border-radius: 4px; background: #e0475a; color: #fff; }
 .stars[hidden], .toast[hidden], .quest[hidden], .newmark[hidden], .nametag[hidden] { display: none; }
 .nametag { position: absolute; transform: translate(-50%, -100%); z-index: 1; pointer-events: none; padding: 0 4px; background: #2b1d2ecc; color: var(--gold); border: 1px solid var(--gold); font-size: max(9px, calc(var(--sign, 9px) * .75)); line-height: 1.3; white-space: nowrap; }
 .notebook { max-height: calc(100% - var(--hud-h) - 8px); overflow: auto; }
@@ -164,8 +165,12 @@ main { display: flex; flex-direction: column; align-items: center; }
 .bubble.wee { background: #fff0f5; }
 .bubble.cafe { background: #fff6e8; }
 .bubble[hidden] { display: none; }
+.bubble.below { transform: translate(-50%, 0); }
+.bubble.below::after { bottom: auto; top: -7px; border: 5px solid transparent; border-bottom-color: #2b1d2e; border-top: 0; }
 @media (prefers-reduced-motion: no-preference) { .bubble { animation: bob 2s ease-in-out infinite; } }
 @keyframes bob { 50% { transform: translate(-50%, calc(-100% - 2px)); } }
+@keyframes bobdown { 50% { transform: translate(-50%, 2px); } }
+@media (prefers-reduced-motion: no-preference) { .bubble.below { animation-name: bobdown; } }
 
 /* 게시판 메시지 */
 .memo { max-height: 92%; overflow: auto; }
