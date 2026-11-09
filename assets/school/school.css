@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=26") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=27") format("woff2");
   font-display: swap;
 }
 /* 급식 메뉴·학사일정처럼 날마다 바뀌는 글자용: 자주 쓰는 한글 2,350자(필요할 때만 받는다) */
