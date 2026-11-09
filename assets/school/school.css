@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=21") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=22") format("woff2");
   font-display: swap;
 }
 
@@ -146,6 +146,9 @@ main { display: flex; flex-direction: column; align-items: center; }
   font: inherit; cursor: pointer;
 }
 .dlg-btns button kbd { border-color: #ffffff66; font-size: 10px; }
+.dlg-link { padding: 4px 10px; border: 2px solid #8fe3ff; color: #8fe3ff; text-decoration: none; }
+.dlg-link:hover, .dlg-link:focus-visible { background: #8fe3ff; color: var(--ink); }
+.dlg-link[hidden] { display: none; }
 #dlg-go { background: var(--gold); color: var(--ink); border-color: var(--gold); animation: blink 1s steps(2) infinite; }
 #dlg-go kbd { color: var(--ink); border-color: #2b1d2e66; }
 .dlg-btns button:hover, .dlg-btns button:focus-visible { outline: 2px dashed #fff; outline-offset: 2px; }
@@ -166,6 +169,11 @@ main { display: flex; flex-direction: column; align-items: center; }
 .bubble.cafe { background: #fff6e8; }
 .bubble[hidden] { display: none; }
 .bubble.below { transform: translate(-50%, 0); }
+.bubble.me, .bubble.mono { width: max-content; }
+.bubble.me { z-index: 2; background: #fff6c8; border-color: #8a5a10; max-width: 46%; }
+.bubble.me::after { border-top-color: #8a5a10; }
+.bubble.me.below::after { border-top-color: transparent; border-bottom-color: #8a5a10; }
+.bubble.mono { background: #f4f1ea; color: #5a5060; border-style: dashed; font-style: italic; opacity: .92; }
 .bubble.below::after { bottom: auto; top: -7px; border: 5px solid transparent; border-bottom-color: #2b1d2e; border-top: 0; }
 @media (prefers-reduced-motion: no-preference) { .bubble { animation: bob 2s ease-in-out infinite; } }
 @keyframes bob { 50% { transform: translate(-50%, calc(-100% - 2px)); } }

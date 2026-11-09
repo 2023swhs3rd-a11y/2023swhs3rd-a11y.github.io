@@ -36,6 +36,7 @@
     pale: mix(a.dataset.color, '#ffffff', 0.8),
     dark: mix(a.dataset.color, '#000000', 0.3),
     icon: a.dataset.icon,
+    link: a.dataset.extra ? { url: a.dataset.extra, label: a.dataset.extraLabel || '바로 가기' } : null,
   }));
   ROOMS.forEach((r) => r.el.style.setProperty('--c', r.color));
 
@@ -191,7 +192,7 @@
       pal: { h: '#6a3a26', s: '#ffd9b8', c: '#f08fb0', w: '#ffffff', t: '#c2410c', p: '#4b4f7a' } },
     { id: 't3', bubble: ['그래프에 답이 숨어 있어요', '우리 시는 학생이 늘었을까?', '숫자는 거짓말을 안 해요', '지도에서 동네를 찾아봐요'], name: '이 선생님', adult: true, look: ['glasses'], say: '숫자 속에 우리 동네 이야기가 있어요.',
       pal: { h: '#2a2440', s: '#f2bf94', c: '#f4f4f4', w: '#7fb3e0', t: '#0e7490', p: '#3b4252' } },
-    { id: 't4', bubble: ['오늘의 한 문장은?', '쉿, 책 읽는 중이에요', '친구 책에 공감 눌러 줘요', '한 쪽만 더 읽어 볼까요?'], name: '최 선생님', adult: true, look: ['long'], skirt: true, say: '오늘은 어떤 책을 읽고 있나요?',
+    { id: 't4', bubble: ['오늘의 한 문장은?', '쉿, 책 읽는 중이에요', '친구 책에 공감 눌러 줘요', '한 쪽만 더 읽어 볼까요?', '전자도서관도 열려 있어요'], name: '최 선생님', adult: true, look: ['long'], skirt: true, say: '오늘은 어떤 책을 읽고 있나요?',
       pal: { h: '#2e2030', s: '#ffe0c4', c: '#74b46e', w: '#fff6e0', t: '#c2410c', p: '#a35a3a' } },
     { id: 't5', bubble: ['오늘 아침 뉴스 봤나요?', '이 기사, 어떤 전공일까?', '질문 다섯 개로 깊게 읽기!', '월요일엔 새 뉴스가 와요'], name: '정 선생님', adult: true, look: ['mustache'], say: '뉴스 한 줄이 진로가 되기도 해요.',
       pal: { h: '#3a2a20', s: '#efb98e', c: '#cf8240', w: '#ffffff', t: '#15803d', p: '#4a3a30' } },
@@ -242,23 +243,24 @@
         talk: ['학교 행사 일정은 교무실 게시판에서 볼 수 있어요.', '복도에서 인사하는 학생을 보면 하루가 즐거워요.', '안전이 먼저예요. 계단에서는 천천히!'],
         bubble: ['인사 잘하네요!', '행사 일정 확인 중', '오늘도 안전하게!'] } },
     { room: mkRoom({ key: 'office', short: '교무실', title: '교무실', badge: '교무', color: '#3f7dd8', icon: 'clip',
-        desc: '선생님들이 수업을 준비하고 일하시는 곳이에요. 들어올 땐 노크하고 찾는 선생님 성함을 말해요.' }),
+        link: { url: 'https://bongilcheon-h.goepj.kr/bongilcheon-h/main.do', label: '학교 홈페이지' },
+        desc: '선생님들이 수업을 준비하고 일하시는 곳이에요. 들어올 땐 노크하고 찾는 선생님 성함을 말해요. 학교 홈페이지도 여기서 열 수 있어요.' }),
       staff: { id: 'f1-office', name: '오 선생님', adult: true, look: ['glasses'],
         pal: { h: '#2a2440', s: '#f7caa0', c: '#e9e4d8', w: '#7fb3e0', t: '#33508f', p: '#3b4252' } },
-      talk: ['교무실에 들어올 땐 노크하고, 찾는 선생님 성함을 말해요.', '수행평가 일정은 미리미리 확인해요.', '결석했을 땐 확인 서류를 꼭 챙겨 와요.',
+      talk: ['학교 홈페이지가 궁금하면 아래 버튼을 눌러 봐요. 공지사항과 학사일정이 있어요.', '교무실에 들어올 땐 노크하고, 찾는 선생님 성함을 말해요.', '수행평가 일정은 미리미리 확인해요.', '결석했을 땐 확인 서류를 꼭 챙겨 와요.',
         '시험 기간엔 교무실에 들어올 수 없어요. 질문은 미리 해요.', '학급 회의 결과는 담임 선생님께 알려 줘요.'],
-      bubble: ['노크는 똑똑!', '수행평가 날짜 확인!', '서류는 미리 챙겨요', '수업 준비 중이에요'],
+      bubble: ['노크는 똑똑!', '학교 홈페이지는 여기서!', '수행평가 날짜 확인!', '서류는 미리 챙겨요', '수업 준비 중이에요'],
       npc: { id: 'f1-bae', name: '배 선생님', adult: true, look: ['long'], skirt: true, pal: { h: '#6a3a26', s: '#ffd9b8', c: '#74b46e', w: '#ffffff', t: '#ffffff', p: '#4b4f7a' },
         talk: ['시험지 채점 중이에요. 잠깐만요!', '프린터가 또 종이를 먹었어요…', '질문하러 왔어요? 기특하네요.'],
         bubble: ['채점 중…', '프린터야 힘내…', '질문은 언제든!'] } },
     { room: mkRoom({ key: 'lounge', short: '봉쿱', title: '봉쿱(학생 쉼터)', badge: '쉼터', color: '#e0a93a', icon: 'sofa',
-        desc: '쉬는 시간에 친구들과 쉬어 가는 학생 쉼터 봉쿱이에요. 학생회 건의함이 있고, 음료 자판기는 복도 끝 창가에 있어요.' }),
+        desc: '쉬는 시간에 친구들과 쉬어 가는 학생 쉼터 봉쿱이에요. 학생회 건의함이 있고, 음료 자판기는 봉쿱 앞 복도에 있어요.' }),
       staff: { id: 'f1-gaeun', name: '가은', hi: '어서 와! 여기는 학생 쉼터 봉쿱이야. ', look: ['pony'], skirt: true, pal: KIDPAL('#40322c', '#ffe0c4', '#33508f', '#ffd36b', '#b33d55') },
       talk: ['학생회장 가은이야! 봉쿱은 모두의 공간이니까 깨끗하게 써 줘.', '건의함에 의견을 넣으면 학생회가 꼭 읽어.', '자판기 음료는 하루 한 개만! 당 조심!',
         '다음 달 축제는 학생회가 준비하고 있어. 기대해!', '쉬는 시간엔 여기서 잠깐 쉬어 가.'],
       bubble: ['봉쿱은 깨끗하게!', '건의함 열려 있어요', '축제 준비 중!', '쉬었다 가!'],
       npc: { id: 'f1-taeo', name: '태오', look: ['ahoge', 'hood'], pal: KIDPAL('#8a5232', '#f7caa0', '#5bb36b', '#ffffff', '#4b5563'),
-        talk: ['복도 끝 자판기에서 뭐 마실지 10분째 고민 중이야.', '여기 소파 은근 편해.', '쉬는 시간 끝나기 1분 전이 제일 아쉬워.'],
+        talk: ['봉쿱 앞 자판기에서 뭐 마실지 10분째 고민 중이야.', '여기 소파 은근 편해.', '쉬는 시간 끝나기 1분 전이 제일 아쉬워.'],
         bubble: ['뭐 마시지…', '소파 최고', '쉬는 시간 짧아…'] } },
     { room: mkRoom({ key: 'cafeteria', short: '급식실', title: '급식실', badge: '급식', color: '#e0603a', icon: 'rice',
         desc: '점심을 먹는 곳이에요. 먹을 만큼 받고, 줄은 차례대로 서요.' }),
@@ -281,6 +283,17 @@
         talk: ['자유투 열 개 중에 일곱 개 넣었어!', '농구 동아리 들어올래?', '땀나면 물부터 마셔야 해.'],
         bubble: ['슛!', '자유투 연습 중', '같이 농구 할래?'] } },
   ];
+  // 교무실에 함께 계신 선생님들(혼잣말만 한다)
+  const OFFICE_EXTRA = [
+    { id: 'f1-seo', name: '서 선생님', adult: true, look: ['spiky', 'glasses'], pal: { h: '#40322c', s: '#f2c49e', c: '#5a6b8a', w: '#ffffff', t: '#e0a93a', p: '#3b4252' },
+      mono: ['수행평가 채점 기준표가 어디 갔지…', '오늘 3교시 실험 준비 끝!', '커피가 식었네…'] },
+    { id: 'f1-yoon', name: '윤 선생님', adult: true, look: ['pony'], skirt: true, pal: { h: '#2a2440', s: '#ffe0c4', c: '#f08fb0', w: '#ffffff', t: '#ffffff', p: '#4b4f7a' },
+      mono: ['동아리 신청서 마감이 내일이던가?', '이 학생 소감문 정말 잘 썼다!', '출석부 정리 완료~'] },
+    { id: 'f1-lim', name: '임 선생님', adult: true, look: ['mustache'], pal: { h: '#1f1b2e', s: '#efb98e', c: '#8d5a33', w: '#fff1e0', t: '#15803d', p: '#4a3a30' },
+      mono: ['수학 문제 하나 더 만들어 볼까…', '프린터 종이 누가 채워 주셨지? 감사합니다.', '음, 이 풀이 깔끔하네.'] },
+    { id: 'f1-jo', name: '조 선생님', adult: true, look: ['bob', 'glasses'], skirt: true, pal: { h: '#6a3a26', s: '#ffd9b8', c: '#a8dcef', w: '#ffffff', t: '#e0475a', p: '#3b3a5a' },
+      mono: ['영어 단어 시험지 복사해야지.', '학부모 상담 일정 확인!', '오늘은 칼퇴할 수 있을까…'] },
+  ];
   const specialOf = (r) => r && r.room.special ? (r.f1 || SPECIAL.find((x) => x.room === r.room)) : null;
   const BASEPAL = { e: '#2b1d2e', W: '#ffffff', b: '#ff9fa8', m: '#d0505a', w: '#ffffff', k: '#3b2a24', g: '#8a9cc8', r: '#e0475a', H: '#3a2a20' };
   function finishPal(p) {
@@ -290,7 +303,7 @@
     p.pal.C = mix(p.pal.c, C.ink, 0.25);
     return p;
   }
-  [...KIDS, ...TEACHERS, ...SPECIAL.map((x) => x.staff), ...FLOOR1.map((x) => x.staff), ...FLOOR1.map((x) => x.npc)].forEach(finishPal);
+  [...KIDS, ...TEACHERS, ...SPECIAL.map((x) => x.staff), ...FLOOR1.map((x) => x.staff), ...FLOOR1.map((x) => x.npc), ...OFFICE_EXTRA].forEach(finishPal);
   // 내 캐릭터: 처음 한 번 적은 이름·성별로 만든다(교복 차림, 머리 모양·색은 이름에 따라)
   const HAIRS = ['#2a2440', '#40322c', '#6a3a26', '#8a5232', '#1f1b2e', '#5a3428'];
   const SKINS = ['#ffd9b8', '#ffe0c4', '#f7caa0', '#ffd4ae'];
@@ -404,7 +417,7 @@
       L.hall = { x: 0, y: 104, w: 480, h: 46 };
       L.walkHall = { x: 28, y: 107, w: 480 - 28 - 24, h: 42 };
       // [x, 위쪽 줄?, 너비]
-      const slots = f1 ? [[0, 0, 128], [0, 1, 160], [160, 1, 160], [320, 1, 160], [128, 0, 176], [304, 0, 176]]
+      const slots = f1 ? [[0, 0, 128], [0, 1, 128], [128, 1, 176], [304, 1, 176], [128, 0, 176], [304, 0, 176]]
         : [[0, 1, 128], [128, 1, 128], [256, 1, 128], [0, 0, 128], [128, 0, 128], [256, 0, 128], [384, 1, 96], [384, 0, 96]];
       slots.forEach(([x, top, w], i) => {
         const r = { i, ...who(i), x, y: top ? 0 : 150, w, h: top ? 104 : 106,
@@ -429,7 +442,7 @@
       L.hall = { x: 96, y: 0, w: 48, h: 448 };
       L.walkHall = { x: 101, y: 28, w: 38, h: 448 - 28 - 10 };
       // [왼쪽?, y, 높이]
-      const slots = f1 ? [[0, 0, 150], [1, 0, 150], [1, 150, 150], [1, 300, 148], [0, 150, 150], [0, 300, 148]]
+      const slots = f1 ? [[0, 0, 128], [1, 0, 128], [1, 128, 160], [1, 288, 160], [0, 128, 160], [0, 288, 160]]
         : Array.from({ length: 8 }, (_, i) => [i % 2 === 0 ? 1 : 0, Math.floor(i / 2) * 112, 112]);
       slots.forEach(([left, y, h], i) => {
         const r = { i, ...who(i), x: left ? 0 : 144, y, w: 96, h,
@@ -509,7 +522,8 @@
       // 계단 표지판: 2층에서는 내려가는 길, 1층에서는 올라가는 길
       sign(2, h.y + 2, 20, 9, L.f1 ? '▲2층' : '▼1층');
       // 1층 복도 끝 창가 음료 자판기
-      if (L.f1) vending(458, h.y + 2, L, { x: 447, y: h.y + 30 });
+      // 1층 봉쿱 앞 복도 음료 자판기
+      if (L.f1) vending(336, h.y + 1, L);
       // 복도 깔개
       rug(Math.round(L.W / 2 - 52), h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
     } else {
@@ -520,7 +534,7 @@
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
       sign(h.x + 3, 5, 42, 12, L.f1 ? '▲ 2층' : '▼ 1층');
       standSign(h.x + 1, 232, 34, 12, '뛰지 마요', L);
-      if (L.f1) vending(h.x + 1, 350, L, { x: h.x + 25, y: 366 });
+      if (L.f1) vending(h.x + 1, 306, L, { x: h.x + 25, y: 322 });
     }
     if (L.portrait && !L.f1) {
       // 진로카페 앞에 세워 둔 게시판(가까이 가거나 누르면 진로 선생님께 메시지)
@@ -990,6 +1004,8 @@
       }
       r.tpos = spots[0];
       r.npcSeat = spots.length > 1 ? spots[spots.length - 1] : null;
+      r.extras = spots.slice(1, -1).slice(0, OFFICE_EXTRA.length).map((pos, k) => ({ sp: OFFICE_EXTRA[k], pos }));
+      for (const x of r.extras) block(x.pos.x - 4, x.pos.y - 4, 8, 5);
     } else if (key === 'lounge') {
       // 봉쿱: 벽 쪽 소파와 건의함, 낮은 탁자, 벤치
       const sw = 34, sx0 = doorRight ? f.x + 6 : f.x + f.w - sw - 6, sy0 = f.y + 4;
@@ -1528,16 +1544,16 @@
   const roomName = (i) => (i < 6 ? (i + 1) + '반 ' : '진로카페 ') + (i < 6 ? TEACHERS[i] : SPECIAL[i - 6].staff).name;
   // 1층 미션: 한 번에 하나씩. 받는 사람은 '교실키:t'(선생님) / '교실키:s'(학생) / 'f2:번호'(2층 교실 선생님) / 'vend'(쉼터 자판기)
   const MISSIONS = [
-    { id: 'notice', from: 'office:t', item: '가정통신문', to: ['f2:0'], hint: ['가정통신문 → 2층 1반 김 선생님'],
+    { id: 'notice', go: ['계단으로 2층 1반 김 선생님께 가자'], from: 'office:t', item: '가정통신문', to: ['f2:0'], hint: ['가정통신문 → 2층 1반 김 선생님'],
       ask: '2층 1반 김 선생님께 이 가정통신문 좀 전해 줄래요? 복도 끝 계단으로 올라가면 돼요.', thanks: '아, 가정통신문! 고마워요. 반 학생들에게 나눠 줄게요.' },
-    { id: 'bandage', from: 'nurse:t', item: '반창고', to: ['gym:s'], hint: ['반창고 → 체육관 예준'],
+    { id: 'bandage', go: ['체육관 예준에게 반창고를 갖다주자'], from: 'nurse:t', item: '반창고', to: ['gym:s'], hint: ['반창고 → 체육관 예준'],
       ask: '체육관에서 예준이가 넘어져서 무릎이 까졌대요. 이 반창고 좀 갖다줄래요?', thanks: '반창고! 살았다… 고마워. 다음엔 조심해서 뛸게.' },
-    { id: 'menu', from: 'cafeteria:t', item: '이번 주 식단표', to: ['lounge:t'], hint: ['식단표 → 봉쿱 가은'],
+    { id: 'menu', go: ['봉쿱 가은에게 식단표를 전하자'], from: 'cafeteria:t', item: '이번 주 식단표', to: ['lounge:t'], hint: ['식단표 → 봉쿱 가은'],
       ask: '이번 주 식단표를 봉쿱 게시판에 붙이게 학생회장 가은이에게 전해 줄래요?', thanks: '식단표 왔다! 바로 붙일게. 와, 금요일에 치킨이네!' },
-    { id: 'water', from: 'gym:t', item: '생수', to: ['vend', 'gym:t'], hint: ['생수 → 복도 끝 창가 자판기에서 뽑기', '생수 → 체육관 강 선생님'],
-      ask: '목이 너무 마르네요. 복도 끝 창가 자판기에서 물 한 병만 뽑아다 줄래요?', got: '자판기에서 생수 한 병을 뽑았다! 체육관 강 선생님께 가져가자.',
+    { id: 'water', go: ['봉쿱 앞 자판기에서 생수를 뽑자', '체육관 강 선생님께 생수를 갖다드리자'], from: 'gym:t', item: '생수', to: ['vend', 'gym:t'], hint: ['생수 → 봉쿱 앞 자판기에서 뽑기', '생수 → 체육관 강 선생님'],
+      ask: '목이 너무 마르네요. 봉쿱 앞 복도 자판기에서 물 한 병만 뽑아다 줄래요?', got: '자판기에서 생수 한 병을 뽑았다! 체육관 강 선생님께 가져가자.',
       thanks: '캬, 시원하다! 고마워요. 운동할 땐 물이 최고예요.' },
-    { id: 'idea', from: 'lounge:t', item: '건의함 의견서', to: ['principal:t'], hint: ['건의함 의견서 → 교장 선생님'],
+    { id: 'idea', go: ['교장실 교장 선생님께 가자'], from: 'lounge:t', item: '건의함 의견서', to: ['principal:t'], hint: ['건의함 의견서 → 교장 선생님'],
       ask: '건의함에 모인 의견서를 교장 선생님께 전해 줄래? 학생회 대표로 부탁해!', thanks: '학생들 의견이군요. "쉼터에 콘센트를 늘려 주세요"… 좋아요, 꼭 살펴볼게요.' },
   ];
   const ms = Object.assign({ done: [], cur: null, step: 0, fin: false }, load('pixelSchoolMissions', localStorage) || {});
@@ -1592,6 +1608,9 @@
   }
   const titleName = () => { const t = TITLES.find((x) => x.id === earned[earned.length - 1]); return t ? t.name : ''; };
   const isLunch = () => new Date().getHours() === 12;
+  // 등장인물 혼잣말(이따금 한 사람씩)
+  const TEACH_MONO = ['오늘 수업 준비 끝!', '커피 한 잔 해야겠다…', '채점할 게 산더미네…', '다음 시간이 몇 반이더라?', '창밖 날씨 좋다~'];
+  const KID_MONO = ['배고프다…', '다음 시간 뭐더라?', '졸려…', '숙제 다 했나?', '오늘 급식 뭐지?', '쉬는 시간 언제 와…'];
   const VEND_LINES = ['흠… 자판기 제품들의 영양성분을 비교해 볼까?', '당류가 가장 적은 음료는 뭘까? 표로 정리해 보자', '이온음료와 탄산음료, 나트륨은 얼마나 다를까?',
     '가격 대비 용량을 계산하면 어떤 게 제일 이득일까?', '캔과 페트병, 어느 쪽이 재활용하기 쉬울까?', '음료마다 카페인 양을 그래프로 그려 보면 재밌겠다'];
   let vendN = Math.floor(Math.random() * 6);
@@ -1682,6 +1701,8 @@
       $('#fade').hidden = true;
       leaving = false;
       const M = curMission();
+      hintAt = clock; idleT = 0; mono = null;
+      if (M) setTimeout(() => { const h = nextHint(); if (h) sayMe(h, 4.5); }, 3600);
       toast(kid ? kid.name : '나', to === 1 ? (M ? '1층에 도착!' : '1층 도착! 교장실·교무실·봉쿱, 보건실·급식실·체육관이 있어요. 부탁할 일이 있는 사람을 찾아보자.')
         : '2층으로 올라왔다. 교실들이 보인다!');
     }, reduceMotion ? 120 : 520);
@@ -1905,6 +1926,7 @@
   let newTick = 0;
   function update(dt) {
     updateBubbles();
+    updateSay(dt);
     if ((newTick += dt) > 1) { newTick = 0; updateNew(); }
     if (party > 0) party -= dt;
     if (mode !== 'play' || leaving || memoOpen) { P.moving = false; return; }
@@ -1963,13 +1985,13 @@
     // 자판기 가까이 가면 탐구 한마디(멀어졌다 다시 오면 다른 말)
     if (L.vend) {
       const dv = Math.hypot(P.x - L.vend.spot.x, P.y - L.vend.spot.y);
-      if (dv < 14 && !said.has('vend')) {
+      if (dv < 20 && !said.has('vend')) {
         said.add('vend');
         const M = curMission();
-        if (M && M.to[ms.step] === 'vend') { ms.step++; saveMs(); SFX.pickup(); toast(kid ? kid.name : '나', M.got); paintQuest(); }
+        if (M && M.to[ms.step] === 'vend') { ms.step++; saveMs(); SFX.pickup(); toast(kid ? kid.name : '나', M.got); paintQuest(); hintAt = clock; }
         else { SFX.chime(); toast(kid ? kid.name : '나', VEND_LINES[vendN++ % VEND_LINES.length]); }
       }
-      else if (dv > 30) said.delete('vend');
+      else if (dv > 38) said.delete('vend');
     }
     // 위클래스 강아지
     const dogR = L.rooms.find((r) => r.dog);
@@ -2075,6 +2097,12 @@
         tdir = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down');
       }
       list.push({ y: tp.y, fn: () => { shadowAt(tp.x, tp.y, 10); drawSprite(personSprite(t, tdir, 'idle', blinking(i + 3)), tp.x, tp.y + hop(i)); } });
+      for (const [k, x] of (r.extras || []).entries()) {
+        const q = x.pos, near = Math.hypot(P.x - q.x, P.y - q.y) < 30;
+        let sd = 'up';
+        if (near) { const vx = P.x - q.x, vy = P.y - q.y; sd = Math.abs(vx) > Math.abs(vy) ? (vx < 0 ? 'left' : 'right') : (vy < 0 ? 'up' : 'down'); }
+        list.push({ y: q.y, fn: () => { shadowAt(q.x, q.y, 10); drawSprite(personSprite(x.sp, sd, 'idle', near && blinking(k + 7)), q.x, q.y + hop(k + 4)); } });
+      }
       const o = r.f1 ? r.f1.npc : others[i];
       r.npc = r.f1 ? o : lunch ? null : o || null; // 점심시간엔 다들 급식 먹으러 갔다(2층)
       if (o && r.npcSeat) {
@@ -2085,7 +2113,7 @@
         list.push({ y: s.y, fn: () => { shadowAt(s.x, s.y, 10); drawSprite(personSprite(o, sd, 'idle', near && blinking(i)), s.x, s.y + hop(i + 1)); } });
       }
     });
-    moveTag();
+    moveTag(); moveSay();
     if (kid && mode === 'play') {
       const frames = P.dir === 'left' || P.dir === 'right' ? ['a', 'idle'] : ['a', 'idle', 'b', 'idle'];
       const fr = P.moving ? frames[Math.floor(P.anim * 7) % frames.length] : 'idle';
@@ -2204,6 +2232,7 @@
     toastEl.hidden = false;
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => { toastEl.hidden = true; }, Math.max(3200, (who.length + text.length) * 110));
+    if (kid && who === kid.name) sayMe(text);
   }
   const starsEl = $('#stars'), hudbar = $('#hudbar'), hudRow = $('#hud-row');
   function paintStars() {
@@ -2220,6 +2249,68 @@
     const t = titleName();
     el.textContent = t && kid ? `[${t}] ${kid.name}` : '';
     el.hidden = !t || !kid;
+  }
+  // 내 캐릭터를 따라다니는 말풍선: 방금 한 말, 받은 미션, 다음 갈 곳
+  let meSay = { text: '', until: 0 }, idleT = 0, hintAt = -99, mono = null, monoT = 6;
+  function sayMe(text, secs) { meSay = { text, until: clock + (secs || Math.max(3.5, text.length * 0.12)) }; }
+  function nextHint() {
+    const M = curMission();
+    if (M) {
+      const tk = M.to[ms.step], tf = tk.startsWith('f2:') ? 2 : 1;
+      if (tf !== floor) return `계단으로 ${tf}층에 ${tf === 1 ? '내려' : '올라'}가자. (${M.item})`;
+      return M.go[Math.min(ms.step, M.go.length - 1)];
+    }
+    const Q = QUESTS[quest.q];
+    if (Q && quest.active) return floor === 2 ? `${josa(Q.item, '을', '를')} ${roomName(Q.to)}께!` : `${Q.item} 심부름은 2층이야. 계단으로 올라가자`;
+    if (floor === 1 && ms.done.length < MISSIONS.length) return '1층에 부탁할 게 있는 사람이 있대. 말풍선을 찾아보자';
+    return null;
+  }
+  function placeBubble(el, x, y, below) {
+    el.classList.toggle('below', below);
+    // 화면 가장자리에서 말풍선이 좁게 접히지 않게 안쪽으로 당긴다
+    el.style.left = (Math.max(L.W * 0.16, Math.min(L.W * 0.84, x)) / L.W) * 100 + '%';
+    el.style.top = ((below ? y + 2 : y) / L.H) * 100 + '%';
+  }
+  function moveSay() {
+    const el = $('#mebub'), mel = $('#monobub');
+    if (!el || !L) return;
+    const free = mode === 'play' && !dlg && !memoOpen && !leaving;
+    const show = free && clock < meSay.until && !!meSay.text;
+    if (show) {
+      if (el.textContent !== meSay.text) el.textContent = meSay.text;
+      const tagUp = $('#nametag') && !$('#nametag').hidden ? 6 : 0;
+      placeBubble(el, P.x, P.y - 20 - tagUp, P.y < 52);
+    }
+    if (el.hidden === show) el.hidden = !show;
+    const ms2 = free && mono && clock < mono.until;
+    if (ms2) { if (mel.textContent !== mono.text) mel.textContent = mono.text; placeBubble(mel, mono.x, mono.y - 19, mono.below); }
+    if (mel.hidden === ms2) mel.hidden = !ms2;
+  }
+  function updateSay(dt) {
+    if (mode !== 'play' || dlg || leaving) { idleT = 0; return; }
+    // 가만히 서 있으면 다음에 갈 곳을 혼자 중얼거린다
+    idleT = P.moving ? 0 : idleT + dt;
+    if (idleT > 4 && clock - hintAt > 14 && clock >= meSay.until) {
+      const h = nextHint();
+      if (h) { hintAt = clock; sayMe(h, 4.5); }
+    }
+    // 등장인물 혼잣말: 내가 멀리 있는 사람 가운데 한 명이 이따금
+    if ((monoT -= dt) <= 0) {
+      monoT = 6 + Math.random() * 6;
+      const here = roomOfPoint(P.x, P.y), c = [];
+      for (const r of L.rooms) {
+        if (r === here) continue;
+        const add = (q, lines) => { if (q && lines && lines.length && Math.hypot(P.x - q.x, P.y - q.y) > 60) c.push({ q, lines, below: q.y - r.y < 62 }); };
+        add(r.tpos, r.teacher.mono || (r.teacher.adult ? TEACH_MONO : r.f1 ? r.f1.bubble : KID_MONO));
+        if (r.npc && r.npcSeat) add(r.npcSeat, r.npc.mono || (r.f1 ? r.npc.bubble : KID_MONO));
+        for (const x of r.extras || []) add(x.pos, x.sp.mono);
+      }
+      if (c.length) {
+        const pick = c[Math.floor(Math.random() * c.length)];
+        const text = pick.lines[Math.floor(Math.random() * pick.lines.length)];
+        mono = { text, x: pick.q.x, y: pick.q.y, below: pick.below, until: clock + 3.5 };
+      }
+    }
   }
   function moveTag() {
     const el = $('#nametag'); if (!el || !L) return;
@@ -2292,6 +2383,8 @@
     $('#dlg-title').textContent = room.title;
     $('#dlg-desc').textContent = room.desc;
     $('#dlg-upd').textContent = room.el && room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
+    const lk = $('#dlg-link'); lk.hidden = !room.link;
+    if (room.link) { lk.href = room.link.url; lk.textContent = room.link.label + ' 열기 (새 창)'; }
     const me = kid ? kid.name : '친구';
     let face = t, say;
     const tl = timeLine(r), Q = L.f1 ? null : QUESTS[quest.q];
@@ -2302,6 +2395,7 @@
     if (M && wk && M.to[ms.step] === wk) {
       // 미션 완료
       ms.done.push(M.id); ms.cur = null; ms.step = 0; saveMs(); SFX.pickup();
+      sayMe(`미션 완료! (${ms.done.length}/${MISSIONS.length})`, 4); hintAt = clock;
       const left = MISSIONS.length - ms.done.length;
       say = `${speaker.name}: ${M.thanks}`;
       setTimeout(() => toast('미션 완료!', left ? `1층 미션 ${ms.done.length}/${MISSIONS.length} · 1층에 부탁할 게 있는 사람이 또 있어요` : '1층 미션을 모두 끝냈어요! 교장 선생님께 가 보세요'), 400);
@@ -2309,6 +2403,7 @@
     } else if (G) {
       // 미션 받기
       ms.cur = G.id; ms.step = 0; saveMs(); paintQuest();
+      setTimeout(() => { sayMe('미션! ' + G.go[0], 5); hintAt = clock; }, 300);
       say = `${speaker.name}: ${me}, ${G.ask}`;
     } else if (F && F.room.key === 'principal' && !asNpc && ms.done.length >= MISSIONS.length && !ms.fin) {
       // 1층 미션을 모두 끝내면 교장 선생님이 칭찬
@@ -2353,7 +2448,7 @@
     $('#dlg-face').replaceChildren(faceCanvas(face));
     $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
     $('#dlg-no kbd').textContent = 'Esc';
-    if (dlg.quiz) { $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
+    if (dlg.quiz) { lk.hidden = true; $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
     typeSay(say);
     // 위쪽 교실이면 대화창을 화면 아래에, 아래쪽 교실이면 위에 띄운다
     dlgEl.classList.toggle('top', r.y + r.h / 2 > L.H / 2);

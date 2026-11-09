@@ -30,8 +30,8 @@
 </script>
 <!-- 이 페이지가 불러올 수 있는 곳을 같은 주소와 게시판 메시지(구글 Apps Script)로만 묶어 둔다 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
-<link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2?v=21" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/school/school.css?v=21">
+<link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2?v=22" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/school/school.css?v=22">
 </head>
 <body>
 <div class="page">
@@ -46,6 +46,8 @@
       <canvas id="screen" aria-hidden="true"></canvas>
       <div class="labels" id="labels" aria-hidden="true"></div>
       <div class="nametag" id="nametag" hidden aria-hidden="true"></div>
+      <div class="bubble me" id="mebub" hidden aria-hidden="true"></div>
+      <div class="bubble mono" id="monobub" hidden aria-hidden="true"></div>
 
       <div class="dialog" id="dialog" role="dialog" aria-modal="false" aria-labelledby="dlg-title" hidden>
         <div class="dlg-face" id="dlg-face" aria-hidden="true"></div>
@@ -56,6 +58,7 @@
           <div class="dlg-btns">
             <button type="button" id="dlg-go">▶ 들어가기 <kbd>Enter</kbd></button>
             <button type="button" id="dlg-no">교실 둘러보기 <kbd>Esc</kbd></button>
+            <a id="dlg-link" class="dlg-link" target="_blank" rel="noopener" hidden></a>
           </div>
         </div>
       </div>
@@ -143,7 +146,7 @@
       <span><kbd>1</kbd>~<kbd>6</kbd> 그 반으로 바로 · <kbd>M</kbd> 소리 · ♫ 음악 버튼으로 배경 음악 켜기 (휴대폰은 무음 모드에서는 소리가 나지 않아요)</span>
       <span>교실 안도 걸어 다닐 수 있고, 클릭한 곳까지 길을 찾아가요 · 복도 게시판에서 진로 선생님께 메시지를 남길 수 있어요</span>
       <span>복도 오른쪽 끝에는 진로카페와 위클래스가 있어요 · 위클래스에는 강아지 뭉치가 살아요</span>
-      <span>복도 끝 계단으로 내려가면 1층: 교장실·교무실·봉쿱(학생 쉼터), 보건실·급식실·체육관 · 1층 사람들의 부탁(미션 5개)을 들어주고, 복도 끝 창가 자판기도 들러 보세요</span>
+      <span>복도 끝 계단으로 내려가면 1층: 교장실·교무실·봉쿱(학생 쉼터), 보건실·급식실·체육관 · 1층 사람들의 부탁(미션 5개)을 들어주고, 봉쿱 앞 자판기도 들러 보세요 · 가만히 서 있으면 내 캐릭터가 다음에 갈 곳을 알려 줘요</span>
       <span>여섯 교실의 출석 도장을 모으고 선생님 심부름도 해 보세요 · 새로 바뀐 교실에는 NEW!가 떠요</span>
       <span>진로카페에서 하루 한 번 O/X 퀴즈 · 친구와 이야기하면 수첩에 도감이 채워지고, 모은 만큼 칭호가 붙어요</span>
     </p>
@@ -156,7 +159,7 @@
         <li><a class="card" href="/2028plan/" data-short="2028 대입" data-color="#1d4ed8" data-icon="pennant"><kbd>1</kbd><h3>2028 대입전형 시행계획 요약</h3><p>95개 대학의 학생부교과·학생부종합·논술·정시 전형과 2027학년도 대비 바뀐 점을 대학별로 찾아봅니다.</p><span class="meta">대입 전형 · 전 학년</span></a></li>
         <li><a class="card" href="/jinhak/" data-short="진로 자료" data-color="#6d28d9" data-icon="star"><kbd>2</kbd><h3>대입·진로 추천 자료</h3><p>과목 선택, 진로 탐색, 전공 안내, 대학 가이드북, 설명회 영상을 학년별로 쓰기 좋게 모으고 자료마다 해설을 붙였습니다.</p><span class="meta">자료 모음 · 전 학년</span></a></li>
         <li><a class="card" href="/gg-highschool-students/" data-short="학생수 통계" data-color="#0e7490" data-icon="chart"><kbd>3</kbd><h3>경기도 고등학교 학생수 추이</h3><p>학교알리미 공시자료로 경기도 31개 시·군 고등학교의 학년별 학생수 3개년 변화를 지도와 그래프로 봅니다.</p><span class="meta">통계 · 학생·선생님</span></a></li>
-        <li><a class="card" href="/book/" data-short="독서나눔" data-color="#c2410c" data-icon="book"><kbd>4</kbd><h3>독서나눔 릴레이</h3><p>지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p><span class="meta">독서 · 학생·선생님</span></a></li>
+        <li><a class="card" href="/book/" data-extra="https://bonghs.dkyobobook.co.kr/main.ink" data-extra-label="전자도서관" data-short="독서나눔" data-color="#c2410c" data-icon="book"><kbd>4</kbd><h3>독서나눔 릴레이</h3><p>지금 읽는 책과 마음에 남은 문장을 말풍선으로 소개하고, 친구의 책에 댓글과 공감을 남깁니다.</p><span class="meta">독서 · 학생·선생님</span></a></li>
         <li><a class="card" href="/news/" data-short="뉴스 탐구" data-color="#15803d" data-icon="news"><kbd>5</kbd><h3>뉴스 읽고 진로 확장하기</h3><p>계열별로 고른 한 주의 뉴스를 교과 개념과 다섯 단계 탐구 질문으로 읽고 관심 전공을 넓혀 봅니다.</p><span class="meta">매주 월요일 · 1학년</span></a></li>
         <li><a class="card" href="/matrix/" data-short="탐구 매트릭스" data-color="#be185d" data-icon="pyramid"><kbd>6</kbd><h3>블룸 교과탐구활동 매트릭스</h3><p>블룸의 개정 교육목표 분류 24칸에 2022 개정 교육과정 155과목, 성취기준 2173개를 놓고, 과목이나 탐구 주제에 맞는 활동을 추천합니다.</p><span class="meta">교과 탐구 · 학생·선생님</span></a></li>
       </ol>
@@ -200,6 +203,6 @@
     } catch (e) { /* 날짜 없이 둔다 */ }
   });
 </script>
-<script src="/assets/school/school.js?v=21"></script>
+<script src="/assets/school/school.js?v=22"></script>
 </body>
 </html>
