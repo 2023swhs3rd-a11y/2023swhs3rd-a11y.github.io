@@ -706,8 +706,15 @@
     crown: ['...', '#.#', '###', '###', '...'], clip: ['##.', '#.#', '#.#', '#.#', '###'], sofa: ['...', '#.#', '###', '#.#', '...'],
     rice: ['...', '###', '###', '.#.', '...'], ball: ['.#.', '###', '###', '.#.', '...'] };
   function plate(x, y, room) {
+    if (!room.special) {
+      // 교실 번호판: 숫자를 두 배로 키워 멀리서도 보이게(같은 자리를 중심으로)
+      const X = x - 1.5, Y = y - 2.5, s = 2;
+      R(X - 1, Y - 1, 10, 14, C.out); R(X, Y, 8, 12, room.color); R(X, Y, 8, 0.5, room.light); R(X, Y + 11.5, 8, 0.5, room.dark);
+      DIGITS[room.n].forEach((row, j) => [...row].forEach((c, i) => { if (c === '#') R(X + 1 + i * s, Y + 1 + j * s, s, s, '#ffffff'); }));
+      return;
+    }
     R(x - 1, y - 1, 7, 9, C.out); R(x, y, 5, 7, room.color); R(x, y, 5, 0.5, room.light);
-    const glyph = room.special ? PLATE[room.icon] || PLATE.heart : DIGITS[room.n];
+    const glyph = PLATE[room.icon] || PLATE.heart;
     glyph.forEach((row, j) => [...row].forEach((c, i) => { if (c === '#') R(x + 1 + i, y + 1 + j, 1, 1, '#ffffff'); }));
   }
 
@@ -2422,7 +2429,7 @@
     const room = r.room, t = r.teacher, sp = specialOf(r);
     SFX.chime();
     dlgEl.style.setProperty('--room', room.color);
-    $('#dlg-go').firstChild.textContent = sp ? '▶ 이야기 더 듣기 ' : '▶ 들어가기 ';
+    $('#dlg-go').firstChild.textContent = sp ? '▶ 이야기 더 듣기 ' : '▶ 사이트 열기 ';
     $('#dlg-num').textContent = sp ? room.badge : room.n + '반';
     $('#dlg-title').textContent = room.title;
     $('#dlg-desc').textContent = room.desc;

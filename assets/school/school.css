@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=23") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=24") format("woff2");
   font-display: swap;
 }
 
