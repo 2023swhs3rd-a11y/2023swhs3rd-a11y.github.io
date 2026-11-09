@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=29") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=30") format("woff2");
   font-display: swap;
 }
 /* 급식 메뉴·학사일정처럼 날마다 바뀌는 글자용: 자주 쓰는 한글 2,350자(필요할 때만 받는다) */
@@ -202,7 +202,7 @@ main { display: flex; flex-direction: column; align-items: center; }
   font-size: max(10px, calc(var(--sign, 9px) * .9)); line-height: 1.3; box-shadow: 2px 2px 0 #2b1d2e44;
 }
 .bubble::after {
-  content: ''; position: absolute; left: 50%; bottom: -7px; margin-left: -5px;
+  content: ''; position: absolute; left: clamp(8px, calc(50% + var(--tx, 0px)), calc(100% - 8px)); bottom: -7px; margin-left: -5px;
   border: 5px solid transparent; border-top-color: #2b1d2e; border-bottom: 0;
 }
 .bubble.wee { background: #fff0f5; }
@@ -304,10 +304,29 @@ body.touch .pad { display: flex; }
 .abtn { position: static; width: 64px; height: 64px; border-radius: 50%; background: #e2574c; color: #fff; font-size: 20px; line-height: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; }
 .abtn small { font-size: 10px; }
 
-/* 가로로 누운 휴대폰: 방향 패드를 화면 양옆에 겹쳐 놓는다 */
-body.touch.overlay-pad .pad { position: fixed; left: 0; right: 0; bottom: 8px; max-width: none; padding: 0 12px; pointer-events: none; z-index: 10; }
-body.touch.overlay-pad .pad > * { pointer-events: auto; opacity: .82; }
-body.touch.overlay-pad .top, body.touch.overlay-pad .help { display: none; }
+/* 가로로 놓은 휴대폰·태블릿: 방향 패드는 왼쪽 아래, A 버튼은 오른쪽 아래 칸(--side 너비)에 둔다 */
+body.touch.land .pad { position: fixed; left: 0; right: 0; bottom: 10px; max-width: none; padding: 0 calc((var(--side) - 132px) / 2); pointer-events: none; z-index: 10; }
+body.touch.land .pad > * { pointer-events: auto; }
+/* 아래 교실 목록으로 내려가 게임 화면이 거의 안 보이면 떠 있는 버튼들을 숨긴다 */
+body.touch.land.stage-off .pad, body.touch.land-phone.stage-off .hudbar { visibility: hidden; }
+body.touch.land .abtn { margin-right: calc((132px - 64px) / 2); }
+/* 가로 휴대폰: 제목은 숨기고, 메시지창과 버튼은 오른쪽 칸 위에 세로로 */
+body.touch.land-phone .top, body.touch.land-phone .help { display: none; }
+body.touch.land-phone main { padding-top: 6px; }
+body.touch.land-phone .hudbar { position: fixed; top: 6px; right: 6px; width: calc(var(--side) - 12px); max-height: calc(100vh - 100px); margin: 0; gap: 4px; z-index: 9; align-content: start; }
+body.touch.land-phone .msgline { min-height: 0; align-items: flex-start; padding: 4px 6px; font-size: 11px; line-height: 1.35; max-height: 9.6em; overflow: hidden; }
+body.touch.land-phone .statline { flex-direction: column; align-items: stretch; gap: 4px; }
+body.touch.land-phone .hud-row { display: grid; grid-template-columns: 1fr; gap: 3px; }
+body.touch.land-phone .hud { min-height: 28px; padding: 3px 4px; font-size: 11px; }
+body.touch.land-phone .stars { text-align: center; }
+body.touch.land-phone .pad { bottom: 6px; padding: 0 calc((var(--side) - 108px) / 2); }
+body.touch.land-phone .dpad { width: 108px; height: 108px; }
+body.touch.land-phone .dpad button { width: 36px; height: 36px; font-size: 13px; }
+body.touch.land-phone .dpad .u { left: 36px; top: 0; }
+body.touch.land-phone .dpad .l { left: 0; top: 36px; }
+body.touch.land-phone .dpad .r { left: 72px; top: 36px; }
+body.touch.land-phone .dpad .d { left: 36px; top: 72px; }
+body.touch.land-phone .abtn { width: 56px; height: 56px; font-size: 17px; margin-right: calc((108px - 56px) / 2); }
 
 .help { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 16px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 body.touch .help { display: none; }
