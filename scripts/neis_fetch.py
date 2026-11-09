@@ -56,9 +56,11 @@ def school_code(key):
 
 
 def clean_dish(s):
-    """'잡곡밥 (5.6.)' → '잡곡밥'. 알레르기 번호, 별표, 겹친 공백을 지운다."""
+    """'잡곡밥 (5.6.)' → '잡곡밥'. 알레르기 번호, 별표·^ 같은 표시, 학교급 꼬리표((고)·(봉)·/고), -js 같은 영문 코드를 지운다."""
     s = re.sub(r'\(\s*[\d.\s]+\)', '', s)
-    s = re.sub(r'[*#]+', '', s)
+    s = re.sub(r'[*#^]+', '', s)
+    s = re.sub(r'\((?:고|중|초|봉)\)|/(?:고|중|초|봉)$', '', s.strip())
+    s = re.sub(r'-[a-zA-Z]+$', '', s.strip())
     return re.sub(r'\s+', ' ', s).strip()
 
 
@@ -82,7 +84,7 @@ def schedule(key, code, start, end):
         if not name or name == '토요휴업일':
             continue
         grades = [g for g, k in (('1', 'ONE_GRADE_EVENT_YN'), ('2', 'TW_GRADE_EVENT_YN'), ('3', 'THREE_GRADE_EVENT_YN')) if r.get(k) == 'Y']
-        out.append({'date': r['AA_YMD'], 'name': name, 'off': r.get('SBTR_DD_SC_NM') == '휴업일', 'grades': grades})
+        out.append({'date': r['AA_YMD'], 'name': name, 'off': r.get('SBTR_DD_SC_NM') in ('휴업일', '공휴일'), 'grades': grades})
     out.sort(key=lambda e: (e['date'], e['name']))
     # 같은 날 같은 행사가 두 번 오면 하나만
     seen, uniq = set(), []

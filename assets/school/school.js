@@ -2602,9 +2602,12 @@
     const n = Math.round((toDate(s) - toDate(ymd(new Date()))) / 864e5);
     return n === 0 ? '오늘' : n === 1 ? '내일' : 'D-' + n;
   }
+  // 수집 스크립트가 지우지 못한 표시(^, (고)·(봉) 같은 꼬리표, -js 같은 코드)는 여기서도 한 번 더 지운다
+  const dish = (x) => String(x).replace(/[*#^]+/g, '').replace(/\((?:고|중|초|봉)\)|\/(?:고|중|초|봉)$/g, '').replace(/-[a-zA-Z]+$/, '').trim();
   function lunchOf(day) {
     const d = NEIS.meal && NEIS.meal.days && NEIS.meal.days[day];
-    return d ? d['중식'] || Object.values(d)[0] || null : null;
+    const l = d ? d['중식'] || Object.values(d)[0] || null : null;
+    return l && Array.isArray(l.menu) ? { ...l, menu: l.menu.map(dish).filter(Boolean) } : null;
   }
   const upcoming = (n) => (NEIS.sch && Array.isArray(NEIS.sch.events) ? NEIS.sch.events.filter((e) => e.date >= ymd(new Date())).slice(0, n) : []);
   async function loadNeis() {
@@ -2685,9 +2688,16 @@
     boardBody.append(grid);
     const ul = mk('ul', 'board-list');
     if (!evs.length) ul.append(mk('li', 'board-none', '이 달에는 등록된 학사일정이 없어요.'));
+    // 이어지는 같은 행사(겨울방학, 정기시험 등)는 한 줄로: '12월 31일(목) ~ 1월 8일(금)'
+    const runs = [];
     for (const e of evs) {
+      const p = runs[runs.length - 1];
+      if (p && p.name === e.name && (toDate(e.date) - toDate(p.to)) / 864e5 <= 3) p.to = e.date;
+      else runs.push({ ...e, to: e.date });
+    }
+    for (const e of runs) {
       const li = mk('li', e.off ? 'off' : '');
-      li.append(mk('b', '', mdw(e.date)), document.createTextNode(' ' + e.name + (e.grades && e.grades.length && e.grades.length < 3 ? ` (${e.grades.join('·')}학년)` : '')));
+      li.append(mk('b', '', mdw(e.date) + (e.to !== e.date ? ' ~ ' + mdw(e.to) : '')), document.createTextNode(' ' + e.name + (e.grades && e.grades.length && e.grades.length < 3 ? ` (${e.grades.join('·')}학년)` : '')));
       ul.append(li);
     }
     boardBody.append(ul);
