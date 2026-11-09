@@ -1924,9 +1924,11 @@
       else if (Q && !quest.active && Q.from === r.i) list = ['부탁할 게 있어요!'];
       else if (r.room.key === 'cafe' && stamps.size >= 6 && load('pixelSchoolDrink', localStorage) !== dayKey()) list = ['도장 6개? …이리 와 봐요'];
       else if (tl) list = [tl, ...list];
-      const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
+      const menu = !mb && r.f1 && r.f1.room.key === 'cafeteria' ? menuBubble() : null;
+      if (menu) list = menu;
+      const near = mode === 'play' && !(dlg && dlg.r === r) && (!!menu || roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
       if (near && list) {
-        const text = list[Math.floor(clock / 4) % list.length];
+        const text = list[Math.floor(clock / (menu ? 2.5 : 4)) % list.length];
         if (r.bubbleEl.textContent !== text) r.bubbleEl.textContent = text;
       }
       if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
@@ -2610,7 +2612,7 @@
     [NEIS.meal, NEIS.sch] = await Promise.all([get('data/meal.json'), get('data/schedule.json')]);
     const caf = FLOOR1.find((x) => x.room.key === 'cafeteria'), off = FLOOR1.find((x) => x.room.key === 'office');
     const l = lunchOf(ymd(new Date()));
-    if (caf && l && l.menu.length) caf.bubble = ['오늘 점심: ' + (l.menu[1] || l.menu[0]), ...caf.bubble.filter((b) => !b.startsWith('오늘은'))];
+    if (caf) caf.bubble = caf.bubble.filter((b) => !b.startsWith('오늘은')); // 실제 메뉴는 menuBubble()이 11~13시에
     const e = upcoming(1)[0];
     if (off && e) off.bubble = [`${dday(e.date)} ${e.name}`, ...off.bubble];
   }
@@ -2628,6 +2630,15 @@
       return `다음 학사일정은 ${mdw(e.date)} ${josa(e.name, '이에요', '예요')}(${dday(e.date)}). 학사일정 달력도 볼래요?`;
     }
     return null;
+  }
+  // 급식실 말풍선: 11:00~13:00에는 오늘의 식단을 두 가지씩 돌아가며(복도에서도 보이게)
+  const menuTime = () => { const h = new Date().getHours(); return h >= 11 && h < 13; };
+  function menuBubble() {
+    const l = menuTime() && lunchOf(ymd(new Date()));
+    if (!l || !l.menu.length) return null;
+    const out = ['오늘의 식단!'];
+    for (let i = 0; i < l.menu.length; i += 2) out.push(l.menu.slice(i, i + 2).join(' · '));
+    return out;
   }
   const infoKind = (r) => (r && r.f1 ? { cafeteria: 'meal', office: 'cal' }[r.f1.room.key] : null);
 
