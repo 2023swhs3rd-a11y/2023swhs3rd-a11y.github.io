@@ -1022,7 +1022,8 @@
         R(fx + 2.5, dy - 13, 8, 6, room.color); R(fx + 2.5, dy - 13, 8, 0.5, room.light); R(fx + 5, dy - 11.5, 3, 3, '#ffffff'); R(fx + 6, dy - 11, 1, 2, room.color);
       });
       r.tpos = { x: dx + dw + 8, y: dy + 8 };
-      const ox = doorRight ? f.x + 6 : f.x + f.w - 30, sy = f.y + 34;
+      // 좁은 방(휴대폰 세로)에서는 소파를 아래로 내려 교장 선생님 말풍선이 교감 선생님 얼굴을 가리지 않게
+      const ox = doorRight ? f.x + 6 : f.x + f.w - 30, sy = f.y + (f.w < 120 ? 62 : 34);
       r.keepClear.push({ x: ox - 4, y: sy - 2, w: 32, h: 32 });
       for (const y of [sy, sy + 20]) {
         block(ox, y + 1, 24, 6);
@@ -1099,7 +1100,8 @@
         R(sx + 1, sy + 4, 1, 3, C.leg); R(sx + 24, sy + 4, 1, 3, C.leg);
       });
       r.keepClear.push({ x: sx - 2, y: sy - 6, w: 30, h: 16 });
-      r.tpos = { x: bx + 24, y: f.y + 24 };
+      // 좁은 방(휴대폰 세로)에서는 자판기와 겹치지 않게 건의함 앞에 선다
+      r.tpos = f.w < 120 ? { x: bx + 5, y: f.y + 31 } : { x: bx + 24, y: f.y + 24 };
       r.npcSeat = { x: sx + 13, y: sy + 2 };
     } else if (key === 'cafeteria') {
       // 배식대(밥·국·반찬)와 긴 식탁
@@ -1826,26 +1828,47 @@
   function fit() {
     const portrait = choosePortrait();
     if (!L || L.portrait !== portrait) setLayout(portrait);
-    const overlayPad = isTouch && !portrait && innerHeight < 560;
-    document.body.classList.toggle('overlay-pad', overlayPad);
-    const availW = Math.min(document.documentElement.clientWidth - 32 - 16, 1200);
+    // 가로로 놓은 터치 기기: 방향 패드와 A 버튼을 화면 양옆 아래에 둔다.
+    // 휴대폰(높이가 낮음)은 제목을 숨기고 메시지창·버튼을 오른쪽 칸으로 옮겨 교실 화면을 키운다
+    const cw = document.documentElement.clientWidth, vh = innerHeight;
+    const land = isTouch && !portrait && innerWidth > vh, phone = land && vh < 560;
+    const side = phone ? (cw < 640 ? 104 : 124) : 150;
+    document.body.classList.toggle('land', land);
+    document.body.classList.toggle('land-phone', phone);
+    document.body.classList.toggle('overlay-pad', phone);
+    document.body.style.setProperty('--side', side + 'px');
+    let availW = Math.min(cw - 32 - 16, 1200);
+    if (phone) availW = cw - 2 * side - 28;
     // 화면 아래 상태 줄(메시지창·버튼) 높이만큼 교실 화면을 줄인다
-    hudbar.style.width = Math.min(availW + 8, L.W * 4 + 8) + 'px';
-    const barH = hudbar.offsetHeight + 12;
-    const reserve = (overlayPad ? 24 : isTouch ? 230 : 190) + barH;
+    const barMax = land && !phone ? cw - 2 * side - 24 : Infinity;
+    hudbar.style.width = phone ? '' : Math.min(availW + 8, L.W * 4 + 8, barMax) + 'px';
+    const barH = phone ? 0 : hudbar.offsetHeight + 12;
+    const top = stage.getBoundingClientRect().top + scrollY;
+    const reserve = phone ? top + 14 : land ? top + Math.max(barH, 150) + 12 : (isTouch ? 230 : 190) + barH;
     const byW = availW / L.W;
-    const byH = (innerHeight - reserve) / L.H;
-    scale = Math.max(0.6, Math.min(byW, Math.max(byH, portrait ? byW * 0.8 : 0.6), 4));
+    const byH = (vh - reserve) / L.H;
+    scale = Math.max(0.6, Math.min(byW, land ? byH : Math.max(byH, portrait ? byW * 0.8 : 0.6), 4));
     const cssW = Math.floor(L.W * scale), cssH = Math.floor(L.H * scale);
     stage.style.width = cssW + 8 + 'px';
     stage.style.height = cssH + 8 + 'px';
-    hudbar.style.width = cssW + 8 + 'px';
+    hudbar.style.width = phone ? '' : Math.min(cssW + 8, barMax) + 'px';
     k = Math.max(1, Math.ceil(scale * (devicePixelRatio || 1)));
     screen.width = L.W * k; screen.height = L.H * k;
     stage.style.setProperty('--chalk', Math.max(9, Math.min(22, Math.round(scale * 5.4))) + 'px');
     stage.style.setProperty('--sign', Math.max(8, Math.min(18, Math.round(scale * 4.6))) + 'px');
+    // 칠판보다 긴 교실 이름은 글자를 줄여 다 보이게
+    for (const el of labels.querySelectorAll('.chalk')) {
+      el.style.fontSize = '';
+      if (el.scrollWidth > el.clientWidth + 1) el.style.fontSize = Math.floor(parseFloat(getComputedStyle(el).fontSize) * el.clientWidth / el.scrollWidth * 0.94) + 'px';
+    }
     render();
   }
+  // 휴대폰·태블릿을 돌렸을 때: resize가 늦거나 빠지는 브라우저가 있어 한 번 더 맞춘다
+  let refitT = 0;
+  const refit = () => { fit(); clearTimeout(refitT); refitT = setTimeout(fit, 350); };
+  addEventListener('orientationchange', refit);
+  if (window.IntersectionObserver) new IntersectionObserver(([en]) => document.body.classList.toggle('stage-off', en.intersectionRatio < 0.35), { threshold: [0, 0.35, 0.6, 1] }).observe(stage);
+  if (window.visualViewport) visualViewport.addEventListener('resize', () => { clearTimeout(refitT); refitT = setTimeout(fit, 120); });
 
   /* ───────── 걷는 곳·부딪히는 것 ───────── */
   const inRect = (x, y, r) => x >= r.x && x <= r.x + r.w && y >= r.y && y <= r.y + r.h;
@@ -1998,15 +2021,29 @@
       const tl = night ? null : timeLine(r), Q = L.f1 ? null : QUESTS[quest.q], mb = r.away ? null : mBubble(whoKey(r, 'teacher'));
       // 야간 자습실: 공부하는 학생들 가운데 한 명씩 돌아가며 말풍선
       if (r.studyEl) {
-        const seats = r.studySeats, step = Math.floor(clock / 3.2), st = seats[(step * 7 + 3) % seats.length];
+        const seats = r.studySeats, step = Math.floor(clock / 3.2);
         const nearR = mode === 'play' && !(dlg && dlg.r === r) && !boardOpen && (roomOfPoint(P.x, P.y) === r || Math.hypot(P.x - r.door.front.x, P.y - r.door.front.y) < 60);
         if (nearR) {
           const text = STUDY.kid.crowd[step % STUDY.kid.crowd.length];
           if (r.studyEl.textContent !== text) r.studyEl.textContent = text;
-          r.studyEl._at = { p: st, sp: null, below: false };
-          fitAt(r.studyEl);
+          if (!r.studyPick || r.studyPick.step !== step) {
+            // 말풍선이 다른 사람 얼굴을 가리지 않는 자리를 고른다(없으면 가장 덜 가리는 자리)
+            let best = null;
+            for (let k = 0; k < seats.length; k++) {
+              const st = seats[(step * 7 + 3 + k * 5) % seats.length];
+              r.studyEl._at = { p: st, sp: null, below: false, soft: true };
+              const hit = fitAt(r.studyEl);
+              if (!best || hit < best.hit) best = { st, hit };
+              if (!hit) break;
+            }
+            r.studyPick = { step, st: best.st, ok: best.hit === 0 };
+          }
+          r.studyEl._at = { p: r.studyPick.st, sp: null, below: false, soft: true };
+          if (fitAt(r.studyEl) > 0) r.studyPick.ok = false; // 그사이 누가 다가와 가리게 되면 이번 차례는 접는다
         }
-        if (r.studyEl.hidden === nearR) r.studyEl.hidden = !nearR;
+        // 빈자리가 없으면(좁은 화면) 이번 차례는 말풍선을 쉬고 다음 학생에게 넘긴다
+        const showS = nearR && r.studyPick && r.studyPick.ok;
+        if (r.studyEl.hidden === showS) r.studyEl.hidden = !showS;
       }
       // 1층 학생 말풍선: 선생님보다 학생이 더 가까울 때
       if (r.npcBubbleEl) {
@@ -2054,6 +2091,7 @@
     if (was.night && !L.night) toast('자정', '자습실이 다시 체육관과 급식실로 돌아왔어요.');
   }
   function update(dt) {
+    placed = placed.filter((b) => !b.el.hidden && b.el.isConnected);
     updateBubbles();
     updateSay(dt);
     if ((newTick += dt) > 1) { newTick = 0; updateNew(); checkNight(); }
@@ -2439,17 +2477,26 @@
       if (!r.away) add(r.tpos, r.teacher);
       if (r.npc && r.npcSeat) add(r.npcSeat, r.npc);
       for (const x of r.extras || []) add(x.pos, x.sp);
-      if (L.night && mode === 'play') for (const st of r.studySeats || []) add(st, null);
+      if (L.night && mode === 'play') for (const st of r.studySeats || []) { add(st, null); out[out.length - 1].crowd = true; }
     }
     if (kid && mode === 'play') add(P, kid);
     return out;
   }
   // 말풍선을 말하는 사람(x, 발 y) 위나 아래에 띄우되, 누구의 얼굴도 가리지 않는 자리를 고른다.
   // 순서: 원래 쪽 → 원래 쪽에서 좌우로 비켜서 → 반대쪽. 다 막히면 원래 자리.
-  function fitBubble(el, x, y, sp, below, up = 0) {
-    if (el._t !== el.textContent || el._sw !== screen.clientWidth) { el._t = el.textContent; el._sw = screen.clientWidth; el._w = el.offsetWidth; el._h = el.offsetHeight; }
+  // soft: 자습실 학생 말풍선. 이름 없는 자습 학생 머리는 조금 가려도 되지만(가볍게 친다), 다른 사람·말풍선은 안 된다
+  function fitBubble(el, x, y, sp, below, up = 0, soft = false) {
+    if (el._t !== el.textContent || el._sw !== screen.clientWidth || !el._w) {
+      // 숨긴 채로는 크기가 0으로 재지므로, 보이지 않게 잠깐 펼쳐서 잰다
+      const hid = el.hidden;
+      if (hid) { el.style.visibility = 'hidden'; el.hidden = false; }
+      el._t = el.textContent; el._sw = screen.clientWidth; el._w = el.offsetWidth; el._h = el.offsetHeight;
+      if (hid) { el.hidden = true; el.style.visibility = ''; }
+    }
     const sc = (screen.clientWidth || L.W) / L.W, w = el._w / sc, h = el._h / sc, tail = 9 / sc;
     const faces = faceBoxes(), lo = L.W * 0.16, hi = L.W * 0.84;
+    // 이번 화면에서 먼저 자리 잡은 다른 말풍선도 피한다(얼굴을 가리는 것보다는 덜 나쁘게 친다)
+    const bubs = placed.filter((b) => b.el !== el && !b.el.hidden);
     // 얼굴과 겹치는 넓이가 가장 작은 자리(같으면 앞 순서)를 고른다
     let pick = null;
     const s = w * 0.5 + 8;
@@ -2459,17 +2506,29 @@
       const y0 = bel ? ay : ay - tail - h, y1 = bel ? ay + tail + h : ay;
       if (y0 < 0 || y1 > L.H) continue;
       const x0 = cx - w / 2, x1 = cx + w / 2;
-      let hit = 0;
-      for (const f of faces) hit += Math.max(0, Math.min(x1, f.x1) - Math.max(x0, f.x0)) * Math.max(0, Math.min(y1, f.y1) - Math.max(y0, f.y0));
-      if (!pick || hit < pick.hit) pick = { cx, ay, bel, hit };
+      let hit = 0, hard = 0;
+      const ov = (f) => Math.max(0, Math.min(x1, f.x1) - Math.max(x0, f.x0)) * Math.max(0, Math.min(y1, f.y1) - Math.max(y0, f.y0));
+      for (const f of faces) { const o = ov(f); if (soft && f.crowd) hit += 0.3 * o; else { hit += 3 * o; hard += o; } }
+      for (const f of bubs) { const o = ov(f); hit += o; hard += o; }
+      if (!pick || hit < pick.hit) pick = { cx, ay, bel, hit, hard };
       if (!hit) break;
     }
     if (!pick) pick = { cx: Math.max(lo, Math.min(hi, x)), ay: below ? y + 2 : y - headUp(sp) - up, bel: below };
+    {
+      const y0 = pick.bel ? pick.ay : pick.ay - tail - h, i = placed.findIndex((b) => b.el === el);
+      const box = { el, x0: pick.cx - w / 2 - 2, x1: pick.cx + w / 2 + 2, y0: y0 - 2, y1: y0 + tail + h + 2 };
+      if (i >= 0) placed[i] = box; else placed.push(box);
+    }
     el.classList.toggle('below', pick.bel);
+    // 옆으로 비켜 선 말풍선은 꼬리가 말하는 사람을 가리키게
+    const tx = Math.round((Math.max(lo, Math.min(hi, x)) - pick.cx) * sc);
+    if (el._tx !== tx) { el._tx = tx; el.style.setProperty('--tx', tx + 'px'); }
     el.style.left = (pick.cx / L.W) * 100 + '%';
     el.style.top = (pick.ay / L.H) * 100 + '%';
+    return soft ? pick.hard || 0 : pick.hit || 0;
   }
-  const fitAt = (el) => { const a = el._at; if (a) fitBubble(el, a.p.x, a.p.y, a.sp, a.below); };
+  let placed = []; // 이번에 자리 잡은 말풍선들(게임 좌표)
+  const fitAt = (el) => { const a = el._at; return a ? fitBubble(el, a.p.x, a.p.y, a.sp, a.below, 0, !!a.soft) : 0; };
   function moveSay() {
     const el = $('#mebub'), mel = $('#monobub');
     if (!el || !L) return;
@@ -2483,7 +2542,12 @@
     }
     const ms2 = free && mono && clock < mono.until;
     if (mel.hidden === ms2) mel.hidden = !ms2;
-    if (ms2) { if (mel.textContent !== mono.text) mel.textContent = mono.text; fitBubble(mel, mono.x, mono.y, mono.sp, mono.below); }
+    if (ms2) {
+      if (mel.textContent !== mono.text) mel.textContent = mono.text;
+      const hit = fitBubble(mel, mono.x, mono.y, mono.sp, mono.below);
+      // 혼잣말은 누구 얼굴도 가리지 않을 때만 띄운다(좁은 화면에서 자리가 없으면 이번 혼잣말은 건너뛴다)
+      if (hit > 0 && !mono.ok) { mono = null; mel.hidden = true; monoT = 1.5; } else mono.ok = true;
+    }
   }
   function updateSay(dt) {
     if (mode !== 'play' || dlg || leaving) { idleT = 0; return; }
@@ -3197,7 +3261,7 @@
     enter(siteRoom(i));
   }));
 
-  addEventListener('resize', fit);
+  addEventListener('resize', refit);
   addEventListener('pageshow', (e) => {
     if (!e.persisted) return;
     leaving = false;
