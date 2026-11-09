@@ -319,6 +319,8 @@
   let ME = (() => { const m = load('pixelSchoolMe', localStorage); return m && cleanName(m.name) && /^[mf]$/.test(m.g) ? makeMe(cleanName(m.name), m.g) : null; })();
 
   const SPR_W = 18, OX = 2, OY = 3;
+  // 머리 꼭대기까지의 높이(발 기준). 말풍선은 이보다 위(또는 발 아래)에 띄워 얼굴을 가리지 않는다
+  const headUp = (sp) => (sp && sp.adult ? 21 : 18) + (sp && sp.skirt ? 1 : 0) + 2;
   const spriteCache = new Map();
   function personSprite(sp, dir, frame, blink) {
     const key = `${sp.id}|${dir}|${frame}|${blink ? 1 : 0}`;
@@ -1645,20 +1647,21 @@
     };
     for (const r of L.rooms) put('chalk', r.room.short, r.board.x, r.board.y, r.board.w, r.board.h - 1);
     // 선생님 머리 위 말풍선(교실마다 성격에 맞게)
-    const bubble = (cls, p, r) => {
+    const bubble = (cls, p, r, sp) => {
       const el = document.createElement('div');
       // 칠판 가까이 선 사람은 말풍선이 칠판(과 화면 위 끝)을 가리지 않게 발 아래에 띄운다
       const below = p.y - r.y < 62;
       el.className = 'bubble ' + cls + (below ? ' below' : '');
       el.hidden = true;
-      Object.assign(el.style, { left: (p.x / L.W) * 100 + '%', top: ((below ? p.y + 2 : p.y - 19) / L.H) * 100 + '%' });
+      Object.assign(el.style, { left: (p.x / L.W) * 100 + '%', top: ((below ? p.y + 2 : p.y - headUp(sp)) / L.H) * 100 + '%' });
+      el._at = { p, sp, below };
       labels.appendChild(el);
       return el;
     };
     for (const r of L.rooms) {
-      r.bubbleEl = bubble(r.room.special ? r.room.key : 'class', r.tpos, r);
+      r.bubbleEl = bubble(r.room.special ? r.room.key : 'class', r.tpos, r, r.teacher);
       // 1층은 교실 학생에게도 말풍선
-      if (r.f1 && r.npcSeat) r.npcBubbleEl = bubble('npc', r.npcSeat, r);
+      if (r.f1 && r.npcSeat) r.npcBubbleEl = bubble('npc', r.npcSeat, r, r.npc);
     }
     // 일주일 안에 업데이트된 교실 문 위에 NEW!
     for (const r of L.rooms) {
@@ -1905,6 +1908,7 @@
         const nearS = mode === 'play' && !(dlg && dlg.r === r) && roomOfPoint(P.x, P.y) === r && closer;
         if (nearS) { const text = sl[Math.floor(clock / 4) % sl.length]; if (r.npcBubbleEl.textContent !== text) r.npcBubbleEl.textContent = text; }
         if (r.npcBubbleEl.hidden === nearS) r.npcBubbleEl.hidden = !nearS;
+        if (nearS) fitAt(r.npcBubbleEl);
         if (nearS) { if (!r.bubbleEl.hidden) r.bubbleEl.hidden = true; continue; }
       }
       if (mb) list = mb;
@@ -1918,6 +1922,7 @@
         if (r.bubbleEl.textContent !== text) r.bubbleEl.textContent = text;
       }
       if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
+      if (near) fitAt(r.bubbleEl);
     }
   }
   function updateNew() {
@@ -2252,7 +2257,14 @@
   }
   // 내 캐릭터를 따라다니는 말풍선: 방금 한 말, 받은 미션, 다음 갈 곳
   let meSay = { text: '', until: 0 }, idleT = 0, hintAt = -99, mono = null, monoT = 6;
-  function sayMe(text, secs) { meSay = { text, until: clock + (secs || Math.max(3.5, text.length * 0.12)) }; }
+  // 내 말풍선은 짧게: 긴 문장은 앞 문장만(전체 내용은 메시지창에 그대로 남는다)
+  function shortSay(text) {
+    if (text.length <= 30) return text;
+    let out = '';
+    for (const part of text.split(/(?<=[.!?])\s+/)) { if (out && (out + ' ' + part).length > 30) break; out = out ? out + ' ' + part : part; }
+    return out.length > 30 ? out.slice(0, 29) + '…' : out;
+  }
+  function sayMe(text, secs) { text = shortSay(text); meSay = { text, until: clock + (secs || Math.max(3.5, text.length * 0.12)) }; }
   function nextHint() {
     const M = curMission();
     if (M) {
@@ -2265,26 +2277,58 @@
     if (floor === 1 && ms.done.length < MISSIONS.length) return '1층에 부탁할 게 있는 사람이 있대. 말풍선을 찾아보자';
     return null;
   }
-  function placeBubble(el, x, y, below) {
-    el.classList.toggle('below', below);
-    // 화면 가장자리에서 말풍선이 좁게 접히지 않게 안쪽으로 당긴다
-    el.style.left = (Math.max(L.W * 0.16, Math.min(L.W * 0.84, x)) / L.W) * 100 + '%';
-    el.style.top = ((below ? y + 2 : y) / L.H) * 100 + '%';
+  // 화면에 서 있는 사람들의 얼굴·몸 영역(게임 좌표)
+  function faceBoxes() {
+    const out = [];
+    const add = (q, sp) => { if (q) out.push({ x0: q.x - 7, x1: q.x + 7, y0: q.y - headUp(sp) + 1, y1: q.y - 2 }); };
+    for (const r of L.rooms) {
+      add(r.tpos, r.teacher);
+      if (r.npc && r.npcSeat) add(r.npcSeat, r.npc);
+      for (const x of r.extras || []) add(x.pos, x.sp);
+    }
+    if (kid && mode === 'play') add(P, kid);
+    return out;
   }
+  // 말풍선을 말하는 사람(x, 발 y) 위나 아래에 띄우되, 누구의 얼굴도 가리지 않는 자리를 고른다.
+  // 순서: 원래 쪽 → 원래 쪽에서 좌우로 비켜서 → 반대쪽. 다 막히면 원래 자리.
+  function fitBubble(el, x, y, sp, below, up = 0) {
+    if (el._t !== el.textContent || el._sw !== screen.clientWidth) { el._t = el.textContent; el._sw = screen.clientWidth; el._w = el.offsetWidth; el._h = el.offsetHeight; }
+    const sc = (screen.clientWidth || L.W) / L.W, w = el._w / sc, h = el._h / sc, tail = 9 / sc;
+    const faces = faceBoxes(), lo = L.W * 0.16, hi = L.W * 0.84;
+    // 얼굴과 겹치는 넓이가 가장 작은 자리(같으면 앞 순서)를 고른다
+    let pick = null;
+    const s = w * 0.5 + 8;
+    for (const [bel, dx] of [[below, 0], [below, -s], [below, s], [!below, 0], [!below, -s], [!below, s]]) {
+      const cx = Math.max(lo, Math.min(hi, x + dx));
+      const ay = bel ? y + 2 : y - headUp(sp) - up;
+      const y0 = bel ? ay : ay - tail - h, y1 = bel ? ay + tail + h : ay;
+      if (y0 < 0 || y1 > L.H) continue;
+      const x0 = cx - w / 2, x1 = cx + w / 2;
+      let hit = 0;
+      for (const f of faces) hit += Math.max(0, Math.min(x1, f.x1) - Math.max(x0, f.x0)) * Math.max(0, Math.min(y1, f.y1) - Math.max(y0, f.y0));
+      if (!pick || hit < pick.hit) pick = { cx, ay, bel, hit };
+      if (!hit) break;
+    }
+    if (!pick) pick = { cx: Math.max(lo, Math.min(hi, x)), ay: below ? y + 2 : y - headUp(sp) - up, bel: below };
+    el.classList.toggle('below', pick.bel);
+    el.style.left = (pick.cx / L.W) * 100 + '%';
+    el.style.top = (pick.ay / L.H) * 100 + '%';
+  }
+  const fitAt = (el) => { const a = el._at; if (a) fitBubble(el, a.p.x, a.p.y, a.sp, a.below); };
   function moveSay() {
     const el = $('#mebub'), mel = $('#monobub');
     if (!el || !L) return;
     const free = mode === 'play' && !dlg && !memoOpen && !leaving;
     const show = free && clock < meSay.until && !!meSay.text;
+    if (el.hidden === show) el.hidden = !show;
     if (show) {
       if (el.textContent !== meSay.text) el.textContent = meSay.text;
       const tagUp = $('#nametag') && !$('#nametag').hidden ? 6 : 0;
-      placeBubble(el, P.x, P.y - 20 - tagUp, P.y < 52);
+      fitBubble(el, P.x, P.y, kid, P.y < 52, tagUp);
     }
-    if (el.hidden === show) el.hidden = !show;
     const ms2 = free && mono && clock < mono.until;
-    if (ms2) { if (mel.textContent !== mono.text) mel.textContent = mono.text; placeBubble(mel, mono.x, mono.y - 19, mono.below); }
     if (mel.hidden === ms2) mel.hidden = !ms2;
+    if (ms2) { if (mel.textContent !== mono.text) mel.textContent = mono.text; fitBubble(mel, mono.x, mono.y, mono.sp, mono.below); }
   }
   function updateSay(dt) {
     if (mode !== 'play' || dlg || leaving) { idleT = 0; return; }
@@ -2300,15 +2344,15 @@
       const here = roomOfPoint(P.x, P.y), c = [];
       for (const r of L.rooms) {
         if (r === here) continue;
-        const add = (q, lines) => { if (q && lines && lines.length && Math.hypot(P.x - q.x, P.y - q.y) > 60) c.push({ q, lines, below: q.y - r.y < 62 }); };
-        add(r.tpos, r.teacher.mono || (r.teacher.adult ? TEACH_MONO : r.f1 ? r.f1.bubble : KID_MONO));
-        if (r.npc && r.npcSeat) add(r.npcSeat, r.npc.mono || (r.f1 ? r.npc.bubble : KID_MONO));
-        for (const x of r.extras || []) add(x.pos, x.sp.mono);
+        const add = (q, lines, sp) => { if (q && lines && lines.length && Math.hypot(P.x - q.x, P.y - q.y) > 60) c.push({ q, lines, sp, below: q.y - r.y < 62 }); };
+        add(r.tpos, r.teacher.mono || (r.teacher.adult ? TEACH_MONO : r.f1 ? r.f1.bubble : KID_MONO), r.teacher);
+        if (r.npc && r.npcSeat) add(r.npcSeat, r.npc.mono || (r.f1 ? r.npc.bubble : KID_MONO), r.npc);
+        for (const x of r.extras || []) add(x.pos, x.sp.mono, x.sp);
       }
       if (c.length) {
         const pick = c[Math.floor(Math.random() * c.length)];
         const text = pick.lines[Math.floor(Math.random() * pick.lines.length)];
-        mono = { text, x: pick.q.x, y: pick.q.y, below: pick.below, until: clock + 3.5 };
+        mono = { text, x: pick.q.x, y: pick.q.y, sp: pick.sp, below: pick.below, until: clock + 3.5 };
       }
     }
   }
