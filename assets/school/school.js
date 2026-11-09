@@ -1924,9 +1924,11 @@
       else if (Q && !quest.active && Q.from === r.i) list = ['부탁할 게 있어요!'];
       else if (r.room.key === 'cafe' && stamps.size >= 6 && load('pixelSchoolDrink', localStorage) !== dayKey()) list = ['도장 6개? …이리 와 봐요'];
       else if (tl) list = [tl, ...list];
-      const near = mode === 'play' && !(dlg && dlg.r === r) && (roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
+      const menu = !mb && r.f1 && r.f1.room.key === 'cafeteria' ? menuBubble() : null;
+      if (menu) list = menu;
+      const near = mode === 'play' && !(dlg && dlg.r === r) && (!!menu || roomOfPoint(P.x, P.y) === r || (r.room.special && Math.hypot(P.x - r.tpos.x, P.y - r.tpos.y) < 70));
       if (near && list) {
-        const text = list[Math.floor(clock / 4) % list.length];
+        const text = list[Math.floor(clock / (menu ? 2.5 : 4)) % list.length];
         if (r.bubbleEl.textContent !== text) r.bubbleEl.textContent = text;
       }
       if (r.bubbleEl.hidden === near) r.bubbleEl.hidden = !near;
@@ -2600,9 +2602,12 @@
     const n = Math.round((toDate(s) - toDate(ymd(new Date()))) / 864e5);
     return n === 0 ? '오늘' : n === 1 ? '내일' : 'D-' + n;
   }
+  // 수집 스크립트가 지우지 못한 표시(^, (고)·(봉) 같은 꼬리표, -js 같은 코드)는 여기서도 한 번 더 지운다
+  const dish = (x) => String(x).replace(/[*#^]+/g, '').replace(/\((?:고|중|초|봉)\)|\/(?:고|중|초|봉)$/g, '').replace(/-[a-zA-Z]+$/, '').trim();
   function lunchOf(day) {
     const d = NEIS.meal && NEIS.meal.days && NEIS.meal.days[day];
-    return d ? d['중식'] || Object.values(d)[0] || null : null;
+    const l = d ? d['중식'] || Object.values(d)[0] || null : null;
+    return l && Array.isArray(l.menu) ? { ...l, menu: l.menu.map(dish).filter(Boolean) } : null;
   }
   const upcoming = (n) => (NEIS.sch && Array.isArray(NEIS.sch.events) ? NEIS.sch.events.filter((e) => e.date >= ymd(new Date())).slice(0, n) : []);
   async function loadNeis() {
@@ -2610,7 +2615,7 @@
     [NEIS.meal, NEIS.sch] = await Promise.all([get('data/meal.json'), get('data/schedule.json')]);
     const caf = FLOOR1.find((x) => x.room.key === 'cafeteria'), off = FLOOR1.find((x) => x.room.key === 'office');
     const l = lunchOf(ymd(new Date()));
-    if (caf && l && l.menu.length) caf.bubble = ['오늘 점심: ' + (l.menu[1] || l.menu[0]), ...caf.bubble.filter((b) => !b.startsWith('오늘은'))];
+    if (caf) caf.bubble = caf.bubble.filter((b) => !b.startsWith('오늘은')); // 실제 메뉴는 menuBubble()이 11~13시에
     const e = upcoming(1)[0];
     if (off && e) off.bubble = [`${dday(e.date)} ${e.name}`, ...off.bubble];
   }
@@ -2628,6 +2633,15 @@
       return `다음 학사일정은 ${mdw(e.date)} ${josa(e.name, '이에요', '예요')}(${dday(e.date)}). 학사일정 달력도 볼래요?`;
     }
     return null;
+  }
+  // 급식실 말풍선: 11:00~13:00에는 오늘의 식단을 두 가지씩 돌아가며(복도에서도 보이게)
+  const menuTime = () => { const h = new Date().getHours(); return h >= 11 && h < 13; };
+  function menuBubble() {
+    const l = menuTime() && lunchOf(ymd(new Date()));
+    if (!l || !l.menu.length) return null;
+    const out = ['오늘의 식단!'];
+    for (let i = 0; i < l.menu.length; i += 2) out.push(l.menu.slice(i, i + 2).join(' · '));
+    return out;
   }
   const infoKind = (r) => (r && r.f1 ? { cafeteria: 'meal', office: 'cal' }[r.f1.room.key] : null);
 
@@ -2674,9 +2688,16 @@
     boardBody.append(grid);
     const ul = mk('ul', 'board-list');
     if (!evs.length) ul.append(mk('li', 'board-none', '이 달에는 등록된 학사일정이 없어요.'));
+    // 이어지는 같은 행사(겨울방학, 정기시험 등)는 한 줄로: '12월 31일(목) ~ 1월 8일(금)'
+    const runs = [];
     for (const e of evs) {
+      const p = runs[runs.length - 1];
+      if (p && p.name === e.name && (toDate(e.date) - toDate(p.to)) / 864e5 <= 3) p.to = e.date;
+      else runs.push({ ...e, to: e.date });
+    }
+    for (const e of runs) {
       const li = mk('li', e.off ? 'off' : '');
-      li.append(mk('b', '', mdw(e.date)), document.createTextNode(' ' + e.name + (e.grades && e.grades.length && e.grades.length < 3 ? ` (${e.grades.join('·')}학년)` : '')));
+      li.append(mk('b', '', mdw(e.date) + (e.to !== e.date ? ' ~ ' + mdw(e.to) : '')), document.createTextNode(' ' + e.name + (e.grades && e.grades.length && e.grades.length < 3 ? ` (${e.grades.join('·')}학년)` : '')));
       ul.append(li);
     }
     boardBody.append(ul);
