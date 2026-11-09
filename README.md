@@ -45,6 +45,15 @@ GitHub Pages로 배포하는 진로진학부 첫 화면과 공통 파일, 대입
 
 주소가 비어 있으면 창에 "준비하고 있어요"가 뜨고 보내지 않는다. 스크립트를 고치면 배포 › 배포 관리에서 새 버전으로 다시 배포해야 반영된다.
 
+## 급식 식단·학사일정 (NEIS)
+
+1층 급식실 하은 쌤이 오늘 점심을 알려 주고 '이번 주 식단표'를, 교무실 오 선생님이 다음 학사일정을 알려 주고 '학사일정 달력'을 보여 준다. 자료는 `data/meal.json`, `data/schedule.json`이고 손으로 올리지 않는다.
+
+- GitHub Actions `NEIS 급식·학사일정`(`.github/workflows/neis.yml`)이 매일 05:07(KST)에 `scripts/neis_fetch.py`로 NEIS 교육정보 개방 포털(open.neis.go.kr)의 급식식단정보·학사일정을 받아, 바뀐 내용이 있을 때만 커밋한다. 급식은 지난달~다음 달, 학사일정은 지난달~석 달 뒤.
+- 인증키는 저장소 Settings › Secrets and variables › Actions의 `NEIS_KEY`. 키는 페이지에 들어가지 않는다.
+- 바로 받으려면 Actions 탭 › NEIS 급식·학사일정 › Run workflow. 받아 오지 못하면 기존 파일을 그대로 두고 실행이 실패로 표시된다.
+- 메뉴·행사 이름은 날마다 바뀌므로 자주 쓰는 한글 2,350자 글꼴(`fonts/galmuri11-ko.woff2`)을 따로 둔다.
+
 ## 픽셀 학교 글꼴
 
 `assets/school/fonts/galmuri11-subset.woff2`는 갈무리11(SIL OFL)에서 페이지에 쓰는 글자만 남긴 파일이다. 화면 글자를 바꾸면 다시 만들고, `school.css`의 `@font-face` 주소와 `index.html`의 preload 주소에 붙은 `?v=`를 함께 올린다(안 올리면 브라우저가 예전 글꼴 파일을 써서 새 글자만 다른 글꼴로 보인다)(fonttools·brotli 필요, 원본은 npm `galmuri` 패키지의 `dist/Galmuri11.woff2`).

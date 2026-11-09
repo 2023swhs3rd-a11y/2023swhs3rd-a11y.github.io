@@ -1,0 +1,41 @@
+# 매일 새벽, NEIS 교육정보 개방 포털에서 봉일천고 급식 식단과 학사일정을 받아 data/meal.json·data/schedule.json에 저장한다.
+# 픽셀 학교 1층 급식실(오늘 메뉴·이번 주 식단)과 교무실(학사일정 달력)이 이 파일을 읽는다.
+# 필요한 것: 저장소 Settings → Secrets and variables → Actions → New repository secret, 이름 NEIS_KEY(open.neis.go.kr 인증키).
+# Actions 탭에서 'NEIS 급식·학사일정' → Run workflow로 바로 돌릴 수도 있다.
+name: NEIS 급식·학사일정
+on:
+  schedule:
+    - cron: "7 20 * * *"   # 매일 05:07 KST
+  workflow_dispatch:
+permissions:
+  contents: write
+  pages: write
+concurrency:
+  group: neis
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+      - name: NEIS에서 받아 오기
+        env:
+          NEIS_KEY: ${{ secrets.NEIS_KEY }}
+        run: python3 scripts/neis_fetch.py
+      - name: 바뀌었으면 저장
+        id: save
+        run: |
+          git add data/meal.json data/schedule.json
+          if git diff --cached --quiet; then echo "바뀐 내용 없음"; echo "pushed=0" >> "$GITHUB_OUTPUT"; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "급식·학사일정 갱신 (NEIS)"
+          git push
+          echo "pushed=1" >> "$GITHUB_OUTPUT"
+      - name: 사이트 다시 빌드 요청
+        if: steps.save.outputs.pushed == '1'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh api -X POST "repos/${{ github.repository }}/pages/builds" || echo "빌드 요청은 건너뜀(자동 빌드에 맡김)"
