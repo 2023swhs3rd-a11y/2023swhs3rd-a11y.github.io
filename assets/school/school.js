@@ -1616,7 +1616,8 @@
     paintTag();
   }
   const titleName = () => { const t = TITLES.find((x) => x.id === earned[earned.length - 1]); return t ? t.name : ''; };
-  const isLunch = () => new Date().getHours() === 12;
+  // 봉일천고 점심시간: 12:55 ~ 13:50 (이때만 친구들이 급식실로 이동)
+  const isLunch = () => { const d = new Date(), m = d.getHours() * 60 + d.getMinutes(); return m >= 12 * 60 + 55 && m < 13 * 60 + 50; };
   // 등장인물 혼잣말(이따금 한 사람씩)
   const TEACH_MONO = ['오늘 수업 준비 끝!', '커피 한 잔 해야겠다…', '채점할 게 산더미네…', '다음 시간이 몇 반이더라?', '창밖 날씨 좋다~'];
   const KID_MONO = ['배고프다…', '다음 시간 뭐더라?', '졸려…', '숙제 다 했나?', '오늘 급식 뭐지?', '쉬는 시간 언제 와…'];
@@ -1627,7 +1628,7 @@
     const d = new Date(), h = d.getHours(), wd = d.getDay();
     const cafe = r.room.key === 'cafe';
     if (wd === 1 && r.room.n === 5) return '월요일! 새 뉴스가 왔어요';
-    if (h === 12) return cafe ? '점심은 먹고 커피 마셔요' : r.room.key === 'cafeteria' ? '점심시간! 줄 서서 받아요' : '점심 맛있게 먹어요!';
+    if (isLunch()) return cafe ? '점심은 먹고 커피 마셔요' : r.room.key === 'cafeteria' ? '점심시간! 줄 서서 받아요' : '점심 맛있게 먹어요!';
     if (h >= 19 || h < 6) return cafe ? '이 시간까지? …얼른 집에 가요' : '늦었네요, 오늘은 여기까지!';
     if (wd === 0 || wd === 6) return '주말에도 들렀네요? 대단해요!';
     if (wd === 5) return '금요일이에요, 조금만 더 힘내요!';
@@ -1941,7 +1942,7 @@
     updateSay(dt);
     if ((newTick += dt) > 1) { newTick = 0; updateNew(); }
     if (party > 0) party -= dt;
-    if (mode !== 'play' || leaving || memoOpen) { P.moving = false; return; }
+    if (mode !== 'play' || leaving || memoOpen || boardOpen) { P.moving = false; return; }
     let dx = 0, dy = 0;
     const has = (n) => keys.has(n) || padDirs.has(n);
     if (!dlg) {
@@ -2325,7 +2326,7 @@
   function moveSay() {
     const el = $('#mebub'), mel = $('#monobub');
     if (!el || !L) return;
-    const free = mode === 'play' && !dlg && !memoOpen && !leaving;
+    const free = mode === 'play' && !dlg && !memoOpen && !boardOpen && !leaving;
     const show = free && clock < meSay.until && !!meSay.text;
     if (el.hidden === show) el.hidden = !show;
     if (show) {
@@ -2434,6 +2435,8 @@
     $('#dlg-title').textContent = room.title;
     $('#dlg-desc').textContent = room.desc;
     $('#dlg-upd').textContent = room.el && room.el.dataset.upd ? '· ' + room.el.dataset.upd : '';
+    const ik = infoKind(r), ib = $('#dlg-info');
+    ib.hidden = !ik; if (ik) ib.textContent = ik === 'meal' ? '이번 주 식단표 보기' : '학사일정 달력 보기';
     const lk = $('#dlg-link'); lk.hidden = !room.link;
     if (room.link) { lk.href = room.link.url; lk.textContent = room.link.label + ' 열기 (새 창)'; }
     const me = kid ? kid.name : '친구';
@@ -2463,7 +2466,11 @@
     } else if (F) {
       if (asNpc) say = `${r.npc.name}: ${pickLine(r.npc)}`;
       else if (who === 'door' && giverOf(whoKey(r, 'teacher'))) say = `${t.name}: ${t.hi || `어서 와요, ${me}! 여기는 ${josa(room.short, '이에요', '예요')}. `}마침 잘 왔어요. 부탁할 게 있는데, 가까이 와 볼래요?`;
-      else say = `${t.name}: ${who === 'door' ? (t.hi || `어서 와요, ${me}! 여기는 ${josa(room.short, '이에요', '예요')}. `) : ''}${tl ? tl + ' ' : ''}${specialTalk(F)}`;
+      else {
+        // 급식실·교무실: 말을 걸 때마다 오늘의 정보와 평소 이야기를 번갈아
+        const info = neisLine(F), useInfo = info && !((F.infoN = (F.infoN || 0) + 1) % 2 === 0 && who !== 'door');
+        say = `${t.name}: ${who === 'door' ? (t.hi || `어서 와요, ${me}! 여기는 ${josa(room.short, '이에요', '예요')}. `) : ''}${tl && !useInfo ? tl + ' ' : ''}${useInfo ? info : specialTalk(F)}`;
+      }
     } else if (who !== 'student' && Q && quest.active && Q.to === r.i) {
       // 심부름 완료
       say = `${t.name}: 아, ${Q.item}! 고마워요, ${me}. ${Q.thanks}`;
@@ -2499,7 +2506,7 @@
     $('#dlg-face').replaceChildren(faceCanvas(face));
     $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
     $('#dlg-no kbd').textContent = 'Esc';
-    if (dlg.quiz) { lk.hidden = true; $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
+    if (dlg.quiz) { lk.hidden = true; ib.hidden = true; $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
     typeSay(say);
     // 위쪽 교실이면 대화창을 화면 아래에, 아래쪽 교실이면 위에 띄운다
     dlgEl.classList.toggle('top', r.y + r.h / 2 > L.H / 2);
@@ -2582,6 +2589,126 @@
   $('#note-close').addEventListener('click', (e) => { e.stopPropagation(); toggleNote(false); });
   $('#dlg-go').addEventListener('click', () => { if (dlg && dlg.quiz) answerQuiz(true); else if (dlg) enter(dlg.r); });
   $('#dlg-no').addEventListener('click', () => { if (dlg && dlg.quiz) answerQuiz(false); else closeDialog(true); });
+
+  /* ───────── 급식·학사일정: GitHub Actions가 매일 NEIS에서 받아 둔 data/meal.json, data/schedule.json ───────── */
+  const NEIS = { meal: null, sch: null };
+  const ymd = (d) => `${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, '0')}${String(d.getDate()).padStart(2, '0')}`;
+  const toDate = (s) => new Date(+s.slice(0, 4), +s.slice(4, 6) - 1, +s.slice(6, 8));
+  const WD = ['일', '월', '화', '수', '목', '금', '토'];
+  const mdw = (s) => { const d = toDate(s); return `${d.getMonth() + 1}월 ${d.getDate()}일(${WD[d.getDay()]})`; };
+  function dday(s) {
+    const n = Math.round((toDate(s) - toDate(ymd(new Date()))) / 864e5);
+    return n === 0 ? '오늘' : n === 1 ? '내일' : 'D-' + n;
+  }
+  function lunchOf(day) {
+    const d = NEIS.meal && NEIS.meal.days && NEIS.meal.days[day];
+    return d ? d['중식'] || Object.values(d)[0] || null : null;
+  }
+  const upcoming = (n) => (NEIS.sch && Array.isArray(NEIS.sch.events) ? NEIS.sch.events.filter((e) => e.date >= ymd(new Date())).slice(0, n) : []);
+  async function loadNeis() {
+    const get = async (u) => { try { const r = await fetch(u, { cache: 'no-cache' }); return r.ok ? await r.json() : null; } catch (e) { return null; } };
+    [NEIS.meal, NEIS.sch] = await Promise.all([get('data/meal.json'), get('data/schedule.json')]);
+    const caf = FLOOR1.find((x) => x.room.key === 'cafeteria'), off = FLOOR1.find((x) => x.room.key === 'office');
+    const l = lunchOf(ymd(new Date()));
+    if (caf && l && l.menu.length) caf.bubble = ['오늘 점심: ' + (l.menu[1] || l.menu[0]), ...caf.bubble.filter((b) => !b.startsWith('오늘은'))];
+    const e = upcoming(1)[0];
+    if (off && e) off.bubble = [`${dday(e.date)} ${e.name}`, ...off.bubble];
+  }
+  // 급식실·교무실 선생님이 들려주는 오늘의 정보(자료가 없으면 null)
+  function neisLine(F) {
+    if (F.room.key === 'cafeteria' && NEIS.meal) {
+      const l = lunchOf(ymd(new Date()));
+      if (!l) return '오늘은 급식이 없는 날이에요. 아래에서 이번 주 식단표를 볼 수 있어요.';
+      const m = l.menu.slice(0, 4).join(', ') + (l.menu.length > 4 ? ' 등' : '');
+      return `오늘 점심은 ${m}이에요!${l.kcal ? ` (${l.kcal})` : ''} 이번 주 식단표도 볼래요?`;
+    }
+    if (F.room.key === 'office' && NEIS.sch) {
+      const e = upcoming(1)[0];
+      if (!e) return '당분간 등록된 학사일정이 없어요. 아래에서 학사일정 달력을 볼 수 있어요.';
+      return `다음 학사일정은 ${mdw(e.date)} ${josa(e.name, '이에요', '예요')}(${dday(e.date)}). 학사일정 달력도 볼래요?`;
+    }
+    return null;
+  }
+  const infoKind = (r) => (r && r.f1 ? { cafeteria: 'meal', office: 'cal' }[r.f1.room.key] : null);
+
+  // 식단표·학사일정 판
+  const boardEl = $('#board'), boardBody = $('#board-body');
+  let boardOpen = false, boardKind = 'cal', boardAt = null;
+  const mk = (tag, cls, text) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; };
+  function paintBoard() {
+    boardBody.replaceChildren();
+    const src = boardKind === 'meal' ? NEIS.meal : NEIS.sch, today = ymd(new Date());
+    $('#board-foot').textContent = src ? `출처: NEIS 교육정보 개방 포털 · ${String(src.updated || '').replace('T', ' ').slice(0, 16)} 갱신` : '';
+    if (boardKind === 'meal') {
+      const mon = new Date(boardAt), fri = new Date(mon); fri.setDate(mon.getDate() + 4);
+      $('#board-title').textContent = `${mon.getMonth() + 1}/${mon.getDate()} ~ ${fri.getMonth() + 1}/${fri.getDate()} 식단표`;
+      if (!src) { boardBody.append(mk('p', 'board-empty', '아직 식단 자료를 받아 오지 못했어요. 내일 다시 와 주세요!')); return; }
+      const wk = mk('div', 'board-week');
+      for (let i = 0; i < 5; i++) {
+        const d = new Date(mon); d.setDate(mon.getDate() + i);
+        const k = ymd(d), l = lunchOf(k), card = mk('div', 'board-day' + (k === today ? ' today' : ''));
+        card.append(mk('p', 'board-date', `${d.getMonth() + 1}/${d.getDate()} (${WD[d.getDay()]})${k === today ? ' 오늘' : ''}`));
+        if (l) { const ul = mk('ul'); for (const m of l.menu) ul.append(mk('li', '', m)); card.append(ul); if (l.kcal) card.append(mk('p', 'board-kcal', l.kcal)); }
+        else card.append(mk('p', 'board-none', '급식 없음'));
+        wk.append(card);
+      }
+      boardBody.append(wk);
+      return;
+    }
+    const m0 = new Date(boardAt), y = m0.getFullYear(), mo = m0.getMonth();
+    $('#board-title').textContent = `${y}년 ${mo + 1}월 학사일정`;
+    if (!src) { boardBody.append(mk('p', 'board-empty', '아직 학사일정 자료를 받아 오지 못했어요. 내일 다시 와 주세요!')); return; }
+    const pre = `${y}${String(mo + 1).padStart(2, '0')}`, evs = (src.events || []).filter((e) => e.date.startsWith(pre));
+    const grid = mk('div', 'board-cal');
+    for (const w of WD) grid.append(mk('span', 'board-wd', w));
+    for (let i = 0; i < m0.getDay(); i++) grid.append(mk('span', 'board-cell blank'));
+    const last = new Date(y, mo + 1, 0).getDate();
+    for (let d = 1; d <= last; d++) {
+      const k = pre + String(d).padStart(2, '0'), es = evs.filter((e) => e.date === k), wd = (m0.getDay() + d - 1) % 7;
+      const c = mk('span', 'board-cell' + (k === today ? ' today' : '') + (wd === 0 || es.some((e) => e.off) ? ' off' : wd === 6 ? ' sat' : '') + (es.length ? ' has' : ''));
+      c.append(mk('b', '', String(d)));
+      for (const e of es.slice(0, 2)) c.append(mk('i', '', e.name));
+      if (es.length) c.title = es.map((e) => e.name).join(', ');
+      grid.append(c);
+    }
+    boardBody.append(grid);
+    const ul = mk('ul', 'board-list');
+    if (!evs.length) ul.append(mk('li', 'board-none', '이 달에는 등록된 학사일정이 없어요.'));
+    for (const e of evs) {
+      const li = mk('li', e.off ? 'off' : '');
+      li.append(mk('b', '', mdw(e.date)), document.createTextNode(' ' + e.name + (e.grades && e.grades.length && e.grades.length < 3 ? ` (${e.grades.join('·')}학년)` : '')));
+      ul.append(li);
+    }
+    boardBody.append(ul);
+  }
+  function openBoard(kind) {
+    closeDialog();
+    boardKind = kind; boardOpen = true; keys.clear(); padDirs.clear();
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    if (kind === 'meal') {
+      // 주말이면 다음 주 식단을 보여 준다
+      const k = (t.getDay() + 6) % 7; t.setDate(t.getDate() - k + (k >= 5 ? 7 : 0));
+    } else t.setDate(1);
+    boardAt = t;
+    SFX.chime(); paintBoard();
+    boardEl.hidden = false;
+    $('#board-x').focus({ preventScroll: true });
+  }
+  function closeBoard() {
+    if (!boardOpen) return;
+    boardOpen = false; boardEl.hidden = true;
+    stage.focus({ preventScroll: true });
+  }
+  function moveBoard(step) {
+    const d = new Date(boardAt);
+    if (boardKind === 'meal') d.setDate(d.getDate() + 7 * step); else d.setMonth(d.getMonth() + step);
+    boardAt = d; SFX.move(); paintBoard();
+  }
+  $('#board-x').addEventListener('click', closeBoard);
+  $('#board-prev').addEventListener('click', () => moveBoard(-1));
+  $('#board-next').addEventListener('click', () => moveBoard(1));
+  $('#dlg-info').addEventListener('click', () => { const k = dlg && infoKind(dlg.r); if (k) openBoard(k); });
+  loadNeis();
 
   /* ───────── 복도 게시판: 진로 선생님께 메시지 ───────── */
   const memoEl = $('#memo'), memoForm = $('#memo-form'), memoStatus = $('#memo-status'), memoSend = $('#memo-send');
@@ -2753,6 +2880,11 @@
   addEventListener('keydown', (e) => {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
     if (memoOpen) { if (e.key === 'Escape') { e.preventDefault(); closeMemo(); } return; }
+    if (boardOpen) {
+      if (e.key === 'Escape') { e.preventDefault(); closeBoard(); }
+      else if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') { e.preventDefault(); moveBoard(e.key === 'ArrowLeft' ? -1 : 1); }
+      return;
+    }
     if (noteEl && !noteEl.hidden && (e.key === 'Escape' || KEYMAP[e.key])) { toggleNote(false); if (e.key === 'Escape') { e.preventDefault(); return; } }
     const tag = (document.activeElement && document.activeElement.tagName) || '';
     if (tag === 'INPUT' || tag === 'TEXTAREA') return;
@@ -2819,6 +2951,7 @@
     stage.focus({ preventScroll: true });
     const { x, y } = toMap(e);
     if (memoOpen) closeMemo();
+    if (boardOpen) { closeBoard(); return; }
     const b = L.board;
     if (b && x > b.x - 3 && x < b.x + b.w + 3 && y > b.y - 3 && y < b.y + b.h + 3) {
       if (dlg) closeDialog();

@@ -30,8 +30,8 @@
 </script>
 <!-- 이 페이지가 불러올 수 있는 곳을 같은 주소와 게시판 메시지(구글 Apps Script)로만 묶어 둔다 -->
 <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; media-src 'self' data:; connect-src 'self' https://script.google.com https://script.googleusercontent.com; form-action 'none'; base-uri 'none'; object-src 'none'">
-<link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2?v=24" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/school/school.css?v=24">
+<link rel="preload" href="/assets/school/fonts/galmuri11-subset.woff2?v=25" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/school/school.css?v=25">
 </head>
 <body>
 <div class="page">
@@ -58,7 +58,24 @@
           <div class="dlg-btns">
             <button type="button" id="dlg-go">▶ 사이트 열기 <kbd>Enter</kbd></button>
             <button type="button" id="dlg-no">교실 둘러보기 <kbd>Esc</kbd></button>
+            <button type="button" id="dlg-info" class="dlg-info" hidden></button>
             <a id="dlg-link" class="dlg-link" target="_blank" rel="noopener" hidden></a>
+          </div>
+        </div>
+      </div>
+
+      <!-- 1층 급식실 식단표 · 교무실 학사일정 달력. 자료는 GitHub Actions가 매일 NEIS에서 받아 둔 data/meal.json, data/schedule.json -->
+      <div class="dialog board" id="board" role="dialog" aria-modal="false" aria-labelledby="board-title" hidden>
+        <div class="dlg-body">
+          <div class="board-head">
+            <button type="button" id="board-prev" aria-label="이전">◀</button>
+            <p class="dlg-say" id="board-title"></p>
+            <button type="button" id="board-next" aria-label="다음">▶</button>
+          </div>
+          <div id="board-body" class="board-body"></div>
+          <div class="dlg-btns">
+            <button type="button" id="board-x">닫기 <kbd>Esc</kbd></button>
+            <small class="board-foot" id="board-foot"></small>
           </div>
         </div>
       </div>
@@ -203,6 +220,6 @@
     } catch (e) { /* 날짜 없이 둔다 */ }
   });
 </script>
-<script src="/assets/school/school.js?v=24"></script>
+<script src="/assets/school/school.js?v=25"></script>
 </body>
 </html>

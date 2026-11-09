@@ -2,7 +2,13 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=24") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=25") format("woff2");
+  font-display: swap;
+}
+/* 급식 메뉴·학사일정처럼 날마다 바뀌는 글자용: 자주 쓰는 한글 2,350자(필요할 때만 받는다) */
+@font-face {
+  font-family: "Galmuri11 KO";
+  src: url("fonts/galmuri11-ko.woff2?v=1") format("woff2");
   font-display: swap;
 }
 
@@ -14,7 +20,7 @@
   --paper: #fff8e6;
   --gold: #ffd36b;
   --muted: #b9add8;
-  --pixel: "Galmuri11", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
+  --pixel: "Galmuri11", "Galmuri11 KO", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif;
   color-scheme: dark;
 }
 
@@ -149,6 +155,40 @@ main { display: flex; flex-direction: column; align-items: center; }
 .dlg-link { padding: 4px 10px; border: 2px solid #8fe3ff; color: #8fe3ff; text-decoration: none; }
 .dlg-link:hover, .dlg-link:focus-visible { background: #8fe3ff; color: var(--ink); }
 .dlg-link[hidden] { display: none; }
+.dlg-info { border-color: #9ff0b0 !important; color: #9ff0b0 !important; }
+.dlg-info[hidden] { display: none; }
+
+/* 식단표·학사일정 판 */
+.board { display: block; max-height: calc(100% - 12px); overflow: auto; top: 6px; bottom: auto; width: min(96%, 640px); }
+.board-head { display: flex; align-items: center; gap: 8px; }
+.board-head .dlg-say { flex: 1; text-align: center; color: var(--gold); }
+.board-head button { padding: 2px 8px; border: 2px solid #fff; background: transparent; color: #fff; font: inherit; cursor: pointer; }
+.board-body { margin-top: 6px; }
+.board-empty { color: #d6dcff; padding: 16px 0; text-align: center; }
+.board-week { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.board-day { padding: 4px 6px; background: #ffffff14; border: 1px solid #ffffff55; min-width: 0; }
+.board-day.today { border: 2px solid var(--gold); background: #ffd36b22; }
+.board-day ul { margin: 2px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 1.45; word-break: keep-all; }
+.board-date { color: var(--gold); font-size: 12px; margin: 0; }
+.board-kcal, .board-none { color: #b9c3ff; font-size: 11px; margin: 2px 0 0; }
+.board-cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; }
+.board-wd { text-align: center; font-size: 11px; color: #b9c3ff; }
+.board-cell { min-height: 40px; padding: 1px 3px; background: #ffffff10; border: 1px solid #ffffff33; font-size: 10px; line-height: 1.25; overflow: hidden; min-width: 0; }
+.board-cell.blank { background: none; border-color: transparent; }
+.board-cell b { display: block; font-weight: normal; font-size: 12px; }
+.board-cell i { display: block; font-style: normal; color: #9ff0b0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.board-cell.off b, .board-list .off b { color: #ff9a9a; }
+.board-cell.sat b { color: #9ac8ff; }
+.board-cell.today { border: 2px solid var(--gold); }
+.board-list { margin: 8px 0 0; padding: 0; list-style: none; font-size: 12px; line-height: 1.6; }
+.board-list b { font-weight: normal; color: var(--gold); margin-right: 4px; }
+.board-foot { margin-left: auto; color: #b9c3ff; font-size: 10px; align-self: center; }
+@media (max-width: 560px) {
+  .board-week { grid-template-columns: 1fr 1fr; }
+  .board-cell { min-height: 30px; }
+  .board-cell i { display: none; }
+  .board-cell.has b::after { content: '•'; color: #9ff0b0; margin-left: 2px; }
+}
 #dlg-go { background: var(--gold); color: var(--ink); border-color: var(--gold); animation: blink 1s steps(2) infinite; }
 #dlg-go kbd { color: var(--ink); border-color: #2b1d2e66; }
 .dlg-btns button:hover, .dlg-btns button:focus-visible { outline: 2px dashed #fff; outline-offset: 2px; }
