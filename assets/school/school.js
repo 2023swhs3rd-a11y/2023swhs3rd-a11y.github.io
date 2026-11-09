@@ -142,6 +142,8 @@
       side: [['o', 'H', 1, 6, 3, 1], ['o', 'H', 4, 7, 1, 1], ['o', 'e', 3, 7, 1, 1], ['o', 'e', 3, 9, 1, 1]] },
     mustache: { down: [['o', 'H', 5, 9, 4, 1]], side: [['o', 'H', 1, 9, 3, 1]] },
     hood: { down: [['u', 'w', 2, 11, 10, 2]], up: [['o', 'w', 3, 11, 8, 3]], side: [['u', 'w', 8, 10, 4, 3]] },
+    // 레슬링복(싱글렛): 맨팔이 드러나게
+    singlet: { down: [['o', 's', 3, 13, 1, 1], ['o', 's', 10, 13, 1, 1]], up: [['o', 's', 3, 13, 1, 1], ['o', 's', 10, 13, 1, 1]], side: [['o', 's', 5, 12, 1, 2]] },
   };
 
   const KIDS = [
@@ -407,6 +409,15 @@
   // 1층 점심시간에 급식실을 채울 다른 학생들(이름 없이 모습만). 처음 쓸 때 만든다
   let CROWD = null;
   const crowdList = () => CROWD || (CROWD = Array.from({ length: 60 }, (_, i) => Object.assign(makeMe('급식' + i * 7, i % 2 ? 'f' : 'm'), { id: 'crowd' + i, me: false })));
+  // 1층 저녁 레슬링부(남학생만): 빨강·파랑 레슬링복(싱글렛)에 흰 레슬링화
+  let WRESTLERS = null;
+  const wrestlerList = () => WRESTLERS || (WRESTLERS = Array.from({ length: 12 }, (_, i) => {
+    const m = makeMe('레슬링' + i * 13, 'm'), suit = i % 2 ? '#2f5fd0' : '#d23a3a';
+    m.id = 'wrestler' + i; m.me = false; m.look = m.look.filter((x) => x !== 'glasses').concat('singlet');
+    Object.assign(m.pal, { c: suit, w: m.pal.s, t: suit, p: suit, k: '#f4f4f8' });
+    m.pal.C = mix(suit, C.ink, 0.25);
+    return m;
+  }));
   let ME = (() => { const m = load('pixelSchoolMe', localStorage); return m && cleanName(m.name) && /^[mf]$/.test(m.g) ? makeMe(cleanName(m.name), m.g) : null; })();
 
   const SPR_W = 18, OX = 2, OY = 3;
@@ -2379,7 +2390,7 @@
       let n = 0;
       for (const r of L.rooms) for (const [k, w] of (r.wrestle || []).entries()) {
         // 레슬링부: 두 명이 마주 보고 밀고 당긴다
-        const a = crowd[(n + 2 * k) % crowd.length], c = crowd[(n + 2 * k + 1) % crowd.length];
+        const wl = wrestlerList(), a = wl[(2 * k) % wl.length], c = wl[(2 * k + 1) % wl.length];
         const t = reduceMotion ? 0 : Math.sin(clock * 4 + k * 1.7), push = Math.round(t * 1.5), dip = reduceMotion ? 0 : (Math.floor(clock * 3 + k) % 4 === 0 ? 1 : 0);
         list.push({ y: w.y, fn: () => {
           shadowAt(w.x - 6 + push, w.y, 9); shadowAt(w.x + 6 + push, w.y, 9);
@@ -2408,8 +2419,9 @@
         list.push({ y: q.y, fn: () => { shadowAt(q.x, q.y, 10); drawSprite(personSprite(x.sp, sd, 'idle', near && blinking(k + 7)), q.x, q.y + hop(k + 4)); } });
       }
       const o = r.f1 ? r.f1.npc : others[i];
-      r.npc = r.f1 ? (r.npcAway ? null : o) : lunch ? null : o || null; // 점심시간엔 다들 급식 먹으러 갔다(2층), 17시 넘으면 1층 어른은 퇴근
-      if (o && r.npcSeat && !(r.f1 && !r.npc)) {
+      // 점심시간엔 다들 급식 먹으러 갔다(2층), 17시 넘으면 2층 교실엔 선생님만 남고 1층 어른은 퇴근
+      r.npc = r.f1 ? (r.npcAway ? null : o) : lunch || isEve() ? null : o || null;
+      if (o && r.npcSeat && (r.f1 ? r.npc : !isEve())) {
         const s = r.npcSeat;
         const near = Math.hypot(P.x - s.x, P.y - s.y) < 30;
         let sd = 'up';
@@ -2449,7 +2461,16 @@
     // 시간대에 맞춘 창밖 하늘(저녁 노을, 밤하늘)
     const sky = skyNow();
     if (sky) {
-      if (sky.night) { g.fillStyle = 'rgba(16,20,60,0.3)'; g.fillRect(0, 0, L.W, L.H); }
+      // 밤에는 어둑하게. 단 2층 교실은 늘 불이 켜져 있어 복도만 어둡다
+      if (sky.night) {
+        g.fillStyle = 'rgba(16,20,60,0.3)';
+        if (L.f1) g.fillRect(0, 0, L.W, L.H);
+        else {
+          g.save(); g.beginPath(); g.rect(0, 0, L.W, L.H);
+          for (const r of L.rooms) g.rect(r.x + r.w, r.y, -r.w, r.h); // 교실은 구멍으로 빼고 칠한다
+          g.fill('evenodd'); g.restore();
+        }
+      }
       const paint = (x, y, w, h, vertical) => {
         R(x, y, w, h, sky.top);
         if (vertical) R(x + w - 1, y, 1, h, sky.low); else R(x, y + h - Math.min(4, h / 3), w, Math.min(4, h / 3), sky.low);
