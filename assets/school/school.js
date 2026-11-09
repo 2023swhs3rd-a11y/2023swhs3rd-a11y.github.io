@@ -260,13 +260,13 @@
         talk: ['시험지 채점 중이에요. 잠깐만요!', '프린터가 또 종이를 먹었어요…', '질문하러 왔어요? 기특하네요.'],
         bubble: ['채점 중…', '프린터야 힘내…', '질문은 언제든!'] } },
     { room: mkRoom({ key: 'lounge', short: '봉쿱', title: '봉쿱(학생 쉼터)', badge: '쉼터', color: '#e0a93a', icon: 'sofa',
-        desc: '쉬는 시간에 친구들과 쉬어 가는 학생 쉼터 봉쿱이에요. 학생회 건의함이 있고, 음료 자판기는 봉쿱 앞 복도에 있어요.' }),
+        desc: '쉬는 시간에 친구들과 쉬어 가는 학생 쉼터 봉쿱이에요. 학생회 건의함이 있고, 오른쪽 위 구석에 음료 자판기도 있어요.' }),
       staff: { id: 'f1-gaeun', name: '가은', hi: '어서 와! 여기는 학생 쉼터 봉쿱이야. ', look: ['pony'], skirt: true, pal: KIDPAL('#40322c', '#ffe0c4', '#33508f', '#ffd36b', '#b33d55') },
       talk: ['학생회장 가은이야! 봉쿱은 모두의 공간이니까 깨끗하게 써 줘.', '건의함에 의견을 넣으면 학생회가 꼭 읽어.', '자판기 음료는 하루 한 개만! 당 조심!',
         '다음 달 축제는 학생회가 준비하고 있어. 기대해!', '쉬는 시간엔 여기서 잠깐 쉬어 가.'],
       bubble: ['봉쿱은 깨끗하게!', '건의함 열려 있어요', '축제 준비 중!', '쉬었다 가!'],
       npc: { id: 'f1-taeo', name: '태오', look: ['ahoge', 'hood'], pal: KIDPAL('#8a5232', '#f7caa0', '#5bb36b', '#ffffff', '#4b5563'),
-        talk: ['봉쿱 앞 자판기에서 뭐 마실지 10분째 고민 중이야.', '여기 소파 은근 편해.', '쉬는 시간 끝나기 1분 전이 제일 아쉬워.'],
+        talk: ['봉쿱 자판기에서 뭐 마실지 10분째 고민 중이야.', '여기 소파 은근 편해.', '쉬는 시간 끝나기 1분 전이 제일 아쉬워.'],
         bubble: ['뭐 마시지…', '소파 최고', '쉬는 시간 짧아…'] } },
     { room: mkRoom({ key: 'cafeteria', short: '급식실', title: '급식실', badge: '급식', color: '#e0603a', icon: 'rice',
         desc: '점심을 먹는 곳이에요. 먹을 만큼 받고, 줄은 차례대로 서요.' }),
@@ -320,10 +320,13 @@
     const female = g === 'f';
     const look = female ? [['long', 'ribbon'], ['pony'], ['bob'], ['buns']][h % 4] : [['spiky'], ['ahoge'], [], ['spiky', 'glasses']][h % 4];
     return finishPal({ id: `me-${g}-${h % 997}`, me: true, name, gender: g, line: '나', look, skirt: female,
-      pal: { h: HAIRS[h % HAIRS.length], s: SKINS[(h >> 3) % SKINS.length], c: '#2b3a66', w: '#ffffff', t: female ? '#e2475a' : '#c2283c', p: female ? '#4b4f7a' : '#3b4252', r: '#ff6f91' } });
+      pal: { h: HAIRS[h % HAIRS.length], s: SKINS[(h >>> 3) % SKINS.length], c: '#2b3a66', w: '#ffffff', t: female ? '#e2475a' : '#c2283c', p: female ? '#4b4f7a' : '#3b4252', r: '#ff6f91' } });
   }
   // 이름은 화면 글자로만 쓰지만, 혹시 몰라 꺾쇠·따옴표 같은 기호는 빼고 6자로 자른다
   function cleanName(v) { return [...String(v || '').replace(/[<>&"'`]/g, '').replace(/\s+/g, ' ').trim()].slice(0, 6).join(''); }
+  // 1층 점심시간에 급식실을 채울 다른 학생들(이름 없이 모습만). 처음 쓸 때 만든다
+  let CROWD = null;
+  const crowdList = () => CROWD || (CROWD = Array.from({ length: 24 }, (_, i) => Object.assign(makeMe('급식' + i * 7, i % 2 ? 'f' : 'm'), { id: 'crowd' + i, me: false })));
   let ME = (() => { const m = load('pixelSchoolMe', localStorage); return m && cleanName(m.name) && /^[mf]$/.test(m.g) ? makeMe(cleanName(m.name), m.g) : null; })();
 
   const SPR_W = 18, OX = 2, OY = 3;
@@ -531,9 +534,6 @@
       L.window = { x: L.W - 6, y: h.y, w: 6, h: h.h };
       // 계단 표지판: 2층에서는 내려가는 길, 1층에서는 올라가는 길
       sign(2, h.y + 2, 20, 9, L.f1 ? '▲2층' : '▼1층');
-      // 1층 복도 끝 창가 음료 자판기
-      // 1층 봉쿱 앞 복도 음료 자판기
-      if (L.f1) vending(336, h.y + 1, L);
       // 복도 깔개
       rug(Math.round(L.W / 2 - 52), h.y + 18, 104, 12, '#7d9cc0', '#ffffff');
     } else {
@@ -544,7 +544,6 @@
       rug(h.x + 10, 150, 28, 40, '#7d9cc0', '#ffffff');
       sign(h.x + 3, 5, 42, 12, L.f1 ? '▲ 2층' : '▼ 1층');
       standSign(h.x + 1, 232, 34, 12, '뛰지 마요', L);
-      if (L.f1) vending(h.x + 1, 306, L, { x: h.x + 25, y: 322 });
     }
     if (L.portrait && !L.f1) {
       // 진로카페 앞에 세워 둔 게시판(가까이 가거나 누르면 진로 선생님께 메시지)
@@ -594,6 +593,11 @@
   }
   // 음료 자판기: 14×24(통째로 부딪힘)
   function vending(x, y, L, spot) {
+    vendingArt(x, y);
+    L.obst.push({ x: x, y: y, w: 14, h: 24 });
+    L.vend = { x, y, spot: spot || { x: x + 7, y: y + 30 } };
+  }
+  function vendingArt(x, y) {
     R(x + 1, y + 23, 13, 1, C.shadow);
     R(x - 1, y - 1, 16, 25, C.out);
     R(x, y, 14, 23, '#d8323f'); R(x, y, 14, 1, '#f0606a'); R(x + 12, y + 1, 2, 22, '#a8222d');
@@ -611,8 +615,6 @@
     R(x + 10.5, y + 10, 2, 2, '#2b1d2e'); R(x + 11, y + 10.5, 1, 1, '#c8c8c8');
     R(x + 2, y + 16, 10, 4, '#2b1d2e'); R(x + 2.5, y + 16.5, 9, 3, '#5a5060');
     R(x + 3, y + 14, 8, 1, '#ffffff'); R(x + 3, y + 14, 3, 1, '#ffd36b');
-    L.obst.push({ x: x, y: y, w: 14, h: 24 });
-    L.vend = { x, y, spot: spot || { x: x + 7, y: y + 30 } };
   }
   function plant(x, y) {
     R(x + 3, y + 15.5, 9, 1, C.shadow);
@@ -1024,8 +1026,13 @@
       r.extras = spots.slice(1, -1).slice(0, OFFICE_EXTRA.length).map((pos, k) => ({ sp: OFFICE_EXTRA[k], pos }));
       for (const x of r.extras) block(x.pos.x - 4, x.pos.y - 4, 8, 5);
     } else if (key === 'lounge') {
-      // 봉쿱: 벽 쪽 소파와 건의함, 낮은 탁자, 벤치
-      const sw = 34, sx0 = doorRight ? f.x + 6 : f.x + f.w - sw - 6, sy0 = f.y + 4;
+      // 봉쿱: 왼쪽 위 소파와 건의함, 낮은 탁자, 벤치, 오른쪽 위 구석 음료 자판기
+      const sw = 34, sx0 = f.x + 6, sy0 = f.y + 4;
+      const vx = f.x + f.w - 18, vy = f.y + 1;
+      block(vx, vy + 6, 14, 18);
+      r.keepClear.push({ x: vx - 4, y: f.y, w: 22, h: 40 });
+      thing(vy + 24, () => vendingArt(vx, vy));
+      L.vend = { x: vx, y: vy, spot: { x: vx + 7, y: vy + 32 } };
       block(sx0, sy0 + 2, sw, 10);
       r.keepClear.push({ x: sx0 - 4, y: f.y, w: sw + 8, h: 30 });
       thing(sy0 + 12, () => {
@@ -1042,7 +1049,7 @@
         R(tx, ty, 18, 4, '#c98d5a'); R(tx, ty, 18, 0.5, '#e8b98a'); R(tx + 1, ty + 4, 1, 2, C.leg); R(tx + 16, ty + 4, 1, 2, C.leg);
         R(tx + 3, ty - 2, 4, 2.5, '#ffd36b'); R(tx + 10, ty - 2, 3, 2.5, '#ffffff'); R(tx + 10, ty - 2, 3, 0.5, '#5bb36b');
       });
-      const bx = doorRight ? sx0 + sw + 8 : sx0 - 18, by = f.y + 8;
+      const bx = sx0 + sw + 8, by = f.y + 8;
       block(bx, by + 8, 10, 4);
       thing(by + 13, () => {
         R(bx + 1, by + 13, 9, 1, C.shadow); R(bx + 2, by + 9, 1, 4, C.leg); R(bx + 7, by + 9, 1, 4, C.leg);
@@ -1058,7 +1065,7 @@
         R(sx + 1, sy + 4, 1, 3, C.leg); R(sx + 24, sy + 4, 1, 3, C.leg);
       });
       r.keepClear.push({ x: sx - 2, y: sy - 6, w: 30, h: 16 });
-      r.tpos = { x: doorRight ? bx + 22 : bx - 10, y: f.y + 24 };
+      r.tpos = { x: bx + 24, y: f.y + 24 };
       r.npcSeat = { x: sx + 13, y: sy + 2 };
     } else if (key === 'cafeteria') {
       // 배식대(밥·국·반찬)와 긴 식탁
@@ -1096,6 +1103,13 @@
       }
       const t = tables[0];
       r.npcSeat = t ? { x: t.x + 10, y: t.y + 14 } : null;
+      // 점심시간에 학생들이 앉을 자리: 식탁마다 앞 의자 둘(위를 봄), 맨 윗줄 식탁은 뒤 의자 둘(아래를 봄)도
+      r.lunchSeats = [];
+      const top = tables.length ? Math.min(...tables.map((tb) => tb.y)) : 0;
+      for (const tb of tables) for (const dx of [10, 30]) {
+        if (tb.y === top) r.lunchSeats.push({ x: tb.x + dx, y: tb.y - 1, dir: 'down' });
+        if (!(tb === t && dx === 10)) r.lunchSeats.push({ x: tb.x + dx, y: tb.y + 14, dir: 'up' });
+      }
     } else if (key === 'gym') {
       // 농구 골대, 공 바구니, 굴러다니는 공
       const hx = f.x + f.w - 34, hy = f.y + 2;
@@ -1567,8 +1581,8 @@
       ask: '체육관에서 예준이가 넘어져서 무릎이 까졌대요. 이 반창고 좀 갖다줄래요?', thanks: '반창고! 살았다… 고마워. 다음엔 조심해서 뛸게.' },
     { id: 'menu', go: ['봉쿱 가은에게 식단표를 전하자'], from: 'cafeteria:t', item: '이번 주 식단표', to: ['lounge:t'], hint: ['식단표 → 봉쿱 가은'],
       ask: '이번 주 식단표를 봉쿱 게시판에 붙이게 학생회장 가은이에게 전해 줄래요?', thanks: '식단표 왔다! 바로 붙일게. 와, 금요일에 치킨이네!' },
-    { id: 'water', go: ['봉쿱 앞 자판기에서 생수를 뽑자', '체육관 강 선생님께 생수를 갖다드리자'], from: 'gym:t', item: '생수', to: ['vend', 'gym:t'], hint: ['생수 → 봉쿱 앞 자판기에서 뽑기', '생수 → 체육관 강 선생님'],
-      ask: '목이 너무 마르네요. 봉쿱 앞 복도 자판기에서 물 한 병만 뽑아다 줄래요?', got: '자판기에서 생수 한 병을 뽑았다! 체육관 강 선생님께 가져가자.',
+    { id: 'water', go: ['봉쿱 자판기에서 생수를 뽑자', '체육관 강 선생님께 생수를 갖다드리자'], from: 'gym:t', item: '생수', to: ['vend', 'gym:t'], hint: ['생수 → 봉쿱 자판기에서 뽑기', '생수 → 체육관 강 선생님'],
+      ask: '목이 너무 마르네요. 봉쿱 안 자판기에서 물 한 병만 뽑아다 줄래요?', got: '자판기에서 생수 한 병을 뽑았다! 체육관 강 선생님께 가져가자.',
       thanks: '캬, 시원하다! 고마워요. 운동할 땐 물이 최고예요.' },
     { id: 'idea', go: ['교장실 교장 선생님께 가자'], from: 'lounge:t', item: '건의함 의견서', to: ['principal:t'], hint: ['건의함 의견서 → 교장 선생님'],
       ask: '건의함에 모인 의견서를 교장 선생님께 전해 줄래? 학생회 대표로 부탁해!', thanks: '학생들 의견이군요. "쉼터에 콘센트를 늘려 주세요"… 좋아요, 꼭 살펴볼게요.' },
@@ -2111,6 +2125,25 @@
         const fr = ['a', 'idle', 'b', 'idle'][Math.floor(clock * 6 + k) % 4];
         list.push({ y, fn: () => { shadowAt(x, y, 10); drawSprite(personSprite(o, L.portrait ? 'up' : 'left', L.portrait ? fr : (fr === 'b' ? 'a' : fr), false), x, y); } });
       });
+    }
+    if (lunch && mode === 'play' && L.f1) {
+      // 1층 점심시간: 급식실 식탁이 학생들로 가득 차고, 계단에서 내려온 친구들이 급식실로 줄지어 걸어간다
+      const cr = L.rooms.find((r) => r.f1 && r.f1.room.key === 'cafeteria');
+      if (cr) {
+        const crowd = [...others, ...crowdList()];
+        (cr.lunchSeats || []).forEach((st, k) => {
+          const o = crowd[k % crowd.length];
+          list.push({ y: st.y, fn: () => { shadowAt(st.x, st.y, 8); drawSprite(personSprite(o, st.dir, 'idle', blinking(k + 11)), st.x, st.y + hop(k + 13)); } });
+        });
+        const h = L.walkHall, df = cr.door.front, walkers = others.slice(0, 6);
+        const len = Math.max(20, L.portrait ? df.y - 30 : df.x - 30);
+        walkers.forEach((o, k) => {
+          const d = (clock * 16 + k * (len / walkers.length)) % len;
+          const x = L.portrait ? h.x + 10 + (k % 2) * 18 : 30 + d, y = L.portrait ? 30 + d : h.y + 14 + (k % 2) * 16;
+          const fr = ['a', 'idle', 'b', 'idle'][Math.floor(clock * 6 + k) % 4];
+          list.push({ y, fn: () => { shadowAt(x, y, 10); drawSprite(personSprite(o, L.portrait ? 'down' : 'right', L.portrait ? fr : (fr === 'b' ? 'a' : fr), false), x, y); } });
+        });
+      }
     }
     L.rooms.forEach((r, i) => {
       const t = r.teacher, tp = r.tpos;
