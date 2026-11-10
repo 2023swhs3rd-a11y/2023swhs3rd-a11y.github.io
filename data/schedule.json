@@ -1,12 +1,12 @@
 {
  "school": "봉일천고등학교",
  "source": "NEIS 교육정보 개방 포털(open.neis.go.kr)",
- "updated": "2026-11-09T12:25+09:00",
+ "updated": "2026-11-10T11:41+09:00",
  "events": [
   {
    "date": "20261003",
    "name": "개천절",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -16,7 +16,7 @@
   {
    "date": "20261005",
    "name": "대체공휴일",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -26,7 +26,7 @@
   {
    "date": "20261009",
    "name": "한글날",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -208,7 +208,7 @@
   {
    "date": "20261225",
    "name": "성탄절",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -228,7 +228,7 @@
   {
    "date": "20270101",
    "name": "신정",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -555,7 +555,7 @@
   {
    "date": "20270206",
    "name": "설날",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -575,7 +575,7 @@
   {
    "date": "20270207",
    "name": "설날",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -595,7 +595,7 @@
   {
    "date": "20270208",
    "name": "설날",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
@@ -615,7 +615,7 @@
   {
    "date": "20270209",
    "name": "대체공휴일",
-   "off": false,
+   "off": true,
    "grades": [
     "1",
     "2",
