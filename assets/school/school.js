@@ -1941,8 +1941,11 @@
     // 휴대폰(높이가 낮음)은 제목을 숨기고 메시지창·버튼을 오른쪽 칸으로 옮겨 교실 화면을 키운다
     const cw = document.documentElement.clientWidth, vh = innerHeight;
     const land = isTouch && !portrait && innerWidth > vh, phone = land && vh < 560;
-    const side = phone ? (cw < 640 ? 104 : 124) : 150;
+    // 가로 태블릿: 제목을 숨기고 방향 패드를 줄여 교실 화면을 화면 너비 가득 키운다
+    const tab = land && !phone;
+    const side = phone ? (cw < 640 ? 104 : 124) : tab ? 124 : 150;
     document.body.classList.toggle('land', land);
+    document.body.classList.toggle('land-tab', tab);
     document.body.classList.toggle('land-phone', phone);
     document.body.classList.toggle('overlay-pad', phone);
     document.body.style.setProperty('--side', side + 'px');
@@ -1953,7 +1956,7 @@
     hudbar.style.width = phone ? '' : Math.min(availW + 8, L.W * 4 + 8, barMax) + 'px';
     const barH = phone ? 0 : hudbar.offsetHeight + 12;
     const top = stage.getBoundingClientRect().top + scrollY;
-    const reserve = phone ? top + 14 : land ? top + Math.max(barH, 150) + 12 : (isTouch ? 230 : 190) + barH;
+    const reserve = phone ? top + 14 : tab ? top + barH + 10 : land ? top + Math.max(barH, 150) + 12 : (isTouch ? 230 : 190) + barH;
     const byW = availW / L.W;
     const byH = (vh - reserve) / L.H;
     scale = Math.max(0.6, Math.min(byW, land ? byH : Math.max(byH, portrait ? byW * 0.8 : 0.6), 4));
