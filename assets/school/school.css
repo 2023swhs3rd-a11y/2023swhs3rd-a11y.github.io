@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=33") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=34") format("woff2");
   font-display: swap;
 }
 /* 급식 메뉴·학사일정처럼 날마다 바뀌는 글자용: 자주 쓰는 한글 2,350자(필요할 때만 받는다) */
@@ -312,22 +312,22 @@ body.touch.land .pad > * { pointer-events: auto; }
 body.touch.land.stage-off .pad, body.touch.land-phone.stage-off .hudbar { visibility: hidden; }
 body.touch.land .abtn { margin-right: calc((132px - 64px) / 2); }
 /* 가로 휴대폰: 제목은 숨기고, 메시지창과 버튼은 오른쪽 칸 위에 세로로 */
-body.touch.land-phone .top, body.touch.land-phone .help { display: none; }
-body.touch.land-phone main { padding-top: 6px; }
+body.touch.land-phone .top, body.touch.land-phone .help, body.touch.land-tab .top { display: none; }
+body.touch.land-phone main, body.touch.land-tab main { padding-top: 6px; }
 body.touch.land-phone .hudbar { position: fixed; top: 6px; right: 6px; width: calc(var(--side) - 12px); max-height: calc(100vh - 100px); margin: 0; gap: 4px; z-index: 9; align-content: start; }
 body.touch.land-phone .msgline { min-height: 0; align-items: flex-start; padding: 4px 6px; font-size: 11px; line-height: 1.35; max-height: 9.6em; overflow-y: auto; }
 body.touch.land-phone .statline { flex-direction: column; align-items: stretch; gap: 4px; }
 body.touch.land-phone .hud-row { display: grid; grid-template-columns: 1fr; gap: 3px; }
 body.touch.land-phone .hud { min-height: 28px; padding: 3px 4px; font-size: 11px; }
 body.touch.land-phone .stars { text-align: center; }
-body.touch.land-phone .pad { bottom: 6px; padding: 0 calc((var(--side) - 108px) / 2); }
-body.touch.land-phone .dpad { width: 108px; height: 108px; }
-body.touch.land-phone .dpad button { width: 36px; height: 36px; font-size: 13px; }
-body.touch.land-phone .dpad .u { left: 36px; top: 0; }
-body.touch.land-phone .dpad .l { left: 0; top: 36px; }
-body.touch.land-phone .dpad .r { left: 72px; top: 36px; }
-body.touch.land-phone .dpad .d { left: 36px; top: 72px; }
-body.touch.land-phone .abtn { width: 56px; height: 56px; font-size: 17px; margin-right: calc((108px - 56px) / 2); }
+body.touch.land-phone .pad, body.touch.land-tab .pad { bottom: 6px; padding: 0 calc((var(--side) - 108px) / 2); }
+body.touch.land-phone .dpad, body.touch.land-tab .dpad { width: 108px; height: 108px; }
+body.touch.land-phone .dpad button, body.touch.land-tab .dpad button { width: 36px; height: 36px; font-size: 13px; }
+body.touch.land-phone .dpad .u, body.touch.land-tab .dpad .u { left: 36px; top: 0; }
+body.touch.land-phone .dpad .l, body.touch.land-tab .dpad .l { left: 0; top: 36px; }
+body.touch.land-phone .dpad .r, body.touch.land-tab .dpad .r { left: 72px; top: 36px; }
+body.touch.land-phone .dpad .d, body.touch.land-tab .dpad .d { left: 36px; top: 72px; }
+body.touch.land-phone .abtn, body.touch.land-tab .abtn { width: 56px; height: 56px; font-size: 17px; margin-right: calc((108px - 56px) / 2); }
 
 .help { display: flex; flex-wrap: wrap; justify-content: center; gap: 4px 18px; margin: 16px 0 0; color: var(--muted); font-size: 12px; text-align: center; }
 body.touch .help { display: none; }
