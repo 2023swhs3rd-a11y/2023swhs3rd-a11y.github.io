@@ -207,12 +207,13 @@
     light: mix(o.color, '#ffffff', 0.55), pale: mix(o.color, '#ffffff', 0.8), dark: mix(o.color, '#000000', 0.3) }, o);
   const SPECIAL = [
     { room: mkRoom({ key: 'cafe', short: '진로카페', title: '진로카페', badge: '카페', color: '#9a6240', icon: 'cup',
-        desc: '진로 선생님과 따뜻한 차 한 잔 하며 진로 고민을 편하게 나누는 쉼터예요.' }),
+        link: { url: '/report/', label: '진로 빌드업 맵 탐구 보고서' },
+        desc: '진로 선생님과 따뜻한 차 한 잔 하며 진로 고민을 편하게 나누는 쉼터예요. 진로 빌드업 맵 탐구 보고서도 여기서 열 수 있어요.' }),
       staff: { id: 'barista', name: '쿠리만쥬 쌤', adult: true, look: ['ahoge', 'frown'], say: '',
         mono: ['…원두가 떨어져 가네.', '흥, 오늘 라떼 아트는 잘됐군.', '진로 상담 예약이 꽉 찼어…', '우유 거품이 너무 많아.', '…컵은 제자리에 두라고.'],
         pal: { h: '#8a4b26', s: '#f7caa0', c: '#e9b48c', w: '#fff1e0', t: '#a8643c', p: '#5a3a2a', H: '#4a2410' } },
       talk: ['진로카페에서는 커피 향을 맡으며 진로 이야기를 나눠요.', '원두를 고르듯 진로도 천천히 맛보며 골라 봐요.',
-        '따뜻한 코코아도 있어요. 고민 하나 내려놓고 가요.', '오늘의 추천 메뉴는 "꿈 한 스푼 라떼"예요.', '쉬는 시간에 잠깐 들러도 좋아요. 자리는 늘 비워 둘게요.'],
+        '따뜻한 코코아도 있어요. 고민 하나 내려놓고 가요.', '오늘의 추천 메뉴는 "꿈 한 스푼 라떼"예요.', '쉬는 시간에 잠깐 들러도 좋아요. 자리는 늘 비워 둘게요.', '진로 탐구 보고서는 아래 버튼으로 열 수 있어요. 질문 하나로 시작해 봐요.'],
       bubble: ['커피 내리는 중…', '꿈 한 스푼 라떼 어때요?', '쉬어 가요, 천천히!', '진로 고민도 한 잔!'] },
     { room: mkRoom({ key: 'wee', short: '위클래스', title: '위클래스(Wee 클래스)', badge: '상담', color: '#d96a8e', icon: 'heart',
         desc: '마음이 힘들거나 이야기를 나누고 싶을 때 찾아오는 상담실이에요. 상담이 필요한 학생은 4층 위클래스로 오세요.' }),
@@ -2867,7 +2868,7 @@
     $('#dlg-face').replaceChildren(faceCanvas(face));
     $('#dlg-no').firstChild.textContent = sp ? '닫기 ' : '교실 둘러보기 ';
     $('#dlg-no kbd').textContent = 'Esc';
-    if (dlg.quiz) { lk.hidden = true; ib.hidden = true; $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
+    if (dlg.quiz) { ib.hidden = true; $('#dlg-go').firstChild.textContent = 'O 맞아요 '; $('#dlg-no').firstChild.textContent = 'X 아니에요 '; $('#dlg-no kbd').textContent = 'X'; }
     typeSay(say);
     // 위쪽 교실이면 대화창을 화면 아래에, 아래쪽 교실이면 위에 띄운다
     dlgEl.classList.toggle('top', r.y + r.h / 2 > L.H / 2);
