@@ -2,7 +2,7 @@
    게임 그림은 school.js가 캔버스에 직접 그린다. */
 @font-face {
   font-family: "Galmuri11";
-  src: url("fonts/galmuri11-subset.woff2?v=36") format("woff2");
+  src: url("fonts/galmuri11-subset.woff2?v=37") format("woff2");
   font-display: swap;
 }
 /* 급식 메뉴·학사일정처럼 날마다 바뀌는 글자용: 자주 쓰는 한글 2,350자(필요할 때만 받는다) */
@@ -155,6 +155,8 @@ main { display: flex; flex-direction: column; align-items: center; }
 .dlg-link { padding: 4px 10px; border: 2px solid #8fe3ff; color: #8fe3ff; text-decoration: none; }
 .dlg-link:hover, .dlg-link:focus-visible { background: #8fe3ff; color: var(--ink); }
 .dlg-link[hidden] { display: none; }
+.dlg-reserve { border-color: #ffd36b; color: #ffd36b; }
+.dlg-reserve:hover, .dlg-reserve:focus-visible { background: #ffd36b; color: var(--ink); }
 .dlg-info { border-color: #9ff0b0 !important; color: #9ff0b0 !important; }
 .dlg-info[hidden] { display: none; }
 
