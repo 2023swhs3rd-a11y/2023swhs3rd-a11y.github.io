@@ -1,8 +1,8 @@
 /*
   봉일천고 진로진학부 사이트 공통 스타일 (/assets/site.css)
 
-  첫 화면과 다섯 사이트(2028plan, jinhak, gg-highschool-students, news, book)가 모두 같은 주소
-  2023swhs3rd-a11y.github.io 아래에 있으므로, 각 페이지 <head>에 아래 한 줄을 사이트 자체 CSS보다
+  첫 화면과 각 사이트(2028plan, jinhak, gg-highschool-students, news, book, report, eco-report,
+  climate, quiz 등)가 모두 같은 주소 2023swhs3rd-a11y.github.io 아래에 있으므로, 각 페이지 <head>에 아래 한 줄을 사이트 자체 CSS보다
   "먼저" 넣으면 글꼴·색·머리말·바닥글을 한 곳에서 맞출 수 있다.
 
     <link rel="stylesheet" href="/assets/site.css?v=1">
