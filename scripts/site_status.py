@@ -7,6 +7,7 @@
 점검 대상은 첫 화면(index.html)에서 읽는다. 카드를 더하거나 빼면 따로 고칠 곳이 없다.
   - 첫 화면과 카드마다 걸린 사이트 주소
   - 첫 화면이 '최신 업데이트 날짜'를 읽는 사이트별 공개 파일(UPD). 이 파일이 안 열리면 배포가 빠졌을 수 있다
+  - 픽셀 학교 대화창 버튼으로 여는 같은 주소 아래 사이트(school.js 의 link·link2, 예: 진로카페 → /report/ /reserve/)
 판정은 jinhak_links.py 와 같다(열림 / 확인 필요 / 깨짐). 깨짐이 하나라도 있으면 종료 코드 2.
 """
 import re
@@ -20,7 +21,7 @@ ROOT = Path(__file__).resolve().parent.parent
 BASE = "https://2023swhs3rd-a11y.github.io"
 
 
-def targets(html):
+def targets(html, js=""):
     """[(사이트 이름, 점검할 것, 주소)]"""
     names = {}
     for href, inner in re.findall(r'<a class="card" href="([^"]+)"[^>]*>(.*?)</a>', html, re.S):
@@ -31,12 +32,18 @@ def targets(html):
         out.append((name, "화면", BASE + href))
     for href, path in re.findall(r"'(/[^']+/)':\s*\['(/[^']+)'", html):
         out.append((names.get(href, href), "업데이트 날짜 파일", BASE + path))
+    seen = set(names)
+    for path, label in re.findall(r"link2?: \{ url: '(/[^']*)', label: '([^']+)'", js):
+        if path not in seen:
+            seen.add(path)
+            out.append((re.sub(r"\s*\(새 창\)$", "", label), "화면", BASE + path))
     return out
 
 
 def main():
     html = (ROOT / "index.html").read_text(encoding="utf-8")
-    rows = [(site, what, url, *classify(url)) for site, what, url in targets(html)]
+    js = (ROOT / "assets/school/school.js").read_text(encoding="utf-8")
+    rows = [(site, what, url, *classify(url)) for site, what, url in targets(html, js)]
     sites = {r[0] for r in rows}
     bad_sites = {r[0] for r in rows if r[3] != OK}
     head = f"사이트 {len(sites)}곳 중 정상 {len(sites) - len(bad_sites)}곳 · 문제 {len(bad_sites)}곳"
