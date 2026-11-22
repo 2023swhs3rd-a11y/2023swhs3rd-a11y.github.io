@@ -23,8 +23,12 @@ function doPost(e) {
     if (cache.get('m:' + sig)) return out_('dup');            // 같은 글을 10분 안에 또 보냄
     const n = Number(cache.get('count') || 0);
     if (n >= 60) return out_('busy');                          // 10분에 60개까지만
+    const dayKey = 'day:' + Utilities.formatDate(new Date(), 'Asia/Seoul', 'yyyyMMdd');
+    const nd = Number(cache.get(dayKey) || 0);
+    if (nd >= 300) return out_('busy');                        // 하루 300개까지만
     cache.put('m:' + sig, '1', 600);
     cache.put('count', String(n + 1), 600);
+    cache.put(dayKey, String(nd + 1), 21600);                  // 캐시는 최대 6시간이라 6시간마다 다시 센다
     const sh = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0];
     if (sh.getLastRow() === 0) sh.appendRow(HEADER);
     sh.appendRow([new Date(), clean_(d.who, 30), clean_(msg, 500), clean_(d.kid, 10), false]);
@@ -36,10 +40,10 @@ function doPost(e) {
   }
 }
 
-// 너무 긴 글은 자르고, =·+·-·@ 로 시작하는 글은 수식으로 읽히지 않게 앞에 ' 를 붙인다
+// 너무 긴 글은 자르고, =·+·-·@·탭·줄바꿈으로 시작하는 글은 수식으로 읽히지 않게 앞에 ' 를 붙인다
 function clean_(v, n) {
   const s = String(v || '').trim().slice(0, n);
-  return /^[=+\-@]/.test(s) ? "'" + s : s;
+  return /^[=+\-@\t\r\n]/.test(s) ? "'" + s : s;
 }
 
 function out_(s) {
