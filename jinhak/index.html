@@ -238,6 +238,8 @@
   const FOCUS = 2028;
   // 목록에 넣은 날(added)부터 30일 동안 NEW
   const NEW_DAYS = 30;
+  // 맨 위 '최근 추가한 자료'에 보일 개수
+  const RECENT = 6;
   const isNew = (it) => it.added && (Date.now() - new Date(it.added + 'T00:00:00+09:00')) / 864e5 < NEW_DAYS;
   const now = new Date();
   const schoolYear = now.getMonth() >= 2 ? now.getFullYear() : now.getFullYear() - 1; // 3월에 새 학년
@@ -324,7 +326,7 @@
     return null;
   }
 
-  function card(it) {
+  function card(it, withCat) {
     const kind = it.kind || '웹사이트';
     const isVideo = kind === '영상';
     // 미리보기 그림은 thumbs/<id>.jpg. 아직 없으면 유튜브 영상은 대표 이미지를 바로 쓰고,
@@ -346,7 +348,7 @@
       </a>
       <div class="ib">
         <h3><a href="${href(it.url)}" target="_blank" rel="noopener">${esc(it.title)}</a></h3>
-        <p class="src">${esc(it.src)}</p>
+        <p class="src">${withCat && catOf[it.cat] ? esc(catOf[it.cat].name) + ' · ' : ''}${esc(it.src)}</p>
         <p class="d">${esc(it.desc)}</p>
         ${meta ? `<div class="meta">${meta}</div>` : ''}
         <a class="open" href="${href(it.url)}" target="_blank" rel="noopener">${verb}${OUT}</a>
@@ -357,6 +359,13 @@
   function render() {
     const shown = items.filter((i) => (state.cat === 'all' || i.cat === state.cat) && match(i));
     let html = '';
+    // 전체 탭에서 검색·필터를 걸지 않았으면 맨 위에 최근에 넣은 자료를 먼저 보여 준다(넣은 날 added 기준)
+    if (state.cat === 'all' && !state.q && state.grade === '전체' && state.kind === '전체') {
+      const recent = items.filter((i) => i.added).sort((a, b) => b.added.localeCompare(a.added)).slice(0, RECENT);
+      if (recent.length) html += `<section class="cat recent" id="s-recent">
+        <div class="cathead"><div><h2>최근 추가한 자료<small>${recent.length}개</small></h2><p>목록에 새로 넣은 순서입니다. 아래 분류별 목록에도 함께 있습니다.</p></div></div>
+        <div class="grid">${recent.map((it) => card(it, true)).join('')}</div></section>`;
+    }
     for (const c of cats) {
       const its = shown.filter((i) => i.cat === c.id);
       if (!its.length) continue;
