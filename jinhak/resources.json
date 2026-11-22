@@ -1,5 +1,5 @@
 {
- "updated": "2026-10-30",
+ "updated": "2026-11-22",
  "categories": [
   {
    "id": "course",
@@ -1121,6 +1121,17 @@
    "kind": "시트",
    "who": "t",
    "grade": ["고2", "고3"]
+  },
+  {
+   "id": "069cb31770",
+   "cat": "guide",
+   "title": "EBS 겨울방학 대비 학습전략설명회",
+   "url": "https://www.youtube.com/watch?v=SA5FBswWRTA",
+   "src": "EBS",
+   "desc": "EBS 겨울방학 대비 학습전략설명회 ㅣ 2028학년도 통합형 수능 완전 정복 📈",
+   "kind": "웹사이트",
+   "who": "st",
+   "added": "2026-11-22"
   }
  ]
 }
