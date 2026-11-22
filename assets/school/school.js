@@ -3166,13 +3166,19 @@
     if (Date.now() - last < 30000) { memoSay('조금 전에 보냈어요. 30초 뒤에 다시 보내 주세요.', true); return; }
     memoSend.disabled = true; memoSay('보내는 중…');
     try {
-      // 구글 Apps Script 웹 앱은 응답을 읽을 수 없게(no-cors) 보내는 것이 가장 확실하다
-      await fetch(url, { method: 'POST', mode: 'no-cors', headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ who, msg, kid: kid ? kid.name : '', website: memoForm.website.value }) });
+      // Apps Script 응답(ok·dup·busy·empty·error)을 읽어 실제로 접수됐는지 확인한다.
+      // 응답을 읽지 못하면(옛 브라우저 등) no-cors로 한 번 더 보낸다. 같은 글은 서버가 10분 안에 다시 받지 않는다.
+      const body = JSON.stringify({ who, msg, kid: kid ? kid.name : '', website: memoForm.website.value });
+      const opts = { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body, redirect: 'follow' };
+      let res = null;
+      try { const r = await fetch(url, opts); res = r.ok ? (await r.text()).trim() : 'error'; }
+      catch (e1) { await fetch(url, { ...opts, mode: 'no-cors' }); res = 'sent'; }
+      if (res === 'busy') { memoSay('지금은 메시지가 너무 많이 와서 받을 수 없어요. 잠시 뒤에 다시 보내 주세요.', true); return; }
+      if (res !== 'ok' && res !== 'dup' && res !== 'sent') { memoSay('보내지 못했어요. 잠시 뒤에 다시 보내 주세요.', true); return; }
       save('pixelSchoolMemoAt', Date.now(), localStorage);
       memoForm.msg.value = '';
       SFX.pickup();
-      memoSay('보냈어요! 진로 선생님이 꼭 읽어 볼게요.');
+      memoSay(res === 'dup' ? '같은 메시지가 이미 도착해 있어요. 진로 선생님이 꼭 읽어 볼게요.' : '보냈어요! 진로 선생님이 꼭 읽어 볼게요.');
     } catch (err) {
       memoSay('보내지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요.', true);
     } finally { memoSend.disabled = false; }
